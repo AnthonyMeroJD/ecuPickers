@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "732774398021",
+    "firebase_url": "https://ecupickers.firebaseio.com",
+    "project_id": "ecupickers",
+    "storage_bucket": "ecupickers.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:732774398021:android:bc8a8a1796131ee1598b2c",
+        "android_client_info": {
+          "package_name": "com.example.ecupickers"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "732774398021-7cf9ka59ufnv44be4uhf5stcgfnappcq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkpuokcBFnUVIpTpe7Xz7CuAAVYgpfWeM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "732774398021-7cf9ka59ufnv44be4uhf5stcgfnappcq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
