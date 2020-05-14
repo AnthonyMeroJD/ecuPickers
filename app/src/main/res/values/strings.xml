@@ -10,6 +10,58 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
-
     <string name="home_second">Home Second</string>
+    <!--Titulos Slide menu-->
+    <string name="pantalla_inicio">Tus Pedidos</string>
+    <string name="gestional_local">Tu local</string>
+    <string name="gestionar_productos">Tus productos</string>
+    <string name="gestionar_perfil">Editar perfil</string>
+    <!--Titulos de pantallas-->
+    <string name="tu_inicio">Tu inicio</string>
+    <string name="editar_cuenta">Editar Cuenta</string>
+    <!--Rango hora  -->
+    <string name="am">A.M</string>
+    <string name="pm">P.M</string>
+    <!--Botones-->
+    <string name="ok">Ok</string>
+    <string name="añadir_nuevo_producto">Añadir nuevo producto</string>
+    <string name="añadir">Añadir</string>
+    <string name="guardar">Guardar</string>
+    <string name="crear">Crear</string>
+    <string name="añadir_producto_existente_menu">Añadir producto existente a este menu</string>
+    <!--Estados-->
+    <string name="nuevo_pedido">Nuevos Pedidos</string>
+    <string name="en_proceso_coccion">En proceso de coccion</string>
+    <string name="cocinado">Cocinado</string>
+    <string name="en_proceso_entrega">En proceso de entrega</string>
+    <string name="entregados">Entregados</string>
+    <!--Perfil Textos-->
+    <string name="nombre">Nombre:</string>
+    <string name="apellidos">Apellidos:</string>
+    <string name="telefono">Telefono:</string>
+    <string name="correo">Correo Electronico:</string>
+    <string name="contrasena">Contraseña:</string>
+    <string name="direccion">Dirección</string>
+    <!--Creacion Productos-->
+    <string name="nombre_producto">Nombre del Producto</string>
+    <string name="descripcion">Descripción</string>
+    <string name="categoria">Categoria:</string>
+    <string name="precio">Precio:</string>
+    <string name="tiempo_estimado">Tiempo estimado</string>
+    <string name="menu_opcional">Menu (Opcional)</string>
+    <!--Crear nuevo Menu-->
+    <string name="nombre_del_menu">Nombre del Menu</string>
+    <!--Gestionar Local-->
+    <string name="nombre_local">Nombre del Local </string>
+    <!--PopUp Añadir producto a erste menu-->
+    <string name="añadir_productos_al_menu">Añadir productos al Menu </string>
+    <string name="elija_categoria">Elija la categoria a mostrar:</string>
+    <string name="elija_producto">Elija los productos a añadir</string>
+    <string name="productos_seleccionados">Productos seleccionados</string>
+
+
+
+
+
+
 </resources>
