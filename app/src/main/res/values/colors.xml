@@ -6,5 +6,6 @@
     <color name="colorRosa">#FF6380</color>
     <color name="colorTexto">#2B2B44</color>
     <color name="colorFondoTarjetas">#F7F6FB</color>
+    <color name="colorGris">#707070</color>
 
 </resources>
