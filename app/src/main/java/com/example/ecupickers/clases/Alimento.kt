@@ -1,12 +1,26 @@
 package com.example.ecupickers.clases
 
-import com.example.ecupickers.constantes.EnumTipoComida
-import com.example.ecupickers.interfaces.Local
-import com.example.ecupickers.interfaces.Producto
+import com.example.ecupickers.interfaces.ILocal
+import com.example.ecupickers.interfaces.IProducto
 import com.google.firebase.database.Query
 
-class Alimento: Producto {
-    constructor( tiempoPreparacion:String,tipoComida: String)
+class Alimento: IProducto {
+    var tiempoEstimado:String
+        get() {
+            tiempoEstimado?.let {
+                return tiempoEstimado
+            }
+        }
+        set(value) {
+            tiempoEstimado=value
+        }
+    var miembrosCategorias:HashMap<String,Boolean>
+        get() {
+            miembrosCategorias?.let {
+                return miembrosCategorias
+            }
+        }
+        set(value) {miembrosCategorias=value}
     override val nombre: String
         get() = TODO("Not yet implemented")
     override val precio: String
@@ -17,14 +31,14 @@ class Alimento: Producto {
         get() = TODO("Not yet implemented")
     override val img: String
         get() = TODO("Not yet implemented")
-    override val local: String
+    override val miembroMenu: HashMap<String, Boolean>
         get() = TODO("Not yet implemented")
 
-    override fun registrarProducto(producto: Producto): Boolean {
+    override fun registrarProducto(IProducto: IProducto): Boolean {
         TODO("Not yet implemented")
     }
 
-    override fun traerProducto(local: Local): Query {
+    override fun traerProducto(ILocal: ILocal): Query {
         TODO("Not yet implemented")
     }
 
