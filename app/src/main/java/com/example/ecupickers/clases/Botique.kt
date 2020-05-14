@@ -11,7 +11,7 @@ class Botique : Local {
     override val servicio: String
         get() = TODO("Not yet implemented")
     override val dueño: String
-        get() = TODO("Not yet implemented")s
+        get() = TODO("Not yet implemented")
     override val ciudad: String
         get() = TODO("Not yet implemented")
     override val calificacion: String
