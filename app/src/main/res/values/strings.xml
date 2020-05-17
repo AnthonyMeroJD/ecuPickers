@@ -59,9 +59,8 @@
     <string name="elija_producto">Elija los productos a añadir</string>
     <string name="productos_seleccionados">Productos seleccionados</string>
 
-
-
-
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

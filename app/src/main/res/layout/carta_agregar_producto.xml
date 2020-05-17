@@ -4,11 +4,14 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:cardCornerRadius="10dp">
+    tools:context=".ui.gestionarProucto.CartaAgregarProducto"
+    app:cardCornerRadius="10dp"
+    >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
         <ImageView
             android:id="@+id/imageView2"
@@ -34,7 +37,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/imageView2"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Nombre del Producto" />
+            android:text="@string/nombre_producto" />
 
         <TextView
             android:id="@+id/textView2"
@@ -48,7 +51,7 @@
             android:textStyle="italic"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView2"
-            tools:text="Descripcion:" />
+            android:text="@string/descripcion" />
 
         <EditText
             android:id="@+id/textView4"
@@ -79,10 +82,10 @@
             android:textStyle="italic"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView4"
-            tools:text="Categoria:" />
+            android:text="@string/categoria" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+            android:id="@+id/rvCategorias"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -101,8 +104,8 @@
             android:layout_marginLeft="16dp"
             app:cardCornerRadius="15dp"
             android:backgroundTint="@color/colorFondoBotonCategoria"
-            app:layout_constraintStart_toEndOf="@+id/recyclerView"
-            app:layout_constraintTop_toTopOf="@+id/recyclerView"
+            app:layout_constraintStart_toEndOf="@+id/rvCategorias"
+            app:layout_constraintTop_toTopOf="@+id/rvCategorias"
             android:layout_marginStart="16dp"
             tools:targetApi="lollipop">
 
@@ -137,8 +140,8 @@
             android:textSize="20sp"
             android:textStyle="italic"
             app:layout_constraintStart_toStartOf="@+id/guideline5"
-            app:layout_constraintTop_toBottomOf="@+id/recyclerView"
-            tools:text="Precio:" />
+            app:layout_constraintTop_toBottomOf="@+id/rvCategorias"
+            android:text="@string/precio" />
 
         <EditText
             android:id="@+id/editText"
@@ -168,7 +171,7 @@
             android:textStyle="italic"
             app:layout_constraintStart_toStartOf="@+id/guideline5"
             app:layout_constraintTop_toBottomOf="@+id/editText"
-            tools:text="Tiempo Estimado:" />
+            android:text="@string/tiempo_estimado" />
 
         <ImageView
             android:id="@+id/imageView3"
@@ -230,7 +233,7 @@
             android:textStyle="italic"
             app:layout_constraintStart_toStartOf="@+id/guideline5"
             app:layout_constraintTop_toBottomOf="@+id/editText2"
-            tools:text="Menu(Opcional)" />
+            android:text="@string/menu_opcional" />
 
 
         <androidx.cardview.widget.CardView
@@ -262,7 +265,7 @@
             app:layout_constraintEnd_toStartOf="@+id/guideline2"
             app:layout_constraintStart_toStartOf="@+id/guideline5"
             app:layout_constraintTop_toBottomOf="@+id/cardVAddMenuNuevoProducto"
-            tools:text="Crear" />
+            android:text="@string/crear" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

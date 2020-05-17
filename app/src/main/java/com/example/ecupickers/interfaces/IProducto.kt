@@ -9,7 +9,7 @@ interface IProducto {
     val calificacion:String
     val img:String
    val miembroMenu:HashMap<String,Boolean>
-    fun registrarProducto(IProducto: IProducto):Boolean
+    fun registrarProducto(producto: IProducto):Boolean
     fun traerProducto(ILocal: ILocal):Query
     fun traerProductoXTipo():Query
 
