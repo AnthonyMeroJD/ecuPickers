@@ -7,12 +7,19 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.example.ecupickers.ui.gestionarProucto.CartaAgregarProducto"
+        android:name="com.example.ecupickers.ui.inicio.FragmentInicio"
         android:label="@string/menu_home"
-        tools:layout="@layout/carta_agregar_producto"/>
+        tools:layout="@layout/fragment_inicio"/>
     <fragment
-        android:id="@+id/cartaAgregarProducto"
-        android:name="com.example.ecupickers.ui.gestionarProucto.CartaAgregarProducto"
-        android:label="CartaAgregarProducto" />
+        android:id="@+id/fragmentLocal"
+        android:name="com.example.ecupickers.ui.gestionarLocal.FragmentLocal"
+        android:label="fragment_local"
+        tools:layout="@layout/fragment_local" />
+    <fragment
+        android:id="@+id/fragmentProducto"
+        android:name="com.example.ecupickers.ui.gestionarProucto.FragmentProducto"
+        android:label="fragment_producto"
+        tools:layout="@layout/fragment_producto" />
+
 
 </navigation>
