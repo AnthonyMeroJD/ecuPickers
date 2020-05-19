@@ -13,17 +13,18 @@
     <string name="home_second">Home Second</string>
     <!--Titulos Slide menu-->
     <string name="pantalla_inicio">Tus Pedidos</string>
-    <string name="gestional_local">Tu local</string>
-    <string name="gestionar_productos">Tus productos</string>
-    <string name="gestionar_perfil">Editar perfil</string>
+    <string name="gestional_local">Tu Local</string>
+    <string name="gestionar_productos">Tus Productos</string>
+    <string name="gestionar_perfil">Editar Perfil</string>
     <!--Titulos de pantallas-->
-    <string name="tu_inicio">Tu inicio</string>
+    <string name="tu_inicio">Tu Inicio</string>
     <string name="editar_cuenta">Editar Cuenta</string>
     <!--Rango hora  -->
+    <string name="min">Min</string>
     <string name="am">A.M</string>
     <string name="pm">P.M</string>
     <!--Botones-->
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="añadir_nuevo_producto">Añadir nuevo producto</string>
     <string name="añadir">Añadir</string>
     <string name="guardar">Guardar</string>
@@ -36,12 +37,16 @@
     <string name="en_proceso_entrega">En proceso de entrega</string>
     <string name="entregados">Entregados</string>
     <!--Perfil Textos-->
+    <string name="usuario">Nombre de Usuario</string>
     <string name="nombre">Nombre:</string>
     <string name="apellidos">Apellidos:</string>
     <string name="telefono">Telefono:</string>
     <string name="correo">Correo Electronico:</string>
     <string name="contrasena">Contraseña:</string>
     <string name="direccion">Dirección</string>
+    <string name="ciudad">Ciudad</string>
+    <string name="provincia">Provincia</string>
+    <string name="pais">Pais</string>
     <!--Creacion Productos-->
     <string name="nombre_producto">Nombre del Producto</string>
     <string name="descripcion">Descripción</string>
@@ -58,6 +63,15 @@
     <string name="elija_categoria">Elija la categoria a mostrar:</string>
     <string name="elija_producto">Elija los productos a añadir</string>
     <string name="productos_seleccionados">Productos seleccionados</string>
+
+    <!--Registro e Inicio -->
+
+    <string name="registrarse">Registrarse</string>
+    <string name="iniciar_sesion">Iniciar Sesion</string>
+    <string name="crear_cuenta">Crear Nueva Cuenta</string>
+    <string name="olvidaste_la_contraseña">Olvidaste la Contraseña?</string>
+
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

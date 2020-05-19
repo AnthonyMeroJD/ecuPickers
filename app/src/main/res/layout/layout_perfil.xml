@@ -30,7 +30,7 @@
             android:layout_marginLeft="30dp"
             android:textColor="@color/coloBlancoFondo"
             android:textSize="25sp"
-            tools:text="Editar Cuenta" />
+            android:text="@string/gestionar_perfil" />
 
 
     </com.google.android.material.appbar.MaterialToolbar>
