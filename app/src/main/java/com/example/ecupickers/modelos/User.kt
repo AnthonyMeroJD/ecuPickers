@@ -3,9 +3,9 @@ package com.example.ecupickers.modelos
 data class User constructor(
     var nombres: HashMap<String, String>,
     var celular: String,
-    var Ciudad: String,
-    var Provincia: String,
-    var Pais: String,
+    var ciudad: String,
+    var provincia: String,
+    var pais: String,
     var correo: String,
     var clave: String,
     var tipoUser:String

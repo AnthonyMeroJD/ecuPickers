@@ -5,10 +5,9 @@ data class Producto constructor(
     var precio: String,
     var descripcion: String,
     var calificacion: String,
-    var imagen: String,
     var local: String
 ) {
     public constructor() : this(
-        "def", "def", "def", "def", "def", "def"
+        "def", "def", "def", "def", "def"
     )
 }

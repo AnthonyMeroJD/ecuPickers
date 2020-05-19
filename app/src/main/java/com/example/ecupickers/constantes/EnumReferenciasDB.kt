@@ -7,17 +7,20 @@ enum class EnumReferenciasDB {
     MIEMBROSALIMENTOS {
         override fun rutaDB(): String = "MiembrosAlimentos"
     },
+    MIEMBROINSUMO{
+        override fun rutaDB(): String ="MiembrosInsumos"
+    },
     CATEGORIA {
         override fun rutaDB(): String = "Categorias"
     },
     USERS {
-        override fun rutaDB(): String= "users"
+        override fun rutaDB(): String= "Users"
     },
     MIEMBROSDELIVERY {
-        override fun rutaDB(): String = "miembrosDelivery"
+        override fun rutaDB(): String = "MiembrosDelivery"
     },
     MIEMBROSCONSUMIDORES {
-        override fun rutaDB(): String = "miembrosConsumidores"
+        override fun rutaDB(): String = "MiembrosConsumidores"
     },
     LOCALES {
         override fun rutaDB(): String = "locales"
@@ -33,6 +36,9 @@ enum class EnumReferenciasDB {
     },
     CATEGORIASRESTAURANTE {
         override fun rutaDB(): String ="categoriasRestaurante"
+    },
+    MIEMBROSBOTIQUE{
+        override fun rutaDB(): String ="miembrosBotique"
     },
     ROOT{
         override fun rutaDB(): String ="root"

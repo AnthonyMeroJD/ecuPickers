@@ -4,16 +4,18 @@ import com.example.ecupickers.constantes.EnumTipoLocal
 
 data class Local constructor(
     var nombre: String,
-    var miembroCategoria: HashMap<String, Boolean>,
-    var miembrosMenu: HashMap<String, Boolean>,
+    var miembrosCategorias: HashMap<String, Boolean>,
+    var miembrosMenus: HashMap<String, Boolean>,
     var horaIncio: String,
-    var horaFinal: String,
-    var tipoLocal: String
+    var horaCierre: String,
+    var tipoLocal: String,
+    var direccion:String
 ) {
     public constructor() : this(
         "def",
         HashMap<String, Boolean>(),
         HashMap<String, Boolean>(),
+        "def",
         "def",
         "def",
         "def"
