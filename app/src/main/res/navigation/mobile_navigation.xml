@@ -19,7 +19,9 @@
         android:id="@+id/fragmentProducto"
         android:name="com.example.ecupickers.ui.gestionarProucto.FragmentProducto"
         android:label="fragment_producto"
-        tools:layout="@layout/fragment_producto" />
+        tools:layout="@layout/fragment_producto" >
+
+    </fragment>
 
 
 </navigation>
