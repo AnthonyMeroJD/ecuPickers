@@ -4,12 +4,28 @@ import com.example.ecupickers.constantes.*
 import com.example.ecupickers.factory.DbReference
 import com.example.ecupickers.modelos.Local
 import com.example.ecupickers.modelos.Restaurante
-
+/*
+*----------------------GESTION DE CREACION DE NUEVOS DATOS Y EDICION EN LA BASE DE DATOS-----------
+* Esta clase gestiona los nodos
+* LOCALES COMPLETAMENTE
+* ,MIEMBROSRESTAURANTES COMPLETAMENTE
+* ,MIEMBROSBOTIQUE COMPLETAMENTE
+* ,CATEGORIASRESTAURANTES COMPLETAMENTE
+* Creacion de nuevos locales |--fun crearLocal--|
+* asi como tambien la edicion de campos en los nodos LOCALES,MIEMBROSRESTAURANTES |--fun gestionarCampo--|
+* En el nodo LOCALES la indexion de menus al sub nodo miembrosMenu  |--fun gestionarMenu--|
+* En los nodos LOCALES,MIEMBROSRESTAURANTES
+* la anidacion de  categorias al subnodo miembroCategorias |--fun gestionarCategoriaLocal--|
+*En EL NODO CATEGORIASRESTAURANTES
+* la indexacion de un local a su catalogo de categorias |--fun gestionarCategoriaLocal--|
+* TODO("CREAR FUNCIONES DE RECUPERACION DE LOS DATOS")
+* */
 class Locales {
-        /*
-       * Gestiona la edicion de un campo especifico en los dos nodos Locales y restaurantes
-       * ojo esta funcion sirve con los campos sencillos no anidados
-       * */
+    /*
+   * Gestiona la edicion de un campo especifico en los dos nodos Locales y restaurantes
+   * ojo esta funcion sirve con los campos sencillos no anidados
+   * ademas con este puedo cambiar el estado del el local
+   * */
     fun gestionarCampo(
         valor: String,
         idLocal: String,
@@ -49,9 +65,10 @@ class Locales {
             }
         }
     }
+
     /*
-    * Gestiona la anidacion/eliminar de nuevos campos en miembros Menus y miembros Categorias
-    * dentro de los nodos Locales y Restaurante
+    * Gestiona la anidacion/eliminar de nuevos campos en miembros Categorias
+    * dentro del nodos Locales y agrega a categoriaRestaurantes a sus categorias
     * */
     fun gestionarCategoriaLocal(
         eliminar: Boolean = false,
@@ -77,80 +94,55 @@ class Locales {
                 )
                 childUpdates.put(
                     "${EnumReferenciasDB.MIEMBROSRESTAURANTES.rutaDB()}/${ciudad.getCiudad()}" +
-                            "/${idLocal}/${EnumCamposDB.MIEMBROSCATEGORIAS.getCampos()}/${categoria.getCategoria()}",
-                    tf
+                            "/${idLocal}/${EnumCamposDB.MIEMBROSCATEGORIAS.getCampos()}/" +
+                            "${categoria.getCategoria()}", tf
                 )
             }
             return childUpdates
         }
-        if (!eliminar) {
-            var childUpdates = referenciaCategoria(categorias, true)
+        if (eliminar) {
+            var childUpdates = referenciaCategoria(categorias, false)
             ref.updateChildren(childUpdates)
         } else {
-            var childUpdates = referenciaCategoria(categorias, false)
+            var childUpdates = referenciaCategoria(categorias, true)
             ref.updateChildren(childUpdates)
         }
     }
 
-
-
-    fun gestionarHorario(
-        horaInicio: String,
-        horaCierre: String,
-        idLocal: String,
-        ciudad: EnumCiudad
-    ) {
-        val ref = DbReference.getRef(EnumReferenciasDB.ROOT)
-        val childUpdates = HashMap<String, Any>()
-        childUpdates.put(
-            "${EnumReferenciasDB.LOCALES.rutaDB()}/${idLocal}/${EnumCamposDB.HORAINICIO.getCampos()}",
-            horaInicio
-        )
-        childUpdates.put(
-            "${EnumReferenciasDB.LOCALES.rutaDB()}/${idLocal}/${EnumCamposDB.HORACIERRE.getCampos()}",
-            horaCierre
-        )
-        childUpdates.put(
-            "${EnumReferenciasDB.MIEMBROSRESTAURANTES.rutaDB()}/${ciudad.getCiudad()}/${idLocal}/${EnumCamposDB.HORAINICIO.getCampos()}",
-            horaInicio
-        )
-        childUpdates.put(
-            "${EnumReferenciasDB.MIEMBROSRESTAURANTES.rutaDB()}/${ciudad.getCiudad()}/${idLocal}/${EnumCamposDB.HORACIERRE.getCampos()}",
-            horaCierre
-        )
-        ref.updateChildren(childUpdates)
-    }
-
+    /*
+    * Gestiona la anidacion de nuevos menus en el nodo Local
+    * */
     fun gestionarMenu(
         idMenu: String,
-        ciudad: EnumCiudad,
+        nombreMenu: String,
         idLocal: String,
         eliminar: Boolean = false
     ) {
         val ref = DbReference.getRef(EnumReferenciasDB.ROOT)
         val childUpdates = HashMap<String, Any>()
-        if (!eliminar) {
+        //aqui elimina
+        if (eliminar) {
             childUpdates.put(
-                "${EnumReferenciasDB.LOCALES.rutaDB()}/${idLocal}/${EnumCamposDB.MIEMBROSMENUS.getCampos()}/${idMenu}",
-                true
+                "${EnumReferenciasDB.LOCALES.rutaDB()}/${idLocal}/" +
+                        "${EnumCamposDB.MIEMBROSMENUS.getCampos()}/" +
+                        "${idMenu}/${EnumCamposDB.NOMBRE.getCampos()}",
+                "false"
             )
-            childUpdates.put(
-                "${EnumReferenciasDB.MIEMBROSRESTAURANTES.rutaDB()}/${ciudad.getCiudad()}/${idLocal}/${EnumCamposDB.MIEMBROSMENUS.getCampos()}/${idMenu}",
-                true
-            )
+
         } else {
             childUpdates.put(
-                "${EnumReferenciasDB.LOCALES.rutaDB()}/${idLocal}/${EnumCamposDB.MIEMBROSMENUS.getCampos()}/${idMenu}",
-                false
-            )
-            childUpdates.put(
-                "${EnumReferenciasDB.MIEMBROSRESTAURANTES.rutaDB()}/${ciudad.getCiudad()}/${idLocal}/${EnumCamposDB.MIEMBROSMENUS.getCampos()}/${idMenu}",
-                false
+                "${EnumReferenciasDB.LOCALES.rutaDB()}/${idLocal}/" +
+                        "${EnumCamposDB.MIEMBROSMENUS.getCampos()}/" +
+                        "${idMenu}/${EnumCamposDB.NOMBRE.getCampos()}",
+                nombreMenu
             )
         }
         ref.updateChildren(childUpdates)
     }
 
+    /*
+    * gestiona la creacion del local segun el tipo requerido y retorna la key del local
+    * */
     fun crearLocal(
         local: Local,
         ciudad: EnumCiudad
@@ -164,10 +156,10 @@ class Locales {
             EnumTipoLocal.RESTAURANTE.getTipoLocal() -> {
                 var restaurante = Restaurante(
                     local.nombre,
+                    local.estado,
                     local.horaIncio,
                     local.horaCierre,
-                    local.miembrosCategorias,
-                    local.miembrosMenus
+                    local.miembrosCategorias
                 )
                 childUpdates.put("${EnumReferenciasDB.LOCALES.rutaDB()}/${key}", local)
                 childUpdates.put(

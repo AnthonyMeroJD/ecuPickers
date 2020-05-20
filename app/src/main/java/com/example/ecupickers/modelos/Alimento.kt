@@ -5,12 +5,16 @@ data class Alimento constructor(
     var precio: String,
     var tiempoEstimado: String,
     var descripcion: String,
-    var calificacion:String,
+    var calificacion: String?,
+    var atendidos: String?,
     var miembrosMenus: HashMap<String, Boolean>,
-    var miembrosCategorias: HashMap<String, Boolean>
+    var miembroscategorias: HashMap<String, Boolean>
 ) {
     public constructor() : this(
-        "def", "def","def", "def", "def", HashMap<String, Boolean>()
-        ,HashMap<String,Boolean>()
+        "def", "def",
+        "def", "def",
+        "def", "def",
+        HashMap<String, Boolean>(),
+        HashMap<String, Boolean>()
     )
 }

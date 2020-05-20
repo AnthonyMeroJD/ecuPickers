@@ -4,7 +4,14 @@ import android.view.Menu
 import com.example.ecupickers.constantes.EnumCamposDB
 import com.example.ecupickers.constantes.EnumReferenciasDB
 import com.example.ecupickers.factory.DbReference
-
+/*----------------------GESTION DE CREACION DE NUEVOS DATOS Y EDICION EN LA BASE DE DATOS-----------
+* Esta clase gestiona los nodos
+*  MENUS COMPLETAMENTE ,
+* En el nodo MENUS controla toda la edicion de campos,|--fun gestionarNombre--|
+* agregar un Producto al subnodo miembrosAlimentos,|--fun gestionarAlimentosAmenu--|
+* crear un nuevo menu,
+* En el nodo MIEMBROSALIMENTOS  gestiona la indexaxion de un menu al subnodo miembrosMenus
+* */
 class Menus {
     fun gestionarNombre(nombre: String, idMenu: String) {
         val childUpdates = HashMap<String, Any>()

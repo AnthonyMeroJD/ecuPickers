@@ -1,6 +1,9 @@
 package com.example.ecupickers.constantes
 
 enum class EnumCamposDB {
+    ATENDIDOS{
+        override fun getCampos(): String ="atendidos"
+    },
     NOMBRE {
         override fun getCampos(): String ="nombre"
     }, PRECIO {
