@@ -32,15 +32,17 @@
     <string name="añadir_producto_existente_menu">Añadir producto existente a este menu</string>
     <!--Estados-->
     <string name="nuevo_pedido">Nuevos Pedidos</string>
-    <string name="en_proceso_coccion">En proceso de coccion</string>
+    <string name="preparando">Preparando</string>
     <string name="cocinado">Cocinado</string>
     <string name="en_proceso_entrega">En proceso de entrega</string>
     <string name="entregados">Entregados</string>
     <!--Perfil Textos-->
-    <string name="usuario">Nombre de Usuario</string>
-    <string name="nombre">Nombre:</string>
-    <string name="apellidos">Apellidos:</string>
+    <string name="primer_nombre">Primer Nombre:</string>
+    <string name="primer_apellido">Primer Apellido:</string>
+    <string name="segundo_nombre">Segundo Nombre:(Opcional)</string>
+    <string name="segundo_apellido">Segundo Apellido:(Opcional)</string>
     <string name="telefono">Telefono:</string>
+
     <string name="correo">Correo Electronico:</string>
     <string name="contrasena">Contraseña:</string>
     <string name="direccion">Dirección</string>
@@ -70,7 +72,6 @@
     <string name="iniciar_sesion">Iniciar Sesion</string>
     <string name="crear_cuenta">Crear Nueva Cuenta</string>
     <string name="olvidaste_la_contraseña">Olvidaste la Contraseña?</string>
-
 
 
     <!-- TODO: Remove or change this placeholder text -->

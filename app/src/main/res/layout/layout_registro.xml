@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
 
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_marginBottom="24dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+
+
+
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/materialToolbar"
@@ -87,8 +97,8 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
-                android:autofillHints="@string/nombre"
-                android:hint="@string/nombre"
+                android:autofillHints="@string/primer_nombre"
+                android:hint="@string/primer_nombre"
                 android:inputType="text"
                 app:layout_constraintEnd_toStartOf="@+id/guideline8"
                 app:layout_constraintStart_toStartOf="parent"
@@ -103,28 +113,61 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
-                android:autofillHints="@string/apellidos"
-                android:hint="@string/apellidos"
+                android:autofillHints="@string/primer_apellido"
+                android:hint="@string/primer_apellido"
                 android:inputType="text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/editTextNombreRegistro"
                 app:layout_constraintTop_toBottomOf="@+id/textView23" />
 
             <EditText
-                android:id="@+id/editTextNombreUsuarioRegistro"
+                android:id="@+id/editTextNombreRegistroOpcional"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
-                android:autofillHints="@string/usuario"
-                android:hint="@string/usuario"
+                android:layout_marginTop="16dp"
+                android:autofillHints="@string/segundo_nombre"
+                android:hint="@string/segundo_nombre"
                 android:inputType="text"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/guideline8"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editTextNombreRegistro" />
+
+            <EditText
+                android:id="@+id/editTextApellidoRegistroOpcional"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
+                android:autofillHints="@string/segundo_apellido"
+                android:hint="@string/segundo_apellido"
+                android:inputType="text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/editTextNombreRegistro"
+                app:layout_constraintTop_toBottomOf="@+id/editTextApellidoRegistro" />
+
+
+            <EditText
+                android:id="@+id/editTextNombreLocalRegistro"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
+                android:autofillHints="@string/nombre_local"
+                android:hint="@string/nombre_local"
+                android:inputType="textEmailAddress"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editTextNombreRegistroOpcional" />
 
             <EditText
                 android:id="@+id/editTextCorreoRegistro"
@@ -132,15 +175,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
                 android:autofillHints="@string/correo"
                 android:hint="@string/correo"
                 android:inputType="textEmailAddress"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextNombreUsuarioRegistro" />
+                app:layout_constraintTop_toBottomOf="@+id/editTextNombreLocalRegistro" />
 
             <EditText
                 android:id="@+id/editTextTelefonoRegistro"
@@ -175,8 +218,10 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editTextTelefonoRegistro" />
 
+
+
             <EditText
-                android:id="@+id/editTextCiudadRegistro"
+                android:id="@+id/editTextPaisRegistro"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -205,10 +250,10 @@
                 android:inputType="text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextCiudadRegistro" />
+                app:layout_constraintTop_toBottomOf="@+id/editTextPaisRegistro" />
 
             <EditText
-                android:id="@+id/editTextPaisRegistro"
+                android:id="@+id/editTextCiudadRegistro"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -241,7 +286,7 @@
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextPaisRegistro"
+                app:layout_constraintTop_toBottomOf="@+id/editTextCiudadRegistro"
                 tools:targetApi="lollipop" />
 
             <androidx.constraintlayout.widget.Guideline
@@ -257,5 +302,5 @@
 
     </androidx.cardview.widget.CardView>
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
