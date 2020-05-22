@@ -24,6 +24,7 @@
     <string name="am">A.M</string>
     <string name="pm">P.M</string>
     <!--Botones-->
+    <string name="añadir_categoria">Añadir Categoria</string>
     <string name="ok">OK</string>
     <string name="añadir_nuevo_producto">Añadir nuevo producto</string>
     <string name="añadir">Añadir</string>

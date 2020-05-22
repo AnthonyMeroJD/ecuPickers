@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="opciones_categorias">
+        <item>Seleccione una Categoria</item>
+        <item>Almuerzos</item>
+        <item>Desayunos</item>
+        <item>Meriendas</item>
+        <item>Postres</item>
+        <item>BBQ</item>
+        <item>Comida Rapida</item>
+        <item>Mariscos</item>
+        <item>Pollos</item>
+        <item>Helados</item>
+        <item>Hamburguesas</item>
+        <item>Pizzas</item>
+    </string-array>
+
+
+
+
+</resources>

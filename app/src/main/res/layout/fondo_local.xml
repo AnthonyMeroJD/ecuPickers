@@ -77,11 +77,10 @@
                 app:layout_constraintTop_toTopOf="@+id/recyclerView"
                 tools:targetApi="lollipop">
 
-                <ImageView
+                <Spinner
+                    android:id="@+id/spinnerCategoriasLocal"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_add"
-                    android:tint="@color/colorTexto" />
+                    android:layout_height="wrap_content"/>
 
             </androidx.cardview.widget.CardView>
 
@@ -89,25 +88,25 @@
                 android:id="@+id/imageView3"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
                 android:src="@drawable/ic_clock"
                 android:tint="@color/colorGris"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
+                app:layout_constraintTop_toBottomOf="@+id/cardVAddCategoriaNuevoProducto" />
 
             <EditText
                 android:id="@+id/editText2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:inputType="time"
                 android:hint="10:00"
+                android:inputType="time"
+                android:layout_marginTop="16dp"
                 android:textColor="@color/colorTexto"
                 android:textSize="16sp"
                 app:layout_constraintStart_toEndOf="@+id/imageView3"
-                app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
+                app:layout_constraintTop_toBottomOf="@+id/cardVAddCategoriaNuevoProducto" />
 
             <TextView
                 android:id="@+id/textView8"
@@ -127,13 +126,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:inputType="time"
                 android:hint="20:00"
+                android:inputType="time"
+                android:layout_marginTop="16dp"
                 android:textColor="@color/colorTexto"
                 android:textSize="16sp"
                 app:layout_constraintStart_toEndOf="@+id/textView8"
-                app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
+                app:layout_constraintTop_toBottomOf="@+id/cardVAddCategoriaNuevoProducto" />
 
             <TextView
                 android:id="@+id/textView18"
