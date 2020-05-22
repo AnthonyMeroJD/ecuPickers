@@ -3,6 +3,8 @@ package com.example.ecupickers.constantes
 enum class EnumReferenciasDB {
     PRODUCTOS {
         override fun rutaDB(): String = "Productos"
+    },MIEMBROSVENDEDORES{
+        override fun rutaDB(): String ="MiembrosVendedores"
     },
     MIEMBROSALIMENTOS {
         override fun rutaDB(): String = "MiembrosAlimentos"
