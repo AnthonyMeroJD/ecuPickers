@@ -33,11 +33,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-<<<<<<< HEAD
+
         supportActionBar?.hide()
-=======
+
         auth = FirebaseAuth.getInstance()
->>>>>>> ui
+
         val navController = findNavController(R.id.nav_host_fragment)
         appBarConfiguration = AppBarConfiguration(
             setOf(R.id.fragmentLocal, R.id.fragmentProducto, R.id.nav_home), drawer_layout
@@ -53,24 +53,6 @@ class MainActivity : AppCompatActivity() {
 
             when (item.itemId) {
                 R.id.nav_home -> {
-<<<<<<< HEAD
-                    fragmentManager.beginTransaction().replace(
-                        R.id.nav_host_fragment,
-                        FragmentInicio()
-                    ).commit()
-                }
-                R.id.nav_tus_productos -> {
-                    fragmentManager.beginTransaction().replace(
-                        R.id.nav_host_fragment,
-                        FragmentProducto()
-                    ).commit()
-                }
-                R.id.nav_tu_local -> {
-                    fragmentManager.beginTransaction().replace(
-                        R.id.nav_host_fragment,
-                        FragmentLocal()
-                    ).commit()
-=======
                     fragment = FragmentInicio()
                     fragmentManager.beginTransaction().replace(
                         R.id.nav_host_fragment,
@@ -79,14 +61,14 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.nav_tus_productos -> {
                     fragment =    FragmentProducto()
-                        fragmentManager.beginTransaction().replace(
+                    fragmentManager.beginTransaction().replace(
                         R.id.nav_host_fragment,
                         fragment
                     ).commit()
                 }
                 R.id.nav_tu_local -> {
                     fragment = FragmentLocal()
-                    bundle.putString("idLocal", auth.uid.toString())
+                    bundle.putString("idUser", auth.uid.toString())
                     fragment.arguments=bundle
                     fragmentManager.beginTransaction().replace(
                         R.id.nav_host_fragment,
@@ -98,13 +80,13 @@ class MainActivity : AppCompatActivity() {
                     var intent = Intent(this, IngresoActivity::class.java)
                     startActivity(intent)
                     finish()
->>>>>>> ui
                 }
             }
             drawer_layout.closeDrawer(GravityCompat.START)
             true
         }
         navigationView.setNavigationItemSelectedListener(listener)
+
 
     }
 

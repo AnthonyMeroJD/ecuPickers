@@ -1,25 +1,22 @@
 package com.example.ecupickers.ui.gestionarLocal
 
-import android.annotation.SuppressLint
+
 import android.os.Bundle
-import android.text.Editable
-import android.text.InputFilter
+
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-<<<<<<< HEAD
+
 import android.widget.ArrayAdapter
-import android.widget.Spinner
 
-import com.example.ecupickers.R
-import kotlinx.android.synthetic.main.fondo_local.*
+
 import kotlinx.android.synthetic.main.fondo_local.view.*
-import kotlinx.android.synthetic.main.fondo_productos.*
 
-=======
+
 import android.widget.EditText
 import android.widget.Toast
+
 
 import com.example.ecupickers.R
 import com.example.ecupickers.constantes.EnumReferenciasDB
@@ -30,55 +27,44 @@ import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
-import kotlinx.android.synthetic.main.carta_add_productos_menu_existente.view.*
->>>>>>> ui
 
 
 class FragmentLocal : Fragment() {
-
     private lateinit var uid: String
     private lateinit var nombrelocal: EditText
-    private lateinit var  ref:DatabaseReference
+    private lateinit var ref: DatabaseReference
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        ref= DbReference.getRef(EnumReferenciasDB.ROOT)
-
+        //Inflate the layout for this fragment
+        ref = DbReference.getRef(EnumReferenciasDB.ROOT)
         return inflater.inflate(R.layout.fragment_local, container, false)
-
     }
-
-<<<<<<< HEAD
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        var comboCategorias = view.spinnerCategoriasLocal
-
-
-        comboCategorias?.let {
-            val adaptador: ArrayAdapter<CharSequence> = ArrayAdapter.createFromResource(view.context,
-                R.array.opciones_categorias, android.R.layout.simple_spinner_item)
-            it.adapter=adaptador
-        }
-=======
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        nombrelocal = view.findViewById(R.id.editText4)
-        val qry = ref.child(EnumReferenciasDB.USERS.rutaDB()).orderByKey().equalTo(uid)
-        qry.addChildEventListener(traerUser())
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            uid = it.getString("idLocal")!!
+            uid = it.getString("idUser")!!
         }
-
-
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        var comboCategorias = view.spinnerCategoriasLocal
+        nombrelocal = view.findViewById(R.id.editText4)
+        val qry = ref.child(EnumReferenciasDB.USERS.rutaDB()).orderByKey().equalTo(uid)
+        qry.addChildEventListener(traerUser())
+        comboCategorias?.let {
+            val adaptador: ArrayAdapter<CharSequence> = ArrayAdapter.createFromResource(
+                view.context,
+                R.array.opciones_categorias, android.R.layout.simple_spinner_item
+            )
+            it.adapter = adaptador
+        }
+    }
+
+
 
     fun traerUser(): ChildEventListener {
         var user = User()
@@ -107,7 +93,7 @@ class FragmentLocal : Fragment() {
             }
         }
         return listener
->>>>>>> ui
+
     }
 
     fun traerLocal(idUser: String, ciudad: String) {
@@ -140,10 +126,12 @@ class FragmentLocal : Fragment() {
         }
         qry.addChildEventListener(listener)
     }
-    fun pintarDatosLocal(idLocal: String){
-        val qry=ref.child("${EnumReferenciasDB.LOCALES.rutaDB()}").orderByKey().equalTo(idLocal)
-        var local=Local()
-        val listener=object :ChildEventListener{
+
+    fun pintarDatosLocal(idLocal: String) {
+        val qry =
+            ref.child("${EnumReferenciasDB.LOCALES.rutaDB()}").orderByKey().equalTo(idLocal)
+        var local = Local()
+        val listener = object : ChildEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 TODO("Not yet implemented")
             }
@@ -157,7 +145,8 @@ class FragmentLocal : Fragment() {
             }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                local= p0.getValue(Local::class.java)!!
+                local = p0.getValue(Local::class.java)!!
+
                 nombrelocal.setText(local.nombre)
             }
 
