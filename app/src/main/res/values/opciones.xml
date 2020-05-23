@@ -17,6 +17,37 @@
     </string-array>
 
 
+    <string-array name="opciones_pais">
+        <item>Ecuador</item>
+    </string-array>
 
+    <string-array name="opciones_provincias">
+        <item>Esmeraldas</item>
+        <item>Carchi</item>
+        <item>Sucumbios</item>
+        <item>Imbabura</item>
+        <item>Pichincha</item>
+        <item>Napo</item>
+        <item>Orellana</item>
+        <item>Pastaza</item>
+        <item>Manabi</item>
+        <item>Santo Domingo de los Tsáchilas</item>
+        <item>Cotopaxi</item>
+        <item>Tungurahua</item>
+        <item>Los Ríos</item>
+        <item>Bolivar</item>
+        <item>Chimborazo</item>
+        <item>Morona Santiago</item>
+        <item>Santa Elena</item>
+        <item>Guayas</item>
+        <item>Cañar</item>
+        <item>Azuay</item>
+        <item>El Oro</item>
+        <item>Loja</item>
+        <item>Zamora Chinchipe</item>
+        <item>Galápagos</item>
+    </string-array>
+
+    
 
 </resources>

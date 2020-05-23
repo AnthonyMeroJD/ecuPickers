@@ -40,6 +40,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
+                android:enabled="false"
                 android:hint="@string/nombre_producto"
                 android:textColor="@color/colorTexto"
                 android:textSize="30sp"
@@ -51,11 +52,14 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rVBotonesCategoriaProducto"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editTextNombreProducto"
                 tools:itemCount="1"
@@ -83,36 +87,36 @@
                 android:id="@+id/imageView3"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
                 android:src="@drawable/ic_clock"
                 android:tint="@color/colorGris"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardVAddCategoriaNuevoLocal" />
+                app:layout_constraintTop_toBottomOf="@+id/spinnerCategoriasProductos" />
 
             <EditText
                 android:id="@+id/editTextTiempoAM"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:enabled="false"
                 android:hint="10:00"
-                android:layout_marginTop="16dp"
                 android:inputType="time"
                 android:textColor="@color/colorTexto"
                 android:textSize="16sp"
                 app:layout_constraintStart_toEndOf="@+id/imageView3"
-                app:layout_constraintTop_toBottomOf="@+id/cardVAddCategoriaNuevoLocal" />
+                app:layout_constraintTop_toTopOf="@+id/imageView3" />
 
             <TextView
                 android:id="@+id/textView8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
                 android:text="-"
+                android:layout_marginTop="16dp"
                 android:textColor="@color/colorGris"
                 android:textSize="18sp"
                 app:layout_constraintStart_toEndOf="@+id/editTextTiempoAM"
-                app:layout_constraintTop_toBottomOf="@+id/cardVAddCategoriaNuevoLocal" />
+                app:layout_constraintTop_toBottomOf="@+id/spinnerCategoriasProductos" />
 
             <EditText
                 android:id="@+id/editTextTiempoPM"
@@ -120,48 +124,83 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
+                android:enabled="false"
                 android:hint="20:00"
-                android:layout_marginTop="16dp"
                 android:inputType="time"
                 android:textColor="@color/colorTexto"
                 android:textSize="16sp"
                 app:layout_constraintStart_toEndOf="@+id/textView8"
-                app:layout_constraintTop_toBottomOf="@+id/cardVAddCategoriaNuevoLocal" />
+                app:layout_constraintTop_toTopOf="@+id/imageView3" />
 
             <TextView
                 android:id="@+id/textView18"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/min"
+                android:layout_marginTop="8dp"
                 android:textSize="18sp"
                 app:layout_constraintStart_toEndOf="@+id/editTextTiempoPM"
-                app:layout_constraintTop_toTopOf="@+id/textView8" />
+                app:layout_constraintTop_toTopOf="@+id/imageView3" />
 
             <Button
-                android:id="@+id/buttonGuardarProductos"
+                android:id="@+id/buttonGuardarCambiosProductos"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:textSize="18sp"
+                android:padding="15dp"
                 android:backgroundTint="@color/colorPrimary"
                 android:text="@string/guardar"
                 android:textColor="@color/coloBlancoFondo"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
+            <Button
+                android:id="@+id/buttonEditarProducos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/colorPrimary"
+                android:text="@string/editar"
+                android:textSize="18sp"
+                android:padding="15dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:textColor="@color/coloBlancoFondo"
+                app:layout_constraintStart_toEndOf="@+id/buttonGuardarCambiosProductos"
+                app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+            <Button
+                android:id="@+id/buttonCancelarCambiosProducos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/colorPrimary"
+                android:text="@string/cancelar"
+                android:textSize="18sp"
+                android:visibility="visible"
+                android:padding="15dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:textColor="@color/coloBlancoFondo"
+                app:layout_constraintStart_toEndOf="@+id/buttonEditarProducos"
+                app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+
+
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
                 android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/buttonGuardarProductos">
+                app:layout_constraintTop_toBottomOf="@+id/buttonGuardarCambiosProductos">
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/titulosMenuHorizontal"
@@ -173,7 +212,7 @@
                 </com.google.android.material.tabs.TabLayout>
 
 
-                <androidx.viewpager.widget.ViewPager
+                <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/contenidoMenuHorizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -196,27 +235,28 @@
                 android:id="@+id/cardVAddCategoriaNuevoLocal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
                 android:backgroundTint="@color/colorFondoBotonCategoria"
                 app:cardCornerRadius="15dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
                 app:layout_constraintStart_toEndOf="@+id/rVBotonesCategoriaProducto"
                 app:layout_constraintTop_toBottomOf="@+id/editTextNombreProducto"
                 tools:targetApi="lollipop">
 
-                <Spinner
-                    android:id="@+id/spinnerCategoriasProductos"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                     />
 
             </androidx.cardview.widget.CardView>
 
 
-
-
-
+            <Spinner
+                android:id="@+id/spinnerCategoriasProductos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rVBotonesCategoriaProducto" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

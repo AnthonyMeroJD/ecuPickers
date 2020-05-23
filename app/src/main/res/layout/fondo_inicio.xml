@@ -23,11 +23,14 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="20dp"
         app:cardCornerRadius="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tVInicio"
+        app:layout_goneMarginTop="24dp"
         tools:ignore="MissingConstraints">
 
 
@@ -35,49 +38,50 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/titulosMenuHorizontalInicio"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                app:tabTextColor="@color/colorTexto">
 
 
                 <com.google.android.material.tabs.TabItem
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="@string/nuevo_pedido"/>
-                <com.google.android.material.tabs.TabItem
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="@string/preparando"/>
+                    android:text="@string/nuevo_pedido" />
 
                 <com.google.android.material.tabs.TabItem
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="@string/cocinado"/>
-                <com.google.android.material.tabs.TabItem
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="@string/en_proceso_entrega"/>
-                <com.google.android.material.tabs.TabItem
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="@string/entregados"/>
+                    android:text="@string/preparando" />
 
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/cocinado" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/en_proceso_entrega" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/entregados" />
 
 
             </com.google.android.material.tabs.TabLayout>
 
-            <androidx.viewpager.widget.ViewPager
-            android:id="@+id/contenidoMenuHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp"/>
-
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/contenidoMenuHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp" />
 
 
         </LinearLayout>
-
-
 
 
     </androidx.cardview.widget.CardView>
