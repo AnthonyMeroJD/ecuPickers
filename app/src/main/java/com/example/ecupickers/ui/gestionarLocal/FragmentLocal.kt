@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 
 
@@ -15,17 +16,24 @@ import kotlinx.android.synthetic.main.fondo_local.view.*
 
 
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 
 
 import com.example.ecupickers.R
 import com.example.ecupickers.adapters.CategoriaAdapter
+import com.example.ecupickers.adapters.MiembrosMenusViewPagerAdapter
 import com.example.ecupickers.clases.Locales
 import com.example.ecupickers.constantes.EnumCategoria
 import com.example.ecupickers.constantes.EnumReferenciasDB
 import com.example.ecupickers.factory.DbReference
 import com.example.ecupickers.modelos.Local
 import com.example.ecupickers.modelos.User
+import com.example.ecupickers.ui.inicio.FragmentInicio
+import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.database.*
 
 
@@ -42,6 +50,7 @@ class FragmentLocal : Fragment() {
     private lateinit var titulos: HashMap<String, Boolean>
     private lateinit var comboCategorias: Spinner
     private lateinit var titulosMenu: TabLayout
+    private lateinit var pager:ViewPager2
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -63,6 +72,7 @@ class FragmentLocal : Fragment() {
         rvCategorias = root.recyclerView
         categorias = HashMap()
         titulos = HashMap()
+        pager =root.contenidoMenuHorizontalLocal
         return root
     }
 
@@ -308,6 +318,7 @@ class FragmentLocal : Fragment() {
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
                 val categorias = ArrayList<String>()
                 val menusTittles = ArrayList<String>()
+                val menusId=ArrayList<String>()
                 local = p0.getValue(Local::class.java)!!
                 this@FragmentLocal.idLocal = String()
                 this@FragmentLocal.idLocal = p0.key.toString()
@@ -319,8 +330,9 @@ class FragmentLocal : Fragment() {
                     for (nombre in menu.value) {
                         menusTittles.add(nombre.value)
                     }
+                    menusId.add(menu.key)
                 }
-                llenarMenus(menusTittles)
+                llenarMenus(menusTittles,menusId)
                 llenarCategorias(categorias)
                 nombrelocal.setText(local.nombre)
             }
@@ -328,6 +340,7 @@ class FragmentLocal : Fragment() {
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
                 val categorias = ArrayList<String>()
                 val menusTittles = ArrayList<String>()
+                val menusId=ArrayList<String>()
                 local = p0.getValue(Local::class.java)!!
                 this@FragmentLocal.idLocal = String()
                 this@FragmentLocal.idLocal = p0.key.toString()
@@ -339,8 +352,9 @@ class FragmentLocal : Fragment() {
                     for (nombre in menu.value) {
                         menusTittles.add(nombre.value)
                     }
+                    menusId.add(menu.key)
                 }
-                llenarMenus(menusTittles)
+                llenarMenus(menusTittles,menusId)
                 llenarCategorias(categorias)
                 nombrelocal.setText(local.nombre)
             }
@@ -370,15 +384,22 @@ class FragmentLocal : Fragment() {
         }
     }
 
-    fun llenarMenus(menusTittles: ArrayList<String>) {
+    fun llenarMenus(menusTittles: ArrayList<String>,menusId: ArrayList<String>) {
         for (titulo in menusTittles) {
          titulos.put(titulo,true)
         }
+        /*
         if (titulosMenu.tabCount<titulos.size){
         for (titulo in titulos.keys){
             titulosMenu.addTab(titulosMenu.newTab().setText(titulo))
         }
-        }
-
+        }*/
+        var adapter=MiembrosMenusViewPagerAdapter(this,menusId)
+        pager.adapter=adapter
+        val tabLayoutMediator = TabLayoutMediator(titulosMenu, pager,
+            TabLayoutMediator.TabConfigurationStrategy { tab, position ->
+                tab.text=menusTittles[position]
+            }
+        ).attach()
     }
 }

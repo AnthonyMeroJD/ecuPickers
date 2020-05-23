@@ -180,8 +180,8 @@
                     
                 </com.google.android.material.tabs.TabLayout>
 
-                <androidx.viewpager.widget.ViewPager
-                    android:id="@+id/contenidoMenuHorizontal"
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/contenidoMenuHorizontalLocal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="10dp" />
