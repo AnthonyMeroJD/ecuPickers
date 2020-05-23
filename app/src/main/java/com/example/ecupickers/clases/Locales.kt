@@ -78,7 +78,7 @@ class Locales {
         eliminar: Boolean = false,
         categorias: ArrayList<EnumCategoria>,
         idLocal: String,
-        ciudad: EnumCiudad
+        ciudad: String
     ) {
         val ref = DbReference.getRef(EnumReferenciasDB.ROOT)
         fun referenciaCategoria(
@@ -89,7 +89,7 @@ class Locales {
 
             for (categoria in categorias) {
                 childUpdates.put(
-                    "${EnumReferenciasDB.CATEGORIASRESTAURANTE.rutaDB()}/${ciudad.getCiudad()}/" +
+                    "${EnumReferenciasDB.CATEGORIASRESTAURANTE.rutaDB()}/${ciudad}/" +
                             "${categoria.getCategoria()}/${idLocal}", tf
                 )
                 childUpdates.put(
@@ -97,7 +97,7 @@ class Locales {
                             "${categoria.getCategoria()}", tf
                 )
                 childUpdates.put(
-                    "${EnumReferenciasDB.MIEMBROSRESTAURANTES.rutaDB()}/${ciudad.getCiudad()}" +
+                    "${EnumReferenciasDB.MIEMBROSRESTAURANTES.rutaDB()}/${ciudad}" +
                             "/${idLocal}/${EnumCamposDB.MIEMBROSCATEGORIAS.getCampos()}/" +
                             "${categoria.getCategoria()}", tf
                 )

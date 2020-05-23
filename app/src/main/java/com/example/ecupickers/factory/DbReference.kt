@@ -8,6 +8,7 @@ import kotlin.math.E
 object DbReference {
     val db: FirebaseDatabase = FirebaseDatabase.getInstance()
     fun getRef(referencia: EnumReferenciasDB): DatabaseReference {
+
         return when (referencia.rutaDB()) {
             EnumReferenciasDB.CATEGORIA.rutaDB() -> db.reference.child(EnumReferenciasDB.CATEGORIA.rutaDB())
             EnumReferenciasDB.MIEMBROSALIMENTOS.rutaDB() -> db.reference.child(EnumReferenciasDB.MIEMBROSALIMENTOS.rutaDB())

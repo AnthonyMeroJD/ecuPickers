@@ -7,41 +7,41 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
-import android.widget.ArrayAdapter
+import android.widget.*
+import androidx.recyclerview.widget.LinearLayoutManager
 
 
 import kotlinx.android.synthetic.main.fondo_local.view.*
 
 
-import android.widget.EditText
-import android.widget.Toast
+import androidx.recyclerview.widget.RecyclerView
 
 
 import com.example.ecupickers.R
+import com.example.ecupickers.adapters.CategoriaAdapter
+import com.example.ecupickers.clases.Locales
+import com.example.ecupickers.constantes.EnumCategoria
 import com.example.ecupickers.constantes.EnumReferenciasDB
 import com.example.ecupickers.factory.DbReference
 import com.example.ecupickers.modelos.Local
 import com.example.ecupickers.modelos.User
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
+import com.google.android.material.tabs.TabLayout
+import com.google.firebase.database.*
 
 
 class FragmentLocal : Fragment() {
     private lateinit var uid: String
+    private lateinit var idLocal: String
+    private lateinit var ciudad: String
     private lateinit var nombrelocal: EditText
+    private lateinit var qryUser: Query
+    private lateinit var listenerUser: ChildEventListener
     private lateinit var ref: DatabaseReference
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        //Inflate the layout for this fragment
-        ref = DbReference.getRef(EnumReferenciasDB.ROOT)
-        return inflater.inflate(R.layout.fragment_local, container, false)
-    }
+    private lateinit var rvCategorias: RecyclerView
+    private lateinit var categorias: HashMap<String, Boolean>
+    private lateinit var titulos: HashMap<String, Boolean>
+    private lateinit var comboCategorias: Spinner
+    private lateinit var titulosMenu: TabLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -49,12 +49,25 @@ class FragmentLocal : Fragment() {
         }
     }
 
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        //Inflate the layout for this fragment
+        val root = inflater.inflate(R.layout.fragment_local, container, false)
+        ref = DbReference.getRef(EnumReferenciasDB.ROOT)
+        nombrelocal = root.findViewById(R.id.editText4)
+        comboCategorias = root.spinnerCategoriasLocal
+        titulosMenu = root.titulosMenuHorizontal
+        qryUser = ref.child(EnumReferenciasDB.USERS.rutaDB()).orderByKey().equalTo(uid)
+        rvCategorias = root.recyclerView
+        categorias = HashMap()
+        titulos = HashMap()
+        return root
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var comboCategorias = view.spinnerCategoriasLocal
-        nombrelocal = view.findViewById(R.id.editText4)
-        val qry = ref.child(EnumReferenciasDB.USERS.rutaDB()).orderByKey().equalTo(uid)
-        qry.addChildEventListener(traerUser())
         comboCategorias?.let {
             val adaptador: ArrayAdapter<CharSequence> = ArrayAdapter.createFromResource(
                 view.context,
@@ -62,9 +75,159 @@ class FragmentLocal : Fragment() {
             )
             it.adapter = adaptador
         }
+
     }
 
+    override fun onStart() {
+        super.onStart()
+        listenerUser = traerUser()
+        qryUser.addChildEventListener(listenerUser)
 
+        comboCategorias.onItemSelectedListener = agregarCategoria()
+    }
+
+    fun agregarCategoria(): AdapterView.OnItemSelectedListener {
+
+        var listener = object : AdapterView.OnItemSelectedListener {
+            fun agregar(categorias: HashMap<String, Boolean>): ArrayList<String> {
+                var nCategoria = ArrayList<String>()
+                for (categoria in categorias) {
+                    nCategoria.add(categoria.key)
+                }
+                return nCategoria
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                var local = Locales()
+                var categoriaCategorizada = ArrayList<EnumCategoria>()
+                var categoriaTag: EnumCategoria
+                when (position) {
+                    1 -> {
+                        categoriaTag = EnumCategoria.ALMUERZO
+                        categoriaCategorizada.add(categoriaTag)
+                        categorias.put("${categoriaTag.getCategoria()}", true)
+                        var nCategoria = agregar(categorias)
+                        local.gestionarCategoriaLocal(
+                            false, categoriaCategorizada, idLocal, ciudad
+                        )
+                        llenarCategorias(nCategoria)
+                    }
+                    2 -> {
+                        categoriaTag = EnumCategoria.DESAYUNOS
+                        categoriaCategorizada.add(categoriaTag)
+                        categorias.put("${categoriaTag.getCategoria()}", true)
+                        var nCategoria = agregar(categorias)
+                        local.gestionarCategoriaLocal(
+                            false, categoriaCategorizada, idLocal, ciudad
+                        )
+                        llenarCategorias(nCategoria)
+                    }
+                    3 -> {
+                        categoriaTag = EnumCategoria.MERIENDAS
+                        categoriaCategorizada.add(categoriaTag)
+                        categorias.put("${categoriaTag.getCategoria()}", true)
+                        var nCategoria = agregar(categorias)
+                        local.gestionarCategoriaLocal(
+                            false, categoriaCategorizada, idLocal, ciudad
+                        )
+                        llenarCategorias(nCategoria)
+                    }
+                    4 -> {
+                        categoriaTag = EnumCategoria.POSTRES
+                        categoriaCategorizada.add(categoriaTag)
+                        categorias.put("${categoriaTag.getCategoria()}", true)
+                        var nCategoria = agregar(categorias)
+                        local.gestionarCategoriaLocal(
+                            false, categoriaCategorizada, idLocal, ciudad
+                        )
+                        llenarCategorias(nCategoria)
+                    }
+                    5 -> {
+                        categoriaTag = EnumCategoria.BBQ
+                        categoriaCategorizada.add(categoriaTag)
+                        categorias.put("${categoriaTag.getCategoria()}", true)
+                        var nCategoria = agregar(categorias)
+                        local.gestionarCategoriaLocal(
+                            false, categoriaCategorizada, idLocal, ciudad
+                        )
+                        llenarCategorias(nCategoria)
+                    }
+                    6 -> {
+                        categoriaTag = EnumCategoria.COMIDARAPIDA
+                        categoriaCategorizada.add(categoriaTag)
+                        categorias.put("${categoriaTag.getCategoria()}", true)
+                        var nCategoria = agregar(categorias)
+                        local.gestionarCategoriaLocal(
+                            false, categoriaCategorizada, idLocal, ciudad
+                        )
+                        llenarCategorias(nCategoria)
+                    }
+                    7 -> {
+                        categoriaTag = EnumCategoria.MARISCOS
+                        categoriaCategorizada.add(categoriaTag)
+                        categorias.put("${categoriaTag.getCategoria()}", true)
+                        var nCategoria = agregar(categorias)
+                        local.gestionarCategoriaLocal(
+                            false, categoriaCategorizada, idLocal, ciudad
+                        )
+                        llenarCategorias(nCategoria)
+                    }
+                    8 -> {
+                        categoriaTag = EnumCategoria.POLLOS
+                        categoriaCategorizada.add(categoriaTag)
+                        categorias.put("${categoriaTag.getCategoria()}", true)
+                        var nCategoria = agregar(categorias)
+                        local.gestionarCategoriaLocal(
+                            false, categoriaCategorizada, idLocal, ciudad
+                        )
+                        llenarCategorias(nCategoria)
+                    }
+                    9 -> {
+                        categoriaTag = EnumCategoria.HELADOS
+                        categoriaCategorizada.add(categoriaTag)
+                        categorias.put("${categoriaTag.getCategoria()}", true)
+                        var nCategoria = agregar(categorias)
+                        local.gestionarCategoriaLocal(
+                            false, categoriaCategorizada, idLocal, ciudad
+                        )
+                        llenarCategorias(nCategoria)
+                    }
+                    10 -> {
+                        categoriaTag = EnumCategoria.HAMBURGUESAS
+                        categoriaCategorizada.add(categoriaTag)
+                        categorias.put("${categoriaTag.getCategoria()}", true)
+                        var nCategoria = agregar(categorias)
+                        local.gestionarCategoriaLocal(
+                            false, categoriaCategorizada, idLocal, ciudad
+                        )
+                        llenarCategorias(nCategoria)
+                    }
+                    11 -> {
+                        categoriaTag = EnumCategoria.PIZZAS
+                        categoriaCategorizada.add(categoriaTag)
+                        categorias.put("${categoriaTag.getCategoria()}", true)
+                        var nCategoria = agregar(categorias)
+                        local.gestionarCategoriaLocal(
+                            false, categoriaCategorizada, idLocal, ciudad
+                        )
+                        llenarCategorias(nCategoria)
+                    }
+                }
+                Toast.makeText(view?.context, "${position}/${id}", Toast.LENGTH_LONG).show()
+            }
+
+        }
+        return listener
+    }
 
     fun traerUser(): ChildEventListener {
         var user = User()
@@ -97,6 +260,8 @@ class FragmentLocal : Fragment() {
     }
 
     fun traerLocal(idUser: String, ciudad: String) {
+        this@FragmentLocal.ciudad = String()
+        this@FragmentLocal.ciudad = ciudad
         val qry = ref.child(
             "${EnumReferenciasDB.MIEMBROSVENDEDORES.rutaDB()}" +
                     "/${ciudad}/${idUser}"
@@ -141,12 +306,42 @@ class FragmentLocal : Fragment() {
             }
 
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-                TODO("Not yet implemented")
+                val categorias = ArrayList<String>()
+                val menusTittles = ArrayList<String>()
+                local = p0.getValue(Local::class.java)!!
+                this@FragmentLocal.idLocal = String()
+                this@FragmentLocal.idLocal = p0.key.toString()
+                for (categoria in local.miembrosCategorias) {
+                    categorias.add(categoria.key)
+                }
+
+                for (menu in local.miembrosMenus) {
+                    for (nombre in menu.value) {
+                        menusTittles.add(nombre.value)
+                    }
+                }
+                llenarMenus(menusTittles)
+                llenarCategorias(categorias)
+                nombrelocal.setText(local.nombre)
             }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                val categorias = ArrayList<String>()
+                val menusTittles = ArrayList<String>()
                 local = p0.getValue(Local::class.java)!!
+                this@FragmentLocal.idLocal = String()
+                this@FragmentLocal.idLocal = p0.key.toString()
+                for (categoria in local.miembrosCategorias) {
+                    categorias.add(categoria.key)
+                }
 
+                for (menu in local.miembrosMenus) {
+                    for (nombre in menu.value) {
+                        menusTittles.add(nombre.value)
+                    }
+                }
+                llenarMenus(menusTittles)
+                llenarCategorias(categorias)
                 nombrelocal.setText(local.nombre)
             }
 
@@ -156,5 +351,34 @@ class FragmentLocal : Fragment() {
 
         }
         qry.addChildEventListener(listener)
+    }
+
+    fun llenarCategorias(categoriasL: ArrayList<String>) {
+        for (categoria in categoriasL) {
+            categorias.put(categoria, true)
+        }
+        var categoriasN = ArrayList<String>()
+        for (categoria in categorias.keys) {
+            categoriasN.add(categoria)
+        }
+        rvCategorias.apply {
+            this.layoutManager = LinearLayoutManager(
+                context,
+                LinearLayoutManager.HORIZONTAL, false
+            )
+            this.adapter = CategoriaAdapter(categoriasN)
+        }
+    }
+
+    fun llenarMenus(menusTittles: ArrayList<String>) {
+        for (titulo in menusTittles) {
+         titulos.put(titulo,true)
+        }
+        if (titulosMenu.tabCount<titulos.size){
+        for (titulo in titulos.keys){
+            titulosMenu.addTab(titulosMenu.newTab().setText(titulo))
+        }
+        }
+
     }
 }
