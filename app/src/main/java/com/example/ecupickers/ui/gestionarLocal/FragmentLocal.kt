@@ -62,8 +62,8 @@ class FragmentLocal : Fragment() {
     private lateinit var titulos: HashMap<String, Boolean>
     private lateinit var comboCategorias: Spinner
     private lateinit var titulosMenu: TabLayout
-    private lateinit var horaInicio:EditText
-    private lateinit var horaCierre:EditText
+    private lateinit var horaInicio: EditText
+    private lateinit var horaCierre: EditText
     private lateinit var pager: ViewPager2
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,8 +88,8 @@ class FragmentLocal : Fragment() {
         editarBtn = root.buttonEditarLocal
         cancelarBtn = root.buttonCancelarCambiosLocal
         guardarBtn = root.buttonGuardarCambiosLocal
-        horaInicio=root.txtHoraInicio
-        horaCierre=root.txthoraCierre
+        horaInicio = root.txtHoraInicio
+        horaCierre = root.txthoraCierre
         guardarBtn.isEnabled = false
         cancelarBtn.isEnabled = false
         nombrelocal = root.findViewById(R.id.editText4)
@@ -130,8 +130,8 @@ class FragmentLocal : Fragment() {
             nombrelocal.requestFocus()
         }
         nombrelocal.isEnabled = habilitar
-         horaInicio.isEnabled = habilitar
-         horaCierre.isEnabled = habilitar
+        horaInicio.isEnabled = habilitar
+        horaCierre.isEnabled = habilitar
         cancelarBtn.isEnabled = habilitar
         guardarBtn.isEnabled = habilitar
         var nombreLocal = nombrelocal.text.toString()
@@ -151,13 +151,13 @@ class FragmentLocal : Fragment() {
                 recuperarDatosAnteriores(
                     nombreLocal,
                     horaCierre,
-                     horaInicio
+                    horaInicio
                 )
             }
             guardarBtn.setOnClickListener {
                 guardarDatosLocalDB(
                     nombreLocal,
-                     horaCierre,
+                    horaCierre,
                     horaInicio
                 )
             }
@@ -167,7 +167,7 @@ class FragmentLocal : Fragment() {
 
     fun guardarDatosLocalDB(
         nombreLocal: String,
-        horaCierre: String ,
+        horaCierre: String,
         horaInicio: String
     ) {
         var nuevoNombre = nombrelocal.text.toString()
@@ -181,25 +181,14 @@ class FragmentLocal : Fragment() {
             nombrelocal.requestFocus()
         } else {
             if (nombreLocal != nuevoNombre) {
-                Toasty.success(
-                    requireContext(), "${idLocal}!${nuevoNombre}!${ciudad}",
-                    Toast.LENGTH_SHORT, true
-                ).show()
-                var completado = local.gestionarCampo(
+                local.gestionarCampo(
                     nuevoNombre, idLocal, EnumTipoLocal.RESTAURANTE,
                     ciudad, EnumCamposDB.NOMBRE
                 )
-                if (completado) {
-                    Toasty.success(
-                        requireContext(), "Se a cambaido con exito los datos!",
-                        Toast.LENGTH_SHORT, true
-                    ).show()
-                } else {
-                    Toasty.error(
-                        requireContext(),
-                        "Los datos no han sido modificados", Toast.LENGTH_SHORT, true
-                    ).show()
-                }
+                Toasty.success(
+                    requireContext(), "Se a cambaido con exito los datos!",
+                    Toast.LENGTH_SHORT, true
+                ).show()
 
             } else {
                 Toasty.error(
@@ -208,7 +197,7 @@ class FragmentLocal : Fragment() {
                 ).show()
             }
         }
-
+        habilitarEdicion(false)
     }
 
     fun recuperarDatosAnteriores(
