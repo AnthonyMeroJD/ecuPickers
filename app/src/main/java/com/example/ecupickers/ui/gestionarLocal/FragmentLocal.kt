@@ -1,6 +1,8 @@
 package com.example.ecupickers.ui.gestionarLocal
 
 
+import android.annotation.SuppressLint
+
 import android.os.Bundle
 
 import androidx.fragment.app.Fragment
@@ -8,7 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.content.ContextCompat
+
 import androidx.recyclerview.widget.LinearLayoutManager
 
 
@@ -16,8 +18,7 @@ import kotlinx.android.synthetic.main.fondo_local.view.*
 
 
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager.widget.PagerAdapter
-import androidx.viewpager.widget.ViewPager
+
 import androidx.viewpager2.widget.ViewPager2
 
 
@@ -25,24 +26,33 @@ import com.example.ecupickers.R
 import com.example.ecupickers.adapters.CategoriaAdapter
 import com.example.ecupickers.adapters.MiembrosMenusViewPagerAdapter
 import com.example.ecupickers.clases.Locales
+import com.example.ecupickers.constantes.EnumCamposDB
 import com.example.ecupickers.constantes.EnumCategoria
 import com.example.ecupickers.constantes.EnumReferenciasDB
+import com.example.ecupickers.constantes.EnumTipoLocal
 import com.example.ecupickers.factory.DbReference
 import com.example.ecupickers.modelos.Local
 import com.example.ecupickers.modelos.User
 import com.example.ecupickers.ui.inicio.FragmentInicio
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
+
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.database.*
+import es.dmoral.toasty.Toasty
+import kotlinx.android.synthetic.main.fondo_local.*
+import kotlinx.android.synthetic.main.fondo_local.view.txtHoraInicio
 
 
 class FragmentLocal : Fragment() {
     private lateinit var uid: String
     private lateinit var idLocal: String
     private lateinit var ciudad: String
+    private lateinit var editarBtn: Button
+    private lateinit var cancelarBtn: Button
+    private lateinit var guardarBtn: Button
     private lateinit var nombrelocal: EditText
     private lateinit var qryUser: Query
     private lateinit var listenerUser: ChildEventListener
@@ -52,7 +62,9 @@ class FragmentLocal : Fragment() {
     private lateinit var titulos: HashMap<String, Boolean>
     private lateinit var comboCategorias: Spinner
     private lateinit var titulosMenu: TabLayout
-    private lateinit var pager:ViewPager2
+    private lateinit var horaInicio:EditText
+    private lateinit var horaCierre:EditText
+    private lateinit var pager: ViewPager2
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -60,13 +72,26 @@ class FragmentLocal : Fragment() {
         }
     }
 
+
+    @SuppressLint("ResourceAsColor")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         //Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_local, container, false)
+        Toasty.warning(
+            root.context,
+            "Espera mientras cargan los datos de tu local.", Toast.LENGTH_LONG, true
+        ).show()
         ref = DbReference.getRef(EnumReferenciasDB.ROOT)
+        editarBtn = root.buttonEditarLocal
+        cancelarBtn = root.buttonCancelarCambiosLocal
+        guardarBtn = root.buttonGuardarCambiosLocal
+        horaInicio=root.txtHoraInicio
+        horaCierre=root.txthoraCierre
+        guardarBtn.isEnabled = false
+        cancelarBtn.isEnabled = false
         nombrelocal = root.findViewById(R.id.editText4)
         comboCategorias = root.spinnerCategoriasLocal
         titulosMenu = root.titulosMenuHorizontal
@@ -74,7 +99,7 @@ class FragmentLocal : Fragment() {
         rvCategorias = root.recyclerView
         categorias = HashMap()
         titulos = HashMap()
-        pager =root.contenidoMenuHorizontalLocal
+        pager = root.contenidoMenuHorizontalLocal
         return root
     }
 
@@ -94,20 +119,132 @@ class FragmentLocal : Fragment() {
         super.onStart()
         listenerUser = traerUser()
         qryUser.addChildEventListener(listenerUser)
-
         comboCategorias.onItemSelectedListener = agregarCategoria()
+        editarBtn.setOnClickListener { habilitarEdicion(true) }
+
+    }
+
+
+    fun habilitarEdicion(habilitar: Boolean) {
+        if (habilitar) {
+            nombrelocal.requestFocus()
+        }
+        nombrelocal.isEnabled = habilitar
+         horaInicio.isEnabled = habilitar
+         horaCierre.isEnabled = habilitar
+        cancelarBtn.isEnabled = habilitar
+        guardarBtn.isEnabled = habilitar
+        var nombreLocal = nombrelocal.text.toString()
+        var horaCierre = horaCierre.text.toString()
+        var horaInicio = horaInicio.text.toString()
+        if (habilitar) {
+            Toasty.info(
+                requireContext(),
+                "Ahora puedes editar los campos de tu Local.", Toast.LENGTH_SHORT, true
+            ).show()
+            cancelarBtn.setOnClickListener {
+                Toasty.info(
+                    requireContext(),
+                    "Has cancelado la edicion de los Datos de tu local.",
+                    Toast.LENGTH_SHORT, true
+                ).show()
+                recuperarDatosAnteriores(
+                    nombreLocal,
+                    horaCierre,
+                     horaInicio
+                )
+            }
+            guardarBtn.setOnClickListener {
+                guardarDatosLocalDB(
+                    nombreLocal,
+                     horaCierre,
+                    horaInicio
+                )
+            }
+        }
+
+    }
+
+    fun guardarDatosLocalDB(
+        nombreLocal: String,
+        horaCierre: String ,
+        horaInicio: String
+    ) {
+        var nuevoNombre = nombrelocal.text.toString()
+        var local = Locales()
+        if (nombrelocal.text.isBlank()) {
+            Toasty.error(
+                requireContext(),
+                "El nombre de tu local no puede estar vacio",
+                Toast.LENGTH_SHORT, true
+            ).show()
+            nombrelocal.requestFocus()
+        } else {
+            if (nombreLocal != nuevoNombre) {
+                Toasty.success(
+                    requireContext(), "${idLocal}!${nuevoNombre}!${ciudad}",
+                    Toast.LENGTH_SHORT, true
+                ).show()
+                var completado = local.gestionarCampo(
+                    nuevoNombre, idLocal, EnumTipoLocal.RESTAURANTE,
+                    ciudad, EnumCamposDB.NOMBRE
+                )
+                if (completado) {
+                    Toasty.success(
+                        requireContext(), "Se a cambaido con exito los datos!",
+                        Toast.LENGTH_SHORT, true
+                    ).show()
+                } else {
+                    Toasty.error(
+                        requireContext(),
+                        "Los datos no han sido modificados", Toast.LENGTH_SHORT, true
+                    ).show()
+                }
+
+            } else {
+                Toasty.error(
+                    requireContext(),
+                    "Los datos no han sido modificados", Toast.LENGTH_SHORT, true
+                ).show()
+            }
+        }
+
+    }
+
+    fun recuperarDatosAnteriores(
+        nombreLocal: String,
+        horaCierre: String,
+        horaInicio: String
+    ) {
+        nombrelocal.setText("${nombreLocal}")
+        txtHoraInicio.setText("${horaInicio}")
+        txthoraCierre.setText("${horaCierre}")
+        habilitarEdicion(habilitar = false)
     }
 
     fun agregarCategoria(): AdapterView.OnItemSelectedListener {
+        fun agregar(categorias: HashMap<String, Boolean>): ArrayList<String> {
+            var nCategoria = ArrayList<String>()
+            for (categoria in categorias) {
+                nCategoria.add(categoria.key)
+            }
+            return nCategoria
+        }
+
+        fun añadirDb(tag: EnumCategoria, local: Locales) {
+            var categoriaCategorizada = ArrayList<EnumCategoria>()
+            var categoriaTag = tag
+            categoriaCategorizada.add(categoriaTag)
+            categorias.put("${categoriaTag.getCategoria()}", true)
+            var nCategoria = agregar(categorias)
+            local.gestionarCategoriaLocal(
+                false, categoriaCategorizada, idLocal, ciudad
+            )
+            llenarCategorias(nCategoria)
+        }
 
         var listener = object : AdapterView.OnItemSelectedListener {
-            fun agregar(categorias: HashMap<String, Boolean>): ArrayList<String> {
-                var nCategoria = ArrayList<String>()
-                for (categoria in categorias) {
-                    nCategoria.add(categoria.key)
-                }
-                return nCategoria
-            }
+
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 TODO("Not yet implemented")
@@ -120,121 +257,55 @@ class FragmentLocal : Fragment() {
                 id: Long
             ) {
                 var local = Locales()
-                var categoriaCategorizada = ArrayList<EnumCategoria>()
+
                 var categoriaTag: EnumCategoria
                 when (position) {
                     1 -> {
                         categoriaTag = EnumCategoria.ALMUERZO
-                        categoriaCategorizada.add(categoriaTag)
-                        categorias.put("${categoriaTag.getCategoria()}", true)
-                        var nCategoria = agregar(categorias)
-                        local.gestionarCategoriaLocal(
-                            false, categoriaCategorizada, idLocal, ciudad
-                        )
-                        llenarCategorias(nCategoria)
+                        añadirDb(categoriaTag, local)
                     }
                     2 -> {
                         categoriaTag = EnumCategoria.DESAYUNOS
-                        categoriaCategorizada.add(categoriaTag)
-                        categorias.put("${categoriaTag.getCategoria()}", true)
-                        var nCategoria = agregar(categorias)
-                        local.gestionarCategoriaLocal(
-                            false, categoriaCategorizada, idLocal, ciudad
-                        )
-                        llenarCategorias(nCategoria)
+                        añadirDb(categoriaTag, local)
                     }
                     3 -> {
                         categoriaTag = EnumCategoria.MERIENDAS
-                        categoriaCategorizada.add(categoriaTag)
-                        categorias.put("${categoriaTag.getCategoria()}", true)
-                        var nCategoria = agregar(categorias)
-                        local.gestionarCategoriaLocal(
-                            false, categoriaCategorizada, idLocal, ciudad
-                        )
-                        llenarCategorias(nCategoria)
+                        añadirDb(categoriaTag, local)
                     }
                     4 -> {
                         categoriaTag = EnumCategoria.POSTRES
-                        categoriaCategorizada.add(categoriaTag)
-                        categorias.put("${categoriaTag.getCategoria()}", true)
-                        var nCategoria = agregar(categorias)
-                        local.gestionarCategoriaLocal(
-                            false, categoriaCategorizada, idLocal, ciudad
-                        )
-                        llenarCategorias(nCategoria)
+                        añadirDb(categoriaTag, local)
                     }
                     5 -> {
                         categoriaTag = EnumCategoria.BBQ
-                        categoriaCategorizada.add(categoriaTag)
-                        categorias.put("${categoriaTag.getCategoria()}", true)
-                        var nCategoria = agregar(categorias)
-                        local.gestionarCategoriaLocal(
-                            false, categoriaCategorizada, idLocal, ciudad
-                        )
-                        llenarCategorias(nCategoria)
+                        añadirDb(categoriaTag, local)
                     }
                     6 -> {
                         categoriaTag = EnumCategoria.COMIDARAPIDA
-                        categoriaCategorizada.add(categoriaTag)
-                        categorias.put("${categoriaTag.getCategoria()}", true)
-                        var nCategoria = agregar(categorias)
-                        local.gestionarCategoriaLocal(
-                            false, categoriaCategorizada, idLocal, ciudad
-                        )
-                        llenarCategorias(nCategoria)
+                        añadirDb(categoriaTag, local)
                     }
                     7 -> {
                         categoriaTag = EnumCategoria.MARISCOS
-                        categoriaCategorizada.add(categoriaTag)
-                        categorias.put("${categoriaTag.getCategoria()}", true)
-                        var nCategoria = agregar(categorias)
-                        local.gestionarCategoriaLocal(
-                            false, categoriaCategorizada, idLocal, ciudad
-                        )
-                        llenarCategorias(nCategoria)
+                        añadirDb(categoriaTag, local)
                     }
                     8 -> {
                         categoriaTag = EnumCategoria.POLLOS
-                        categoriaCategorizada.add(categoriaTag)
-                        categorias.put("${categoriaTag.getCategoria()}", true)
-                        var nCategoria = agregar(categorias)
-                        local.gestionarCategoriaLocal(
-                            false, categoriaCategorizada, idLocal, ciudad
-                        )
-                        llenarCategorias(nCategoria)
+                        añadirDb(categoriaTag, local)
                     }
                     9 -> {
                         categoriaTag = EnumCategoria.HELADOS
-                        categoriaCategorizada.add(categoriaTag)
-                        categorias.put("${categoriaTag.getCategoria()}", true)
-                        var nCategoria = agregar(categorias)
-                        local.gestionarCategoriaLocal(
-                            false, categoriaCategorizada, idLocal, ciudad
-                        )
-                        llenarCategorias(nCategoria)
+                        añadirDb(categoriaTag, local)
                     }
                     10 -> {
                         categoriaTag = EnumCategoria.HAMBURGUESAS
-                        categoriaCategorizada.add(categoriaTag)
-                        categorias.put("${categoriaTag.getCategoria()}", true)
-                        var nCategoria = agregar(categorias)
-                        local.gestionarCategoriaLocal(
-                            false, categoriaCategorizada, idLocal, ciudad
-                        )
-                        llenarCategorias(nCategoria)
+                        añadirDb(categoriaTag, local)
                     }
                     11 -> {
                         categoriaTag = EnumCategoria.PIZZAS
-                        categoriaCategorizada.add(categoriaTag)
-                        categorias.put("${categoriaTag.getCategoria()}", true)
-                        var nCategoria = agregar(categorias)
-                        local.gestionarCategoriaLocal(
-                            false, categoriaCategorizada, idLocal, ciudad
-                        )
-                        llenarCategorias(nCategoria)
+                        añadirDb(categoriaTag, local)
                     }
                 }
-                Toast.makeText(view?.context, "${position}/${id}", Toast.LENGTH_LONG).show()
+
             }
 
         }
@@ -320,7 +391,7 @@ class FragmentLocal : Fragment() {
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
                 val categorias = ArrayList<String>()
                 val menusTittles = ArrayList<String>()
-                val menusId=ArrayList<String>()
+                val menusId = ArrayList<String>()
                 local = p0.getValue(Local::class.java)!!
                 this@FragmentLocal.idLocal = String()
                 this@FragmentLocal.idLocal = p0.key.toString()
@@ -334,7 +405,7 @@ class FragmentLocal : Fragment() {
                     }
                     menusId.add(menu.key)
                 }
-                llenarMenus(menusTittles,menusId)
+                llenarMenus(menusTittles, menusId)
                 llenarCategorias(categorias)
                 nombrelocal.setText(local.nombre)
             }
@@ -342,7 +413,7 @@ class FragmentLocal : Fragment() {
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
                 val categorias = ArrayList<String>()
                 val menusTittles = ArrayList<String>()
-                val menusId=ArrayList<String>()
+                val menusId = ArrayList<String>()
                 local = p0.getValue(Local::class.java)!!
                 this@FragmentLocal.idLocal = String()
                 this@FragmentLocal.idLocal = p0.key.toString()
@@ -356,7 +427,7 @@ class FragmentLocal : Fragment() {
                     }
                     menusId.add(menu.key)
                 }
-                llenarMenus(menusTittles,menusId)
+                llenarMenus(menusTittles, menusId)
                 llenarCategorias(categorias)
                 nombrelocal.setText(local.nombre)
             }
@@ -386,15 +457,15 @@ class FragmentLocal : Fragment() {
         }
     }
 
-    fun llenarMenus(menusTittles: ArrayList<String>,menusId: ArrayList<String>) {
+    fun llenarMenus(menusTittles: ArrayList<String>, menusId: ArrayList<String>) {
         for (titulo in menusTittles) {
-         titulos.put(titulo,true)
+            titulos.put(titulo, true)
         }
-        var adapter=MiembrosMenusViewPagerAdapter(this,menusId)
-        pager.adapter=adapter
+        var adapter = MiembrosMenusViewPagerAdapter(this, menusId)
+        pager.adapter = adapter
         val tabLayoutMediator = TabLayoutMediator(titulosMenu, pager,
             TabLayoutMediator.TabConfigurationStrategy { tab, position ->
-                tab.text=menusTittles[position]
+                tab.text = menusTittles[position]
             }
         ).attach()
     }

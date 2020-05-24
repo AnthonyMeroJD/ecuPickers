@@ -64,26 +64,9 @@ class ContenidMenu : Fragment() {
             }
 
             override fun onBindViewHolder(holder: MenuViewHolder, position: Int, model: MiembrosAlimentos) {
-                var mode=model.miembrosAlimentos.size
-                Toast.makeText(context,mode.toString(),Toast.LENGTH_SHORT).show()
-                 //for (alimento in model.alimento.values) {
-
-                   //
-                   /* for (campo in alimento.value){
-
-                        when (campo.key) {
-                            EnumCamposDB.NOMBRE.getCampos() -> {
-                                holder.titulo.text = campo.value
-                            }
-                            EnumCamposDB.PRECIO.getCampos() -> {
-                                holder.precio.text = campo.value
-                            }
-                            EnumCamposDB.DESCRIPCION.getCampos() -> {
-                                holder.descripcion.text = campo.value
-                            }
-                        }
-                    }
-                }*/
+                holder.descripcion.text=model.descripcion
+                holder.precio.text=model.precio
+                holder.titulo.text=model.nombre
             }
         }
         rv.layoutManager = LinearLayoutManager(context)
@@ -103,7 +86,7 @@ class ContenidMenu : Fragment() {
         arguments?.let {
             idMenu = it.getString(IDMENU)!!
         }
-        Toast.makeText(context, idMenu, Toast.LENGTH_SHORT).show()
+
 
 
     }

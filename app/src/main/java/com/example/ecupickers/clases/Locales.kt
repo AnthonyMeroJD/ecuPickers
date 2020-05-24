@@ -34,11 +34,12 @@ class Locales {
         valor: String,
         idLocal: String,
         tipoLocal: EnumTipoLocal,
-        ciudad: EnumCiudad,
+        ciudad: String,
         campo: EnumCamposDB
-    ) {
+    ) :Boolean{
         val childUpdates = HashMap<String, Any>()
         val ref = DbReference.getRef(EnumReferenciasDB.ROOT)
+        var completado=false
         when (tipoLocal.getTipoLocal()) {
             EnumTipoLocal.RESTAURANTE.getTipoLocal() -> {
                 //si el valor del campo es el tipop del local solo se actualiza el nodo Locales
@@ -54,20 +55,26 @@ class Locales {
                                 "${campo.getCampos()}", valor
                     )
                     childUpdates.put(
-                        "${EnumReferenciasDB.MIEMBROSRESTAURANTES.rutaDB()}/${ciudad.getCiudad()}/" +
+                        "${EnumReferenciasDB.MIEMBROSRESTAURANTES.rutaDB()}/${ciudad}/" +
                                 "${idLocal}/${campo.getCampos()}", valor
                     )
                 }
-                ref.updateChildren(childUpdates)
+                val r=ref.updateChildren(childUpdates).isSuccessful
+                if (r){
+                    completado=true
+                }
             }
             EnumTipoLocal.BOTIQUE.getTipoLocal() -> {
                 childUpdates.put(
                     "${EnumReferenciasDB.LOCALES.rutaDB()}/${idLocal}/" +
                             "${campo.getCampos()}", valor
                 )
-                ref.updateChildren(childUpdates)
+                ref.updateChildren(childUpdates).addOnSuccessListener {
+                    completado=true
+                }
             }
         }
+        return completado
     }
 
     /*
