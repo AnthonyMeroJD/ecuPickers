@@ -5,37 +5,47 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="15dp"
+    android:layout_marginTop="16dp"
+    android:elevation="5dp"
+    android:background="@color/colorFondoBotonCategoria"
+    android:backgroundTint="@color/colorFondoBotonCategoria"
     android:id="@+id/cardViewAddProductosAlMenu"
-
-    >
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginLeft="16dp"
+    tools:targetApi="lollipop">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorFondoBotonCategoria"
-        android:backgroundTint="@color/colorFondoBotonCategoria">
+
+        android:layout_marginBottom="16dp">
 
         <ImageView
             android:id="@+id/imageViewAddProductoAlMenu"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
             android:src="@drawable/ic_add_circle"
             android:tint="@color/colorGris"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginLeft="16dp" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="24dp"
-            android:textSize="24sp"
             android:text="@string/añadir_productos_al_menu"
             android:textColor="@color/colorTexto"
+            android:textSize="22sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageViewAddProductoAlMenu"
             app:layout_constraintTop_toTopOf="parent" />
 
