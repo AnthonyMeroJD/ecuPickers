@@ -21,8 +21,8 @@
     <string name="editar_cuenta">Editar Cuenta</string>
     <!--Rango hora  -->
     <string name="min">Min</string>
-    <string name="am">A.M</string>
-    <string name="pm">P.M</string>
+    <string name="am">Hora Inicio</string>
+    <string name="pm">Hora Cierre</string>
     <!--Botones-->
     <string name="cancelar">Cancelar</string>
     <string name="editar">Editar</string>

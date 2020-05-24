@@ -1,26 +1,17 @@
 package com.example.ecupickers.ui.gestionarLocal
 
 
+import android.app.TimePickerDialog
 import android.os.Bundle
-
-import androidx.fragment.app.Fragment
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-
-
-import kotlinx.android.synthetic.main.fondo_local.view.*
-
-
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager.widget.PagerAdapter
-import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
-
-
 import com.example.ecupickers.R
 import com.example.ecupickers.adapters.CategoriaAdapter
 import com.example.ecupickers.adapters.MiembrosMenusViewPagerAdapter
@@ -30,13 +21,14 @@ import com.example.ecupickers.constantes.EnumReferenciasDB
 import com.example.ecupickers.factory.DbReference
 import com.example.ecupickers.modelos.Local
 import com.example.ecupickers.modelos.User
-import com.example.ecupickers.ui.inicio.FragmentInicio
-import com.firebase.ui.database.FirebaseRecyclerAdapter
-import com.firebase.ui.database.FirebaseRecyclerOptions
-import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.database.*
+import kotlinx.android.synthetic.main.fondo_local.view.*
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 class FragmentLocal : Fragment() {
@@ -53,6 +45,7 @@ class FragmentLocal : Fragment() {
     private lateinit var comboCategorias: Spinner
     private lateinit var titulosMenu: TabLayout
     private lateinit var pager:ViewPager2
+    private lateinit var horaInicio:EditText
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -75,11 +68,14 @@ class FragmentLocal : Fragment() {
         categorias = HashMap()
         titulos = HashMap()
         pager =root.contenidoMenuHorizontalLocal
+        horaInicio = root.txtHoraInicio
+
         return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         comboCategorias?.let {
             val adaptador: ArrayAdapter<CharSequence> = ArrayAdapter.createFromResource(
                 view.context,
@@ -88,12 +84,42 @@ class FragmentLocal : Fragment() {
             it.adapter = adaptador
         }
 
+
     }
 
     override fun onStart() {
         super.onStart()
+
         listenerUser = traerUser()
         qryUser.addChildEventListener(listenerUser)
+        //no abrir teclado del editText
+        horaInicio.setRawInputType(InputType.TYPE_NULL)
+        //abrir TimePicker al darle el primer click
+        horaInicio.onFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                val cal = Calendar.getInstance()
+                val obtenerHora = TimePickerDialog.OnTimeSetListener{ timePicker, hora, minuto->
+                    cal.set(Calendar.HOUR_OF_DAY,hora)
+                    cal.set(Calendar.MINUTE,minuto)
+                    horaInicio.setText( SimpleDateFormat("h:m a").format(cal.time))
+                }
+                TimePickerDialog(context, obtenerHora, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
+            } else {
+                // Hide your calender here
+            }
+        }
+        //abrir TimePicker al darle click nuevamente
+        horaInicio.setOnClickListener {
+            val cal = Calendar.getInstance()
+            val obtenerHora = TimePickerDialog.OnTimeSetListener{timePicker, hora, minuto->
+                cal.set(Calendar.HOUR_OF_DAY,hora)
+                cal.set(Calendar.MINUTE,minuto)
+                horaInicio.setText( SimpleDateFormat("h:m a").format(cal.time))
+            }
+            TimePickerDialog(context, obtenerHora, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
+        }
+
+
 
         comboCategorias.onItemSelectedListener = agregarCategoria()
     }
