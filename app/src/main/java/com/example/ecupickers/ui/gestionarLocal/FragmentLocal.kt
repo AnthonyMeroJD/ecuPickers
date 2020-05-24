@@ -31,6 +31,8 @@ import com.example.ecupickers.factory.DbReference
 import com.example.ecupickers.modelos.Local
 import com.example.ecupickers.modelos.User
 import com.example.ecupickers.ui.inicio.FragmentInicio
+import com.firebase.ui.database.FirebaseRecyclerAdapter
+import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -282,11 +284,11 @@ class FragmentLocal : Fragment() {
             }
 
             override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-                TODO("Not yet implemented")
+                pintarDatosLocal(p0.key.toString())
             }
 
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-                TODO("Not yet implemented")
+                pintarDatosLocal(p0.key.toString())
             }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
@@ -295,7 +297,7 @@ class FragmentLocal : Fragment() {
             }
 
             override fun onChildRemoved(p0: DataSnapshot) {
-                TODO("Not yet implemented")
+                pintarDatosLocal(p0.key.toString())
             }
 
         }
@@ -360,7 +362,7 @@ class FragmentLocal : Fragment() {
             }
 
             override fun onChildRemoved(p0: DataSnapshot) {
-                TODO("Not yet implemented")
+                //ojo revisar el codigo para que se elimine las categorias
             }
 
         }
@@ -388,12 +390,6 @@ class FragmentLocal : Fragment() {
         for (titulo in menusTittles) {
          titulos.put(titulo,true)
         }
-        /*
-        if (titulosMenu.tabCount<titulos.size){
-        for (titulo in titulos.keys){
-            titulosMenu.addTab(titulosMenu.newTab().setText(titulo))
-        }
-        }*/
         var adapter=MiembrosMenusViewPagerAdapter(this,menusId)
         pager.adapter=adapter
         val tabLayoutMediator = TabLayoutMediator(titulosMenu, pager,

@@ -31,7 +31,7 @@ enum class EnumReferenciasDB {
         override fun rutaDB(): String = "miembrosRestaurante"
     },
     MENUS {
-        override fun rutaDB(): String = "menus"
+        override fun rutaDB(): String = "Menus"
     },
     PEDIDOS {
         override fun rutaDB(): String="pedidos"

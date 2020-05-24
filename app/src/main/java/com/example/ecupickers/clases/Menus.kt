@@ -1,9 +1,10 @@
 package com.example.ecupickers.clases
 
-import android.view.Menu
+import com.example.ecupickers.modelos.Menu
 import com.example.ecupickers.constantes.EnumCamposDB
 import com.example.ecupickers.constantes.EnumReferenciasDB
 import com.example.ecupickers.factory.DbReference
+
 /*----------------------GESTION DE CREACION DE NUEVOS DATOS Y EDICION EN LA BASE DE DATOS-----------
 * Esta clase gestiona los nodos
 *  MENUS COMPLETAMENTE ,
@@ -13,12 +14,16 @@ import com.example.ecupickers.factory.DbReference
 * En el nodo MIEMBROSALIMENTOS  gestiona la indexaxion de un menu al subnodo miembrosMenus
 * */
 class Menus {
+
+
     fun gestionarNombre(nombre: String, idMenu: String) {
         val childUpdates = HashMap<String, Any>()
         val ref = DbReference.getRef(EnumReferenciasDB.ROOT)
         //ojo si la ruta no existe la crea e inserta los datos
-        childUpdates.put("${EnumReferenciasDB.MENUS.rutaDB()}/${idMenu}/${EnumCamposDB.NOMBRE.getCampos()}"
-            , nombre)
+        childUpdates.put(
+            "${EnumReferenciasDB.MENUS.rutaDB()}/${idMenu}/${EnumCamposDB.NOMBRE.getCampos()}"
+            , nombre
+        )
         ref.updateChildren(childUpdates)
     }
 
@@ -31,13 +36,32 @@ class Menus {
         return key.toString()
     }
 
-    fun gestionarAlimentosAMenu(idAlimento: ArrayList<String>, idMenu: String,eliminar:Boolean=false)
-    {
+    fun gestionarAlimentosAMenu(
+        idAlimento:String,
+        nombreAlimento:String,
+        descripcion:String,
+        precio:String,
+        idMenu: String
+    ) {
         val childUpdates = HashMap<String, Any>()
         val ref = DbReference.getRef(EnumReferenciasDB.ROOT)
-        for (alimento in idAlimento) {
-            childUpdates.put("${EnumReferenciasDB.MENUS.rutaDB()}/${idMenu}/${EnumCamposDB.MIEMBROSALIMENTOS.getCampos()}/${alimento}",!eliminar)
-        }
+
+            childUpdates.put(
+                "${EnumReferenciasDB.MENUS.rutaDB()}/${idMenu}/" +
+                        "${EnumCamposDB.MIEMBROSALIMENTOS.getCampos()}/" +
+                        "${idAlimento}/${EnumCamposDB.NOMBRE.getCampos()}",nombreAlimento
+            )
+            childUpdates.put(
+                "${EnumReferenciasDB.MENUS.rutaDB()}/${idMenu}/" +
+                        "${EnumCamposDB.MIEMBROSALIMENTOS.getCampos()}/" +
+                        "${idAlimento}/${EnumCamposDB.DESCRIPCION.getCampos()}",descripcion
+            )
+        childUpdates.put(
+            "${EnumReferenciasDB.MENUS.rutaDB()}/${idMenu}/" +
+                    "${EnumCamposDB.MIEMBROSALIMENTOS.getCampos()}/" +
+                    "${idAlimento}/${EnumCamposDB.PRECIO.getCampos()}",precio
+        )
+
         ref.updateChildren(childUpdates)
 
     }
