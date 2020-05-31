@@ -3,9 +3,7 @@ package com.example.ecupickers.ui.gestionarLocal
 
 import android.app.TimePickerDialog
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.InputType
 import android.view.Gravity
@@ -13,7 +11,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -45,7 +42,6 @@ import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.carta_agregar_producto.view.*
 import kotlinx.android.synthetic.main.fondo_local.*
 import kotlinx.android.synthetic.main.fondo_local.view.txtHoraInicio
-import java.lang.reflect.Array
 
 
 class FragmentLocal : Fragment() {
@@ -57,7 +53,6 @@ class FragmentLocal : Fragment() {
     private lateinit var guardarBtn: Button
     private lateinit var nombrelocal: EditText
     private lateinit var qryUser: Query
-    private lateinit var listenerUser: ChildEventListener
     private lateinit var ref: DatabaseReference
     private lateinit var rvCategorias: RecyclerView
     private lateinit var categorias: HashMap<String, Boolean>
@@ -73,17 +68,17 @@ class FragmentLocal : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             uid = it.getString("idUser")!!
+            ciudad= it.getString("ciudad")!!
         }
+
     }
-
-
-    @SuppressLint("ResourceAsColor")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         //Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_local, container, false)
+
         Toasty.warning(
             root.context,
             "Espera mientras cargan los datos de tu local.", Toast.LENGTH_LONG, true
@@ -105,41 +100,39 @@ class FragmentLocal : Fragment() {
         rvCategorias = root.recyclerView
         categorias = HashMap()
         titulos = HashMap()
+        //borrar este toast
+        Toasty.warning(
+            root.context,
+            "${ciudad}/${uid}" , Toast.LENGTH_LONG, true
+        ).show()
         pager = root.contenidoMenuHorizontalLocal
         añadirProductoBtn = root.buttonAgregarNuevoProducto
         nombresMenus = HashMap()
-
-
         return root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        comboCategorias?.let {
-            val adaptador: ArrayAdapter<CharSequence> = ArrayAdapter.createFromResource(
-                view.context,
-                R.array.opciones_categorias, android.R.layout.simple_spinner_item
-            )
-            it.adapter = adaptador
-        }
-
-
     }
 
     override fun onStart() {
         super.onStart()
-
-        listenerUser = traerUser()
-        qryUser.addChildEventListener(listenerUser)
+        //esta funcion consulta y dentro llama a la funcion que pinta los datos del local
+        traerLocal(uid,ciudad)
+        //combo categorias
+        comboCategorias?.let {
+            val adaptador: ArrayAdapter<CharSequence> = ArrayAdapter.createFromResource(
+                requireContext(),
+                R.array.opciones_categorias, android.R.layout.simple_spinner_item
+            )
+            it.adapter = adaptador
+        }
+        comboCategorias.onItemSelectedListener = agregarCategoria()
         //no abrir teclado del editText
         horaInicio.setRawInputType(InputType.TYPE_NULL)
         horaCierre.setRawInputType(InputType.TYPE_NULL)
         //abrir TimePicker al darle el primer click
         desplegarTimePicker(horaInicio)
         desplegarTimePicker(horaCierre)
-        comboCategorias.onItemSelectedListener = agregarCategoria()
+        //boton que habilita la edicion
         editarBtn.setOnClickListener { habilitarEdicion(true) }
+        //mostrar carta de agregar productos
         mostrarProductoPopWindows(context, añadirProductoBtn)
 
     }
@@ -372,6 +365,7 @@ class FragmentLocal : Fragment() {
         window.contentView = v
         window.isOutsideTouchable = true
         window.isFocusable = true
+        window.animationStyle
         btnAccion.setOnClickListener {
 
             window.showAtLocation(btnAccion, Gravity.CENTER, 0, 0)
@@ -636,40 +630,11 @@ class FragmentLocal : Fragment() {
         }
         return listener
     }
+    //esta funcion me sirve para traer los datos del local con una consulta al nodo usuario
 
-    fun traerUser(): ChildEventListener {
-        var user = User()
-        val listener = object : ChildEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("Not yet implemented")
-            }
 
-            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                user = p0.getValue(User::class.java)!!
-
-                traerLocal(p0.key.toString(), user.ciudad)
-
-            }
-
-            override fun onChildRemoved(p0: DataSnapshot) {
-                TODO("Not yet implemented")
-            }
-        }
-        return listener
-
-    }
-
+    //esta funcion me consulta el local en el nodo MiembrosVendedores
     fun traerLocal(idUser: String, ciudad: String) {
-        this@FragmentLocal.ciudad = String()
-        this@FragmentLocal.ciudad = ciudad
         val qry = ref.child(
             "${EnumReferenciasDB.MIEMBROSVENDEDORES.rutaDB()}" +
                     "/${ciudad}/${idUser}"
@@ -680,7 +645,7 @@ class FragmentLocal : Fragment() {
             }
 
             override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-                pintarDatosLocal(p0.key.toString())
+
             }
 
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
@@ -701,9 +666,14 @@ class FragmentLocal : Fragment() {
     }
 
     fun pintarDatosLocal(idLocal: String) {
+        fun atachCampos(nombre:String,horaInicioS: String,horaCierreS: String){
+            nombrelocal.setText(nombre)
+            horaInicio.setText(horaInicioS)
+            horaCierre.setText(horaCierreS)
+        }
         val qry =
             ref.child("${EnumReferenciasDB.LOCALES.rutaDB()}").orderByKey().equalTo(idLocal)
-        var local = Local()
+        var local :Local
         val listener = object : ChildEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 TODO("Not yet implemented")
@@ -717,18 +687,14 @@ class FragmentLocal : Fragment() {
                 val categorias = ArrayList<String>()
                 val menusTittles = ArrayList<String>()
                 val menusId = ArrayList<String>()
-
-                local = p0.getValue(Local::class.java)!!
-
-                nombrelocal.setText(local.nombre)
-                horaInicio.setText(local.horaInicio)
-                horaCierre.setText(local.horaCierre)
                 this@FragmentLocal.idLocal = String()
                 this@FragmentLocal.idLocal = p0.key.toString()
+                local = p0.getValue(Local::class.java)!!
+                atachCampos(local.nombre,local.horaInicio,local.horaCierre)
                 for (categoria in local.miembroscategorias) {
                     categorias.add(categoria.key)
                 }
-                nombresMenus.put("Seleccione el menu", "ref")
+
                 for (menu in local.miembrosMenus) {
                     for (nombre in menu.value) {
                         menusTittles.add(nombre.value)
@@ -736,9 +702,9 @@ class FragmentLocal : Fragment() {
                     }
                     menusId.add(menu.key)
                 }
-                llenarMenus(menusTittles, menusId)
-                llenarCategorias(categorias, rvCategorias, true)
 
+                llenarCategorias(categorias, rvCategorias, true)
+                llenarMenus(menusTittles, menusId)
 
             }
 
@@ -746,17 +712,13 @@ class FragmentLocal : Fragment() {
                 val categorias = ArrayList<String>()
                 val menusTittles = ArrayList<String>()
                 val menusId = ArrayList<String>()
-                local = p0.getValue(Local::class.java)!!
                 this@FragmentLocal.idLocal = String()
                 this@FragmentLocal.idLocal = p0.key.toString()
-                nombrelocal.setText(local.nombre)
-                horaInicio.setText(local.horaInicio)
-                horaCierre.setText(local.horaCierre)
-
+                local = p0.getValue(Local::class.java)!!
+                atachCampos(local.nombre,local.horaInicio,local.horaCierre)
                 for (categoria in local.miembroscategorias) {
                     categorias.add(categoria.key)
                 }
-
                 for (menu in local.miembrosMenus) {
                     for (nombre in menu.value) {
                         menusTittles.add(nombre.value)
@@ -774,6 +736,7 @@ class FragmentLocal : Fragment() {
             }
 
         }
+
         qry.addChildEventListener(listener)
     }
 
