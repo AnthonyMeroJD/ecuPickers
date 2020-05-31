@@ -8,9 +8,11 @@ import android.os.Bundle
 import android.text.InputType
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,21 +29,23 @@ import com.example.ecupickers.constantes.EnumTipoLocal
 import com.example.ecupickers.factory.DbReference
 import com.example.ecupickers.modelos.Local
 import com.example.ecupickers.modelos.Producto
-import com.example.ecupickers.modelos.User
+
 
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.database.*
-import kotlinx.android.synthetic.main.fondo_local.view.*
+import es.dmoral.toasty.Toasty
+import kotlinx.android.synthetic.main.fondo_local2.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-import es.dmoral.toasty.Toasty
+
 import kotlinx.android.synthetic.main.carta_agregar_producto.view.*
-import kotlinx.android.synthetic.main.fondo_local.*
-import kotlinx.android.synthetic.main.fondo_local.view.txtHoraInicio
+import kotlinx.android.synthetic.main.fondo_local2.*
+import kotlinx.android.synthetic.main.fondo_local2.view.txtHoraInicio
+import kotlinx.android.synthetic.main.fondo_local2.view.txthoraCierre
 
 
 class FragmentLocal : Fragment() {
@@ -64,6 +68,9 @@ class FragmentLocal : Fragment() {
     private lateinit var pager: ViewPager2
     private lateinit var añadirProductoBtn: Button
     private lateinit var nombresMenus: HashMap<String, String>
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -84,16 +91,16 @@ class FragmentLocal : Fragment() {
             "Espera mientras cargan los datos de tu local.", Toast.LENGTH_LONG, true
         ).show()
         ref = DbReference.getRef(EnumReferenciasDB.ROOT)
-        editarBtn = root.buttonEditarLocal
-        cancelarBtn = root.buttonCancelarCambiosLocal
-        guardarBtn = root.buttonGuardarCambiosLocal
+        //editarBtn = root.buttonEditarLocal
+        //cancelarBtn = root.buttonCancelarCambiosLocal
+        //guardarBtn = root.buttonGuardarCambiosLocal
         horaInicio = root.txtHoraInicio
         horaCierre = root.txthoraCierre
-        guardarBtn.isEnabled = false
-        cancelarBtn.isEnabled = false
-        horaInicio.isEnabled = false
-        horaCierre.isEnabled = false
-        nombrelocal = root.findViewById(R.id.editText4)
+       // guardarBtn.isEnabled = false
+        //cancelarBtn.isEnabled = false
+        horaInicio.isEnabled = true
+        horaCierre.isEnabled = true
+        nombrelocal = root.editText4
         comboCategorias = root.spinnerCategoriasLocal
         titulosMenu = root.titulosMenuHorizontal
         qryUser = ref.child(EnumReferenciasDB.USERS.rutaDB()).orderByKey().equalTo(uid)
@@ -108,6 +115,7 @@ class FragmentLocal : Fragment() {
         pager = root.contenidoMenuHorizontalLocal
         añadirProductoBtn = root.buttonAgregarNuevoProducto
         nombresMenus = HashMap()
+
         return root
     }
 
@@ -119,7 +127,7 @@ class FragmentLocal : Fragment() {
         comboCategorias?.let {
             val adaptador: ArrayAdapter<CharSequence> = ArrayAdapter.createFromResource(
                 requireContext(),
-                R.array.opciones_categorias, android.R.layout.simple_spinner_item
+                R.array.opciones_categorias, android.R.layout.simple_expandable_list_item_1
             )
             it.adapter = adaptador
         }
@@ -131,7 +139,7 @@ class FragmentLocal : Fragment() {
         desplegarTimePicker(horaInicio)
         desplegarTimePicker(horaCierre)
         //boton que habilita la edicion
-        editarBtn.setOnClickListener { habilitarEdicion(true) }
+       // editarBtn.setOnClickListener { habilitarEdicion(true) }
         //mostrar carta de agregar productos
         mostrarProductoPopWindows(context, añadirProductoBtn)
 
@@ -200,8 +208,8 @@ class FragmentLocal : Fragment() {
         comboCategoriasProducto?.let {
             val adaptador: ArrayAdapter<CharSequence> = ArrayAdapter.createFromResource(
                 window.contentView.context,
-                R.array.opciones_categorias, android.R.layout.simple_spinner_item
-            )
+                R.array.opciones_categorias,  android.R.layout.simple_expandable_list_item_1)
+
             it.adapter = adaptador
         }
         comboMenusProductos?.let {
@@ -372,6 +380,7 @@ class FragmentLocal : Fragment() {
             manejarCartaAddProducto(window)
         }
     }
+
 
     fun desplegarTimePicker(editText: EditText) {
 
@@ -703,8 +712,8 @@ class FragmentLocal : Fragment() {
                     menusId.add(menu.key)
                 }
 
-                llenarCategorias(categorias, rvCategorias, true)
-                llenarMenus(menusTittles, menusId)
+               // llenarCategorias(categorias, rvCategorias, true)
+                //llenarMenus(menusTittles, menusId)
 
             }
 
