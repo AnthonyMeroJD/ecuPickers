@@ -1,5 +1,12 @@
 package com.example.ecupickers.modelos
 
-data class MiembrosAlimentos(var miembrosAlimentos:HashMap<String,HashMap<String,String>>) {
-    public constructor():this(HashMap<String,HashMap<String,String>>())
+data class MiembrosAlimentos constructor(
+    var descripcion: String,
+    var nombre: String,
+    var precio: String,
+    var id:String
+) {
+
+
+    public constructor() : this("def", "def", "def","def")
 }

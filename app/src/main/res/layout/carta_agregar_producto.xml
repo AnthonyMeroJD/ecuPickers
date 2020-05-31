@@ -2,6 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     app:cardCornerRadius="10dp"
@@ -10,6 +11,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+
         >
 
         <ImageView
@@ -29,6 +31,7 @@
             android:layout_marginTop="28dp"
             android:layout_marginEnd="52dp"
             android:layout_marginRight="52dp"
+            android:id="@+id/txtCartaProductoNombre"
             android:textColor="@color/colorTexto"
             android:textSize="25sp"
             android:textStyle="bold"
@@ -36,7 +39,8 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/imageView2"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="@string/nombre_producto" />
+            android:inputType="text"
+            android:hint="@string/nombre_producto" />
 
         <TextView
             android:id="@+id/textView2"
@@ -53,7 +57,7 @@
             android:text="@string/descripcion" />
 
         <EditText
-            android:id="@+id/textView4"
+            android:id="@+id/txtcartaProductoDescripcion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -67,7 +71,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@id/guideline5"
             app:layout_constraintTop_toBottomOf="@+id/textView2"
-            tools:text="fsdiojfiosdjfiodsfgdfhgjdfghfhgujdfdfdsdsfjisfjsfiodjfiosjfjsodijfvcxmklvnxklfsnkfnlkfsdnfnjksvjdkfvnkldfjngjkdfgnkldfngjkdsfnjojgndfsngdfngjkdfsngjodfsghijsdngjkfgbofiocbcvjbckvlbnodcgifgihnofhibhghfdffuhhuihihuihuhuk" />
+            tools:text="ffmklfvnkldfjngjkdfgnkldfngjkdsfnjojgndfsngdfngjkdfsngjodfsghijsdngjkfgbofiocbcvjbckvlbnodcgifgihnofhibhghfdffuhhuihihuihuhuk" />
 
         <TextView
             android:id="@+id/textView3"
@@ -80,14 +84,16 @@
             android:textSize="20sp"
             android:textStyle="italic"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView4"
+            app:layout_constraintTop_toBottomOf="@+id/txtcartaProductoDescripcion"
             android:text="@string/categoria" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvCategorias"
-            android:layout_width="wrap_content"
+            android:id="@+id/rvCartaAgregarProductoCategoria"
+            android:layout_width="0dp"
+            android:orientation="horizontal"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
             app:layout_constraintStart_toStartOf="@+id/guideline5"
             app:layout_constraintTop_toBottomOf="@+id/textView3"
             tools:itemCount="1"
@@ -96,25 +102,18 @@
 
         </androidx.recyclerview.widget.RecyclerView>
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardVAddCategoriaNuevoProducto"
+
+        <Spinner
+            android:id="@+id/spinnerCartaAgregarProductoCategoria"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            app:cardCornerRadius="15dp"
-            android:backgroundTint="@color/colorFondoBotonCategoria"
-            app:layout_constraintStart_toEndOf="@+id/rvCategorias"
-            app:layout_constraintTop_toTopOf="@+id/rvCategorias"
-            android:layout_marginStart="16dp"
-            tools:targetApi="lollipop">
+            android:tint="@color/colorTexto"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="@+id/guideline5"
+            app:layout_constraintTop_toBottomOf="@+id/rvCartaAgregarProductoCategoria"
+            />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_add"
-                android:tint="@color/colorTexto"/>
 
-        </androidx.cardview.widget.CardView>
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline2"
@@ -134,23 +133,24 @@
             android:id="@+id/textView5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/precio"
             android:layout_marginTop="16dp"
             android:textColor="@color/colorTexto"
             android:textSize="20sp"
             android:textStyle="italic"
             app:layout_constraintStart_toStartOf="@+id/guideline5"
-            app:layout_constraintTop_toBottomOf="@+id/rvCategorias"
-            android:text="@string/precio" />
+            app:layout_constraintTop_toBottomOf="@+id/spinnerCartaAgregarProductoCategoria" />
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/txtcartaProductoPrecio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"
+            android:inputType="phone"
             android:textColor="@color/colorPrimary"
             app:layout_constraintStart_toStartOf="@+id/guideline5"
             app:layout_constraintTop_toBottomOf="@+id/textView5"
-            tools:text="20" />
+            />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -158,7 +158,7 @@
             android:layout_marginTop="10dp"
             android:src="@drawable/ic_money"
             android:tint="@color/colorPrimary"
-            app:layout_constraintStart_toEndOf="@+id/editText"
+            app:layout_constraintStart_toEndOf="@+id/txtcartaProductoPrecio"
             app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
         <TextView
@@ -169,7 +169,7 @@
             android:textSize="20sp"
             android:textStyle="italic"
             app:layout_constraintStart_toStartOf="@+id/guideline5"
-            app:layout_constraintTop_toBottomOf="@+id/editText"
+            app:layout_constraintTop_toBottomOf="@+id/txtcartaProductoPrecio"
             android:text="@string/tiempo_estimado" />
 
         <ImageView
@@ -183,12 +183,13 @@
             app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
         <EditText
-            android:id="@+id/editText2"
+            android:id="@+id/txtCartaProductoTiempoEstimadoInicio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textColor="@color/colorTexto"
             android:textSize="16sp"
+            android:inputType="phone"
             app:layout_constraintStart_toEndOf="@+id/imageView3"
             app:layout_constraintTop_toBottomOf="@+id/textView6"
             tools:text="20" />
@@ -199,17 +200,18 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:textColor="@color/colorTexto"
-            app:layout_constraintStart_toEndOf="@+id/editText2"
+            app:layout_constraintStart_toEndOf="@+id/txtCartaProductoTiempoEstimadoInicio"
             app:layout_constraintTop_toBottomOf="@+id/textView6"
-            tools:text="--" />
+            android:text="/" />
 
         <EditText
-            android:id="@+id/editText3"
+            android:id="@+id/txtCartaProductoTiempoEstimadoFin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textColor="@color/colorTexto"
             android:textSize="16sp"
+            android:inputType="phone"
             app:layout_constraintStart_toEndOf="@+id/textView8"
             app:layout_constraintTop_toBottomOf="@+id/textView6"
             tools:text="40" />
@@ -219,7 +221,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:textSize="18sp"
-            app:layout_constraintStart_toEndOf="@+id/editText3"
+            app:layout_constraintStart_toEndOf="@+id/txtCartaProductoTiempoEstimadoFin"
             app:layout_constraintTop_toBottomOf="@+id/textView6"
             tools:text="Min" />
 
@@ -231,26 +233,41 @@
             android:textSize="20sp"
             android:textStyle="italic"
             app:layout_constraintStart_toStartOf="@+id/guideline5"
-            app:layout_constraintTop_toBottomOf="@+id/editText2"
+            app:layout_constraintTop_toBottomOf="@+id/txtCartaProductoTiempoEstimadoInicio"
             android:text="@string/menu_opcional" />
 
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvCartaAgregarProductoMenu"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView7"
+            tools:itemCount="1"
+            tools:listitem="@layout/botones_categoria" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardVAddMenuNuevoProducto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="15dp"
-            android:layout_marginTop="10dp"
             android:backgroundTint="@color/colorFondoBotonCategoria"
+            app:cardCornerRadius="15dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="@+id/guideline5"
-            app:layout_constraintTop_toBottomOf="@+id/textView7"
+            app:layout_constraintTop_toBottomOf="@+id/rvCartaAgregarProductoMenu"
             tools:targetApi="lollipop">
 
-            <ImageView
+
+            <Spinner
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_add"
-                android:tint="@color/colorTexto"/>
+                android:id="@+id/spinnerCartaAgregarProductoMenu"
+                android:tint="@color/colorTexto" />
 
         </androidx.cardview.widget.CardView>
 
@@ -259,7 +276,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:backgroundTint="@color/colorPrimary"
-
+            android:id="@+id/btnCartaAgregarProductoCrear"
             android:textColor="@color/coloBlancoFondo"
             app:layout_constraintEnd_toStartOf="@+id/guideline2"
             app:layout_constraintStart_toStartOf="@+id/guideline5"

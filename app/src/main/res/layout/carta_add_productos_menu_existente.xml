@@ -42,7 +42,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView11"
             android:layout_marginStart="16dp" />
 
-        <ListView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/listViewCategoriaMostrar"
             android:layout_width="0dp"
             android:layout_height="100dp"
@@ -79,7 +79,7 @@
             tools:ignore="UnknownId"
             android:layout_marginStart="16dp" />
 
-        <ListView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/listViewProductosAñadir"
             android:layout_width="0dp"
             android:layout_height="100dp"
@@ -90,7 +90,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
-        <ListView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/listViewProductosSeleccionados"
             android:layout_width="0dp"
             android:layout_height="100dp"
@@ -105,6 +105,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/añadir_productos_al_menu"
+            android:id="@+id/btnCartaaddProductosMenuExistente"
             android:layout_marginTop="16dp"
             android:backgroundTint="@color/colorPrimary"
             android:textColor="@color/coloBlancoFondo"

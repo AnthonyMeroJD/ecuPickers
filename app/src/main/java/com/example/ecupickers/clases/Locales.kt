@@ -34,7 +34,7 @@ class Locales {
         valor: String,
         idLocal: String,
         tipoLocal: EnumTipoLocal,
-        ciudad: EnumCiudad,
+        ciudad: String,
         campo: EnumCamposDB
     ) {
         val childUpdates = HashMap<String, Any>()
@@ -54,20 +54,22 @@ class Locales {
                                 "${campo.getCampos()}", valor
                     )
                     childUpdates.put(
-                        "${EnumReferenciasDB.MIEMBROSRESTAURANTES.rutaDB()}/${ciudad.getCiudad()}/" +
+                        "${EnumReferenciasDB.MIEMBROSRESTAURANTES.rutaDB()}/${ciudad}/" +
                                 "${idLocal}/${campo.getCampos()}", valor
                     )
                 }
-                ref.updateChildren(childUpdates)
+
+
             }
             EnumTipoLocal.BOTIQUE.getTipoLocal() -> {
                 childUpdates.put(
                     "${EnumReferenciasDB.LOCALES.rutaDB()}/${idLocal}/" +
                             "${campo.getCampos()}", valor
                 )
-                ref.updateChildren(childUpdates)
             }
         }
+
+        ref.updateChildren(childUpdates)
     }
 
     /*
@@ -101,7 +103,16 @@ class Locales {
                             "/${idLocal}/${EnumCamposDB.MIEMBROSCATEGORIAS.getCampos()}/" +
                             "${categoria.getCategoria()}", tf
                 )
+                childUpdates.put(
+                    "${EnumReferenciasDB.MIEMBROSRESTAURANTES.rutaDB()}/${ciudad}" +
+                            "/${idLocal}/${EnumCamposDB.MIEMBROSCATEGORIAS.getCampos()}/" +
+                            "${categoria.getCategoria()}", tf
+                )
             }
+            childUpdates.put(
+                "${EnumReferenciasDB.MIEMBROSRESTAURANTES.rutaDB()}/${ciudad}" +
+                        "/${idLocal}/${EnumCamposDB.ID.getCampos()}/",idLocal
+            )
             return childUpdates
         }
         if (eliminar) {
@@ -158,13 +169,15 @@ class Locales {
 
         when (local.tipoLocal) {
             EnumTipoLocal.RESTAURANTE.getTipoLocal() -> {
-                var restaurante = Restaurante(
-                    local.nombre,
-                    local.estado,
-                    local.horaIncio,
-                    local.horaCierre,
-                    local.miembrosCategorias
-                )
+                var restaurante = Restaurante(  )
+                restaurante.apply {
+                    this.nombre=local.nombre
+                    this.id=local.id
+                    this.estado=local.estado
+                    this.horaInicio=local.horaInicio
+                    this.horaCierre=local.horaCierre
+                    this.miembroscategorias=local.miembroscategorias
+                }
                 childUpdates.put("${EnumReferenciasDB.LOCALES.rutaDB()}/${key}", local)
                 childUpdates.put(
                     "${EnumReferenciasDB.MIEMBROSRESTAURANTES.rutaDB()}/${ciudad.getCiudad()}/${key}",

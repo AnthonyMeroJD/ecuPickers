@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
                     ).commit()
                 }
                 R.id.nav_tus_productos -> {
-                    fragment =    FragmentProducto()
+                    fragment = FragmentProducto()
                     fragmentManager.beginTransaction().replace(
                         R.id.nav_host_fragment,
                         fragment
@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_tu_local -> {
                     fragment = FragmentLocal()
                     bundle.putString("idUser", auth.uid.toString())
-                    fragment.arguments=bundle
+                    fragment.arguments = bundle
                     fragmentManager.beginTransaction().replace(
                         R.id.nav_host_fragment,
                         fragment

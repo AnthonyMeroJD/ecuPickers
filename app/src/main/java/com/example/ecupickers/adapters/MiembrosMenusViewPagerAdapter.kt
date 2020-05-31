@@ -9,16 +9,17 @@ import com.example.ecupickers.fragmentos.ContenidMenu
 
 class MiembrosMenusViewPagerAdapter(
     fm: Fragment,
-    idMenus:ArrayList<String>)
+    idMenus:ArrayList<String>,idlocal:String)
     : FragmentStateAdapter(fm) {
     private var idMenus=idMenus
-
+    private var idLocal=idlocal
     override fun getItemCount(): Int =idMenus.size
 
     override fun createFragment(position: Int): Fragment {
         val fragment=ContenidMenu()
         val buddle=Bundle()
         buddle.putString("idMenu",idMenus[position])
+        buddle.putString("idLocal",idLocal)
         fragment.arguments=buddle
         return fragment
     }

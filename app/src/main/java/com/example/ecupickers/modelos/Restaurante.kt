@@ -3,11 +3,12 @@ package com.example.ecupickers.modelos
 data class Restaurante constructor(
     var nombre: String,
     var estado:String,
+    var id:String,
     var horaInicio: String,
     var horaCierre: String,
-    var miembrosCategorias: HashMap<String, Boolean>
+    var miembroscategorias: HashMap<String, Boolean>
 ) {
-    public constructor() : this(
+    public constructor() : this("def",
         "def","def", "def", "def", HashMap<String, Boolean>()
     )
 }

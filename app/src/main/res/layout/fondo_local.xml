@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parentFondoLocal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorFondoBotonCategoria">
@@ -128,11 +129,13 @@
                 android:textColor="@color/colorGris"
                 android:textSize="18sp"
                 app:layout_constraintStart_toEndOf="@+id/txtHoraInicio"
+
                 app:layout_constraintTop_toTopOf="@+id/txtHoraInicio"
                 android:layout_marginLeft="8dp" />
 
+
             <EditText
-                android:id="@+id/editText3"
+                android:id="@+id/txthoraCierre"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -152,9 +155,10 @@
                 android:layout_marginStart="8dp"
                 android:text="@string/pm"
                 android:textSize="18sp"
-                app:layout_constraintStart_toEndOf="@+id/editText3"
+                app:layout_constraintStart_toEndOf="@+id/txthoraCierre"
                 app:layout_constraintTop_toTopOf="@+id/textView8"
                 android:layout_marginLeft="8dp" />
+
 
             <Button
                 android:id="@+id/buttonAgregarNuevoProducto"

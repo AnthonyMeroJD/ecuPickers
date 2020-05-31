@@ -1,15 +1,19 @@
 package com.example.ecupickers.fragmentos
 
 import android.os.Bundle
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupWindow
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.example.ecupickers.R
+import com.example.ecupickers.adapters.CategoriaAdapter
 import com.example.ecupickers.constantes.EnumCamposDB
 
 import com.example.ecupickers.constantes.EnumReferenciasDB
@@ -19,6 +23,10 @@ import com.example.ecupickers.modelos.MiembrosAlimentos
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.database.*
+import kotlinx.android.synthetic.main.carta_add_productos_al_menu.*
+import kotlinx.android.synthetic.main.carta_add_productos_al_menu.view.*
+import kotlinx.android.synthetic.main.carta_add_productos_al_menu.view.cartaAddProductosAlMenu
+import kotlinx.android.synthetic.main.carta_add_productos_menu_existente.view.*
 import kotlinx.android.synthetic.main.carta_productos.view.*
 import kotlinx.android.synthetic.main.recyclerview_carta_productos.view.*
 
@@ -26,14 +34,19 @@ import kotlinx.android.synthetic.main.recyclerview_carta_productos.view.*
 class ContenidMenu : Fragment() {
 
     private lateinit var rv: RecyclerView
+    private lateinit var idLocal:String
     private lateinit var idMenu: String
     private lateinit var opciones: FirebaseRecyclerOptions<MiembrosAlimentos>
     private lateinit var adapter: FirebaseRecyclerAdapter<MiembrosAlimentos, MenuViewHolder>
     private lateinit var reference: DatabaseReference
     private lateinit var qry: Query
+    private lateinit var btnAddAlimentoAlMenu: ConstraintLayout
+    private lateinit var idCategoria:String
 
     companion object {
         var IDMENU: String = "idMenu"
+        var IDCATEGORIA:String="idCategoria"
+        var IDLOCAL:String="idLocal"
     }
 
     inner class MenuViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -52,7 +65,12 @@ class ContenidMenu : Fragment() {
         reference = DbReference.getRef(EnumReferenciasDB.ROOT)
         qry =
             reference.child("${EnumReferenciasDB.MENUS.rutaDB()}/${idMenu}/${EnumCamposDB.MIEMBROSALIMENTOS.getCampos()}")
+        btnAddAlimentoAlMenu = root.cartaAddProductosAlMenu
+        return root
+    }
 
+    override fun onStart() {
+        super.onStart()
         opciones =
             FirebaseRecyclerOptions.Builder<MiembrosAlimentos>()
                 .setQuery(qry, MiembrosAlimentos::class.java).build()
@@ -63,47 +81,73 @@ class ContenidMenu : Fragment() {
                 return MenuViewHolder(view)
             }
 
-            override fun onBindViewHolder(holder: MenuViewHolder, position: Int, model: MiembrosAlimentos) {
-                var mode=model.miembrosAlimentos.size
-                Toast.makeText(context,mode.toString(),Toast.LENGTH_SHORT).show()
-                 //for (alimento in model.alimento.values) {
-
-                   //
-                   /* for (campo in alimento.value){
-
-                        when (campo.key) {
-                            EnumCamposDB.NOMBRE.getCampos() -> {
-                                holder.titulo.text = campo.value
-                            }
-                            EnumCamposDB.PRECIO.getCampos() -> {
-                                holder.precio.text = campo.value
-                            }
-                            EnumCamposDB.DESCRIPCION.getCampos() -> {
-                                holder.descripcion.text = campo.value
-                            }
-                        }
-                    }
-                }*/
+            override fun onBindViewHolder(
+                holder: MenuViewHolder,
+                position: Int,
+                model: MiembrosAlimentos
+            ) {
+                holder.descripcion.text = model.descripcion
+                holder.precio.text = model.precio
+                holder.titulo.text = model.nombre
             }
         }
         rv.layoutManager = LinearLayoutManager(context)
         rv.adapter = adapter
-        return root
+        adapter.startListening()
+        mostrarCarta(btnAddAlimentoAlMenu)
     }
 
-    override fun onStart() {
-        super.onStart()
+    fun mostrarCarta(view: View) {
+        val window = PopupWindow(context)
+        val v = layoutInflater.inflate(R.layout.carta_add_productos_menu_existente, null)
+        window.contentView = v
+        window.isOutsideTouchable = true
+        window.isFocusable = true
+        view.setOnClickListener {
+            window.showAtLocation(view, Gravity.CENTER, 0, 0)
+            manejarCartaAdd(window)
+        }
+    }
+
+    fun manejarCartaAdd(view: PopupWindow) {
+
+        var rvCategoria = view.contentView.listViewCategoriaMostrar
+        var rvProducto=view.contentView.listViewProductosAñadir
+        var rvElegidos=view.contentView.listViewProductosSeleccionados
+        var btnAgregar=view.contentView.btnCartaaddProductosMenuExistente
+        var categoria = arrayListOf(
+            "Almuerzos",
+            "Desayunos",
+            "Meriendas",
+            "Postres",
+            "BBQ",
+            "Comida Rapida",
+            "Mariscos",
+            "Pollos",
+            "Helados",
+            "Hamburguesas",
+            "Pizzas"
+        )
+        rvCategoria.apply {
+            layoutManager = LinearLayoutManager(
+                context,
+                LinearLayoutManager.VERTICAL, false
+            )
+            var ids=HashMap<String,String>()
+            ids.put(IDMENU,idMenu)
+            ids.put(IDLOCAL,idLocal)
+            adapter = CategoriaAdapter(categoria,true,rvProducto,rvElegidos,btnAgregar,ids)
+        }
 
 
-        adapter.startListening()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             idMenu = it.getString(IDMENU)!!
+            idLocal=it.getString(IDLOCAL)!!
         }
-        Toast.makeText(context, idMenu, Toast.LENGTH_SHORT).show()
 
 
     }

@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.ecupickers.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.layout_inicar_sesion.*
 
 class IngresoActivity : AppCompatActivity() {
@@ -37,9 +38,9 @@ class IngresoActivity : AppCompatActivity() {
                 var sPassword = password.text.toString()
                 iniciarSecion(sEmail, sPassword)
             } else {
-                Toast.makeText(
-                    this, "No se a podido iniciar secion compruebe los datos"
-                    , Toast.LENGTH_LONG
+                Toasty.error(
+                    applicationContext,
+                    "no se a podido iniciar sesion .", Toast.LENGTH_SHORT, true
                 ).show()
             }
         }
@@ -63,9 +64,9 @@ class IngresoActivity : AppCompatActivity() {
                 startActivity(intent)
             } else {
                 // If sign in fails, display a message to the user.
-                Toast.makeText(
-                    baseContext, "Compruebe los datos.",
-                    Toast.LENGTH_SHORT
+                Toasty.error(
+                    applicationContext,
+                    "no se a podido iniciar sesion .", Toast.LENGTH_SHORT, true
                 ).show()
             }
         }

@@ -3,6 +3,7 @@ package com.example.ecupickers.clases
 import com.example.ecupickers.constantes.*
 import com.example.ecupickers.factory.DbReference
 import com.example.ecupickers.modelos.Alimento
+import com.example.ecupickers.modelos.Menu
 import com.example.ecupickers.modelos.Producto
 
 /*---------------------GESTION DE CREACION DE NUEVOS DATOS Y EDICION EN LA BASE DE DATOS-----------
@@ -22,11 +23,14 @@ import com.example.ecupickers.modelos.Producto
 */
 class Productos {
 
+
     fun crearProducto(producto: Producto): String {
         val childUpdates = HashMap<String, Any>()
         val ref = DbReference.getRef(EnumReferenciasDB.ROOT)
         val key = ref.push().key
+        producto.id = key.toString()
         childUpdates.put("${EnumReferenciasDB.PRODUCTOS.rutaDB()}/${key}", producto)
+        ref.updateChildren(childUpdates)
         return key.toString()
     }
 
@@ -37,19 +41,27 @@ class Productos {
         miembroMenu: HashMap<String, Boolean>,
         miembroCategoria: HashMap<String, Boolean>,
         idLocal: String
-    ): String {
+    ): Alimento {
         val childUpdates = HashMap<String, Any>()
         val ref = DbReference.getRef(EnumReferenciasDB.ROOT)
-        val alimento = Alimento(
-            producto.nombre, producto.precio, tiempoEstimado
-            , producto.descripcion, "0", "0", miembroMenu, miembroCategoria
-        )
+        val alimento = Alimento()
+        alimento.apply {
+            this.nombre = producto.nombre
+            this.precio = producto.precio
+            this.tiempoEstimado = tiempoEstimado
+            this.descripcion = producto.descripcion
+            this.atendidos = "0"
+            this.calificacion = "0"
+            this.miembrosMenus = miembroMenu
+            this.miembroscategorias = miembroCategoria
+            this.id = producto.id
+        }
         childUpdates.put(
             "${EnumReferenciasDB.MIEMBROSALIMENTOS.rutaDB()}/${idLocal}/${idProducto}",
             alimento
         )
         ref.updateChildren(childUpdates)
-        return idProducto
+        return alimento
     }
 
     fun crearInsumo(
@@ -67,20 +79,62 @@ class Productos {
         return idProducto
     }
 
-    fun añadirProductoAMenu(idMenu: String, idLocal: String, idAlimento: ArrayList<String>) {
+    fun añadirProductosAMenu(
+        idMenu: String,
+        productosId: HashMap<String,HashMap<EnumCamposDB, String>>,
+        idLocal: String
+    ) {
         val childUpdates = HashMap<String, Any>()
         val ref = DbReference.getRef(EnumReferenciasDB.ROOT)
-        for (alimento in idAlimento) {
+        for (producto in productosId){
+            for (campo in producto.value){
+                childUpdates.put("${EnumReferenciasDB.MENUS.rutaDB()}/${idMenu}/" +
+                        "${EnumCamposDB.MIEMBROSALIMENTOS.getCampos()}/${producto.key}/" +
+                        "${campo.key.getCampos()}",campo.value)
+                childUpdates.put("${EnumReferenciasDB.MIEMBROSALIMENTOS.rutaDB()}/${idLocal}/" +
+                        "${producto.key}/${EnumCamposDB.MIEMBROSMENUS.getCampos()}/${idMenu}",true)
+            }
+        }
+        ref.updateChildren(childUpdates)
+    }
+
+    fun añadirProductoAMenu(
+        idMenus: ArrayList<String>,
+        idLocal: String,
+        idAlimento: String,
+        alimento: Alimento
+    ) {
+        val childUpdates = HashMap<String, Any>()
+        val ref = DbReference.getRef(EnumReferenciasDB.ROOT)
+        var nombre = alimento.nombre
+        var descripcion = alimento.descripcion
+        var precio = alimento.precio
+
+        for (menu in idMenus) {
             childUpdates.put(
-                "${EnumReferenciasDB.MENUS.rutaDB()}/${idMenu}/" +
-                        "${EnumCamposDB.MIEMBROSALIMENTOS}/${alimento}", true
+                "${EnumReferenciasDB.MENUS.rutaDB()}/${menu}/" +
+                        "${EnumCamposDB.MIEMBROSALIMENTOS.getCampos()}" +
+                        "/${idAlimento}/${EnumCamposDB.NOMBRE.getCampos()}", nombre
+            )
+            childUpdates.put(
+                "${EnumReferenciasDB.MENUS.rutaDB()}/${menu}/" +
+                        "${EnumCamposDB.MIEMBROSALIMENTOS.getCampos()}" +
+                        "/${idAlimento}/${EnumCamposDB.DESCRIPCION.getCampos()}", descripcion
+            )
+            childUpdates.put(
+                "${EnumReferenciasDB.MENUS.rutaDB()}/${menu}/" +
+                        "${EnumCamposDB.MIEMBROSALIMENTOS.getCampos()}" +
+                        "/${idAlimento}/${EnumCamposDB.PRECIO.getCampos()}", precio
+            )
+            childUpdates.put(
+                "${EnumReferenciasDB.MIEMBROSALIMENTOS.rutaDB()}/${idLocal}" +
+                        "/${idAlimento}/${EnumCamposDB.MIEMBROSMENUS.getCampos()}" +
+                        "/${menu}", true
             )
         }
 
-        childUpdates.put(
-            "${EnumReferenciasDB.MIEMBROSALIMENTOS.rutaDB()}/${idLocal}" +
-                    "/${idMenu}/${EnumCamposDB.MIEMBROSMENUS}/${idMenu}", true
-        )
+
+
         ref.updateChildren(childUpdates)
     }
 
@@ -88,7 +142,7 @@ class Productos {
         idAlimento: String,
         categorias: ArrayList<EnumCategoria>,
         idLocal: String,
-        eliminar:Boolean=false
+        eliminar: Boolean = false
     ) {
         val childUpdates = HashMap<String, Any>()
         val ref = DbReference.getRef(EnumReferenciasDB.ROOT)
@@ -111,16 +165,22 @@ class Productos {
     ) {
         val childUpdates = HashMap<String, Any>()
         val ref = DbReference.getRef(EnumReferenciasDB.ROOT)
-        when(campo.getCampos()){
-            EnumCamposDB.TIEMPOESTIMADO.getCampos()->{
-                childUpdates.put("${EnumReferenciasDB.MIEMBROSALIMENTOS.rutaDB()}/" +
-                        "${idLocal}/${idProducto}/${campo.getCampos()}",valor)
+        when (campo.getCampos()) {
+            EnumCamposDB.TIEMPOESTIMADO.getCampos() -> {
+                childUpdates.put(
+                    "${EnumReferenciasDB.MIEMBROSALIMENTOS.rutaDB()}/" +
+                            "${idLocal}/${idProducto}/${campo.getCampos()}", valor
+                )
             }
-            else->{
-                childUpdates.put("${EnumReferenciasDB.MIEMBROSALIMENTOS.rutaDB()}/" +
-                        "${idLocal}/${idProducto}/${campo.getCampos()}",valor)
-                childUpdates.put("${EnumReferenciasDB.PRODUCTOS.rutaDB()}/" +
-                        "${idProducto}/${campo.getCampos()}",valor)
+            else -> {
+                childUpdates.put(
+                    "${EnumReferenciasDB.MIEMBROSALIMENTOS.rutaDB()}/" +
+                            "${idLocal}/${idProducto}/${campo.getCampos()}", valor
+                )
+                childUpdates.put(
+                    "${EnumReferenciasDB.PRODUCTOS.rutaDB()}/" +
+                            "${idProducto}/${campo.getCampos()}", valor
+                )
             }
         }
     }
