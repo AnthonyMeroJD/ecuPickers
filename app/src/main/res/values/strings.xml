@@ -24,6 +24,7 @@
     <string name="am">Hora Inicio</string>
     <string name="pm">Hora Cierre</string>
     <!--Botones-->
+    <string name="cerrar_sesion">Cerrar Sesion</string>
     <string name="cancelar">Cancelar</string>
     <string name="editar">Editar</string>
     <string name="añadir_categoria">Añadir Categoria</string>

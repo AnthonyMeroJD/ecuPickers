@@ -7,7 +7,7 @@
 
 
     <include
-        layout="@layout/fondo_local"
+        layout="@layout/fondo_local2"
 
         />
 

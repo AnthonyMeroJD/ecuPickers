@@ -5,9 +5,11 @@ import android.app.TimePickerDialog
 import android.os.Bundle
 import android.text.InputType
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,6 +27,12 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.fondo_local.view.*
+import kotlinx.android.synthetic.main.fondo_local.view.contenidoMenuHorizontalLocal
+import kotlinx.android.synthetic.main.fondo_local.view.recyclerView
+import kotlinx.android.synthetic.main.fondo_local.view.spinnerCategoriasLocal
+import kotlinx.android.synthetic.main.fondo_local.view.titulosMenuHorizontal
+import kotlinx.android.synthetic.main.fondo_local.view.txtHoraInicio
+import kotlinx.android.synthetic.main.fondo_local2.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -46,6 +54,8 @@ class FragmentLocal : Fragment() {
     private lateinit var titulosMenu: TabLayout
     private lateinit var pager:ViewPager2
     private lateinit var horaInicio:EditText
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -69,7 +79,6 @@ class FragmentLocal : Fragment() {
         titulos = HashMap()
         pager =root.contenidoMenuHorizontalLocal
         horaInicio = root.txtHoraInicio
-
         return root
     }
 
@@ -79,8 +88,9 @@ class FragmentLocal : Fragment() {
         comboCategorias?.let {
             val adaptador: ArrayAdapter<CharSequence> = ArrayAdapter.createFromResource(
                 view.context,
-                R.array.opciones_categorias, android.R.layout.simple_spinner_item
+                R.array.opciones_categorias, android.R.layout.simple_expandable_list_item_1
             )
+
             it.adapter = adaptador
         }
 
@@ -89,6 +99,9 @@ class FragmentLocal : Fragment() {
 
     override fun onStart() {
         super.onStart()
+
+
+
 
         listenerUser = traerUser()
         qryUser.addChildEventListener(listenerUser)
