@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+
+
+    
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/scrollLocal"
+        android:background="@color/coloBlancoFondo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:transitionName="shared_element">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
         <androidx.constraintlayout.widget.ConstraintLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/coloBlancoFondo">
@@ -185,6 +200,8 @@
 
                 </com.google.android.material.tabs.TabLayout>
 
+
+
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/contenidoMenuHorizontalLocal"
                     android:layout_width="match_parent"
@@ -195,7 +212,6 @@
             </LinearLayout>
 
 
-
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline9"
                 android:layout_width="wrap_content"
@@ -204,8 +220,36 @@
                 app:layout_constraintGuide_begin="200dp" />
 
 
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
+    </androidx.core.widget.NestedScrollView>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnAgregarNuevoMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@android:drawable/ic_dialog_dialer" />
+    </LinearLayout>
+
+
+
+    </RelativeLayout>
+    
 

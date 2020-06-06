@@ -6,15 +6,6 @@
         android:orderInCategory="100"
         android:title="@string/editar"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/action_guardar"
-        android:orderInCategory="100"
-        android:title="@string/guardar"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_cancelar"
-        android:orderInCategory="100"
-        android:title="@string/cancelar"
-        app:showAsAction="never" />
+
 
 </menu>

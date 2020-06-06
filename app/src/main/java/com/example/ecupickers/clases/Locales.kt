@@ -116,10 +116,10 @@ class Locales {
             return childUpdates
         }
         if (eliminar) {
-            var childUpdates = referenciaCategoria(categorias, false)
+            var childUpdates = referenciaCategoria(categorias, !eliminar)
             ref.updateChildren(childUpdates)
         } else {
-            var childUpdates = referenciaCategoria(categorias, true)
+            var childUpdates = referenciaCategoria(categorias, !eliminar)
             ref.updateChildren(childUpdates)
         }
     }
@@ -128,15 +128,16 @@ class Locales {
     * Gestiona la anidacion de nuevos menus en el nodo Local
     * */
     fun gestionarMenu(
-        idMenu: String,
+        idMenu:String?,
         nombreMenu: String,
         idLocal: String,
         eliminar: Boolean = false
     ) {
         val ref = DbReference.getRef(EnumReferenciasDB.ROOT)
+        val key=ref.push().key
         val childUpdates = HashMap<String, Any>()
         //aqui elimina
-        if (eliminar) {
+        if (eliminar && idMenu != null) {
             childUpdates.put(
                 "${EnumReferenciasDB.LOCALES.rutaDB()}/${idLocal}/" +
                         "${EnumCamposDB.MIEMBROSMENUS.getCampos()}/" +
@@ -148,7 +149,7 @@ class Locales {
             childUpdates.put(
                 "${EnumReferenciasDB.LOCALES.rutaDB()}/${idLocal}/" +
                         "${EnumCamposDB.MIEMBROSMENUS.getCampos()}/" +
-                        "${idMenu}/${EnumCamposDB.NOMBRE.getCampos()}",
+                        "${key}/${EnumCamposDB.NOMBRE.getCampos()}",
                 nombreMenu
             )
         }

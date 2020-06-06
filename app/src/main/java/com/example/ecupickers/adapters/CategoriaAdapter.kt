@@ -11,8 +11,11 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ecupickers.R
+import com.example.ecupickers.clases.Locales
 import com.example.ecupickers.clases.Productos
 import com.example.ecupickers.constantes.EnumCamposDB
+import com.example.ecupickers.constantes.EnumCategoria
+import com.example.ecupickers.constantes.EnumCiudad
 import com.example.ecupickers.constantes.EnumReferenciasDB
 import com.example.ecupickers.factory.DbReference
 
@@ -21,8 +24,10 @@ import com.example.ecupickers.modelos.Alimento
 import com.example.ecupickers.modelos.MiembrosAlimentos
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
+import com.google.android.material.chip.Chip
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.botones_categoria.view.*
+import kotlinx.android.synthetic.main.layout_perfil.view.*
 
 class CategoriaAdapter(
     categorias: ArrayList<String>,
@@ -30,11 +35,16 @@ class CategoriaAdapter(
     rv: RecyclerView? = null,
     rvElegidos: RecyclerView? = null,
     btnAgregar: Button? = null,
-    ids: HashMap<String, String>? = null
+    ids: HashMap<String, String>? = null,
+    idLocal: String? = null,
+    idCiudad: String? = null,
+    global:Boolean?=null
 ) :
     RecyclerView.Adapter<CategoriaAdapter.CategoriaViewHolder>() {
 
 
+    private val idLocal = idLocal
+    private val idCiudad = idCiudad
     private val categorias = categorias
     private var elegible = elegible
     private val rv = rv
@@ -44,8 +54,11 @@ class CategoriaAdapter(
     private var ids = ids
     private var idsProductos =
         HashMap<String, HashMap<EnumCamposDB, String>>()
-
+    private val global=global
+    //esta clase se usa en el rv interno, se lo ocupa en rv:Firebase si elegible es true
     inner class MiembroAlimentoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+
+
         var categoriaV: TextView = view.btnCategoriaTituloCategoria
     }
 
@@ -53,11 +66,16 @@ class CategoriaAdapter(
         RecyclerView.ViewHolder(view) {
 
 
-        private var categoriaV: TextView = view.findViewById(R.id.btnCategoriaTituloCategoria)
+        private var categoriaV: Chip = view.findViewById(R.id.btnCategoriaTituloCategoria)
 
-
-        fun bind(categoriaP: String) {
+        fun eliminarDelRv(position: Int,categoria:EnumCategoria){
+            categorias.remove(categoria.getCategoria())
+            notifyItemRemoved(position)
+            notifyItemRangeChanged(position, categorias.size)
+        }
+        fun bind(categoriaP: String, position: Int) {
             categoriaV?.text = categoriaP
+
             if (elegible) {
                 categoriaV.setOnClickListener {
                     rv?.let {
@@ -151,8 +169,67 @@ class CategoriaAdapter(
                         adapter.startListening()
                     }
                 }
+            } else {
+                categoriaV?.let {
+                    fun categoriza(categoria: String): ArrayList<EnumCategoria> {
+                        var categorias = ArrayList<EnumCategoria>()
+                        when (categoria) {
+                            EnumCategoria.ALMUERZO.getCategoria() -> categorias.add(EnumCategoria.ALMUERZO)
+                            EnumCategoria.BBQ.getCategoria() -> categorias.add(EnumCategoria.BBQ)
+                            EnumCategoria.COMIDARAPIDA.getCategoria() -> categorias.add(
+                                EnumCategoria.COMIDARAPIDA
+                            )
+                            EnumCategoria.HAMBURGUESAS.getCategoria() -> categorias.add(
+                                EnumCategoria.HAMBURGUESAS
+                            )
+                            EnumCategoria.HELADOS.getCategoria() -> categorias.add(EnumCategoria.HELADOS)
+                            EnumCategoria.MARISCOS.getCategoria() -> categorias.add(EnumCategoria.MARISCOS)
+                            EnumCategoria.MERIENDAS.getCategoria() -> categorias.add(EnumCategoria.MERIENDAS)
+                            EnumCategoria.PIZZAS.getCategoria() -> categorias.add(EnumCategoria.PIZZAS)
+                            EnumCategoria.POLLOS.getCategoria() -> categorias.add(EnumCategoria.POLLOS)
+                            EnumCategoria.POSTRES.getCategoria() -> categorias.add(EnumCategoria.POSTRES)
+                            EnumCategoria.DESAYUNOS.getCategoria() -> categorias.add(EnumCategoria.DESAYUNOS)
+                        }
+                        return categorias
+                    }
+
+                    var categoria = it.text.toString().replace(" ", "")
+                    var categoriasI = categoriza(categoria)
+                    var localManager = Locales()
+                    it.setOnCloseIconClickListener {
+                        idLocal?.let { itLocal ->
+                            idCiudad?.let { itciudad ->
+                                    if (global == true) {
+                                        localManager.gestionarCategoriaLocal(
+                                            true,
+                                            categoriasI,
+                                            itLocal,
+                                            itciudad
+                                        )
+
+                                        eliminarDelRv(position,categoriasI[0])
+                                        Toasty.success(
+                                            it.context,
+                                            "La categoria:${categoria} se elimino de las categorias de local",
+                                            Toast.LENGTH_LONG,
+                                            true
+                                        ).show()
+                                    }else{
+                                        eliminarDelRv(position,categoriasI[0])
+                                    }
+
+
+
+
+                            }
+                        }
+                    }
+
+                }
             }
         }
+
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoriaViewHolder {
@@ -165,6 +242,7 @@ class CategoriaAdapter(
 
     override fun onBindViewHolder(holder: CategoriaViewHolder, position: Int) {
         val categoria: String = categorias[position]
-        holder.bind(categoria)
+
+        holder.bind(categoria, position)
     }
 }

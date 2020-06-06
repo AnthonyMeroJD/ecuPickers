@@ -1,8 +1,8 @@
 package com.example.ecupickers.ui.gestionarLocal
 
 
+import android.app.Dialog
 import android.app.TimePickerDialog
-
 import android.content.Context
 import android.os.Bundle
 import android.text.InputType
@@ -29,10 +29,7 @@ import com.example.ecupickers.constantes.EnumTipoLocal
 import com.example.ecupickers.factory.DbReference
 import com.example.ecupickers.modelos.Local
 import com.example.ecupickers.modelos.Producto
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-
-
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.database.*
@@ -42,9 +39,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
-
-
 import kotlinx.android.synthetic.main.carta_agregar_producto.view.*
+import kotlinx.android.synthetic.main.carta_nuevo_menu.*
 import kotlinx.android.synthetic.main.fondo_local2.*
 import kotlinx.android.synthetic.main.fondo_local2.view.txtHoraInicio
 import kotlinx.android.synthetic.main.fondo_local2.view.txthoraCierre
@@ -54,9 +50,7 @@ class FragmentLocal : Fragment() {
     private lateinit var uid: String
     private lateinit var idLocal: String
     private lateinit var ciudad: String
-    private lateinit var editarBtn: Button
-    private lateinit var cancelarBtn: Button
-    private lateinit var guardarBtn: Button
+
     private lateinit var nombrelocal: EditText
     private lateinit var qryUser: Query
     private lateinit var ref: DatabaseReference
@@ -70,39 +64,39 @@ class FragmentLocal : Fragment() {
     private lateinit var pager: ViewPager2
     private lateinit var añadirProductoBtn: Button
     private lateinit var nombresMenus: HashMap<String, String>
-
-
-
+    private lateinit var toolbar: Toolbar
+    private lateinit var editar: MenuItem
+    private lateinit var cancelar: MenuItem
+    private lateinit var guardar: MenuItem
+    private lateinit var btnAgregarMenu: FloatingActionButton
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             uid = it.getString("idUser")!!
-            ciudad= it.getString("ciudad")!!
+            ciudad = it.getString("ciudad")!!
         }
 
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         //Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_local, container, false)
-
         Toasty.warning(
             root.context,
-            "Espera mientras cargan los datos de tu local.", Toast.LENGTH_LONG, true
+            "Espera mientras cargan los datos de tu local.", Toast.LENGTH_SHORT, true
         ).show()
+        btnAgregarMenu = root.btnAgregarNuevoMenu
         ref = DbReference.getRef(EnumReferenciasDB.ROOT)
-        //editarBtn = root.buttonEditarLocal
-        //cancelarBtn = root.buttonCancelarCambiosLocal
-        //guardarBtn = root.buttonGuardarCambiosLocal
         horaInicio = root.txtHoraInicio
         horaCierre = root.txthoraCierre
-       // guardarBtn.isEnabled = false
-        //cancelarBtn.isEnabled = false
-        horaInicio.isEnabled = true
-        horaCierre.isEnabled = true
+        horaInicio.isEnabled = false
+        horaCierre.isEnabled = false
+
         nombrelocal = root.editText4
+        nombrelocal.isEnabled = false
         comboCategorias = root.spinnerCategoriasLocal
         titulosMenu = root.titulosMenuHorizontal
         qryUser = ref.child(EnumReferenciasDB.USERS.rutaDB()).orderByKey().equalTo(uid)
@@ -112,7 +106,7 @@ class FragmentLocal : Fragment() {
         //borrar este toast
         Toasty.warning(
             root.context,
-            "${ciudad}/${uid}" , Toast.LENGTH_LONG, true
+            "${ciudad}/${uid}", Toast.LENGTH_LONG, true
         ).show()
         pager = root.contenidoMenuHorizontalLocal
         var a=object :ViewPager2.OnPageChangeCallback(){
@@ -135,14 +129,14 @@ class FragmentLocal : Fragment() {
         pager.registerOnPageChangeCallback(a)
         añadirProductoBtn = root.buttonAgregarNuevoProducto
         nombresMenus = HashMap()
-
+        toolbar = root.toolbarLocal
         return root
     }
 
     override fun onStart() {
         super.onStart()
         //esta funcion consulta y dentro llama a la funcion que pinta los datos del local
-        traerLocal(uid,ciudad)
+        traerLocal(uid, ciudad)
         //combo categorias
         comboCategorias?.let {
             val adaptador: ArrayAdapter<CharSequence> = ArrayAdapter.createFromResource(
@@ -159,10 +153,67 @@ class FragmentLocal : Fragment() {
         desplegarTimePicker(horaInicio)
         desplegarTimePicker(horaCierre)
         //boton que habilita la edicion
-       // editarBtn.setOnClickListener { habilitarEdicion(true) }
+        // editarBtn.setOnClickListener { habilitarEdicion(true) }
         //mostrar carta de agregar productos
 
         mostrarProductoPopWindows(context, añadirProductoBtn)
+        mostrarPopNuevoMenu(btnAgregarMenu)
+
+        toolbar.setOnMenuItemClickListener(menuToolbar())
+    }
+
+    fun mostrarPopNuevoMenu(btnAccion: FloatingActionButton) {
+        val v = layoutInflater.inflate(R.layout.carta_nuevo_menu, null)
+        val dialog = Dialog(requireContext())
+        dialog.setContentView(v)
+
+
+
+
+        btnAccion.setOnClickListener {
+            dialog.show()
+            manejarCrearMenu(dialog)
+        }
+
+    }
+
+    fun manejarCrearMenu(dialog: Dialog) {
+        var btnGuardar = dialog.btnCartanuevoMenuAgregarMenu
+        var nombreMenu = dialog.txtNombreMenu
+        btnGuardar?.let {
+            it.setOnClickListener {
+                var localManager = Locales()
+                if (nombreMenu.text.isBlank() || nombreMenu.text.isEmpty()) {
+                    Toasty.error(
+                        requireContext(), "El nombre del menu no puede estar vacio",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    nombreMenu.error = "este campo es obligatorio"
+                } else {
+                    localManager.gestionarMenu(null, nombreMenu.text.toString(), idLocal)
+                    Toasty.success(
+                        requireContext(), "Se agrego el menu ${nombreMenu.text} a tu local",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+
+            }
+        }
+    }
+
+    fun menuToolbar(): Toolbar.OnMenuItemClickListener {
+        return Toolbar.OnMenuItemClickListener {
+            when (it.title.toString()) {
+                "Editar" -> {
+                    editar = it
+                    toolbar.menu.removeItem(it.itemId)
+                    guardar = toolbar.menu.add(R.string.guardar)
+                    cancelar = toolbar.menu.add(R.string.cancelar)
+                    habilitarEdicion(true)
+                }
+            }
+            true
+        }
 
 
     }
@@ -189,7 +240,9 @@ class FragmentLocal : Fragment() {
             var categoriasL = ArrayList<String>()
             categorias.put(tag.getCategoria(), true)
             for (categoria in categorias) {
-                categoriasL.add(categoria.key)
+                if (categoria.value) {
+                    categoriasL.add(categoria.key)
+                }
             }
             return categoriasL
         }
@@ -232,7 +285,8 @@ class FragmentLocal : Fragment() {
         comboCategoriasProducto?.let {
             val adaptador: ArrayAdapter<CharSequence> = ArrayAdapter.createFromResource(
                 window.contentView.context,
-                R.array.opciones_categorias,  android.R.layout.simple_expandable_list_item_1)
+                R.array.opciones_categorias, android.R.layout.simple_expandable_list_item_1
+            )
 
             it.adapter = adaptador
         }
@@ -245,6 +299,73 @@ class FragmentLocal : Fragment() {
         }
 
         var listenerCategoria = object : AdapterView.OnItemSelectedListener {
+            fun agregar(position: Int) {
+                var categoriaTag: EnumCategoria
+                var categorias = ArrayList<String>()
+                when (position) {
+                    1 -> {
+                        categoriaTag = EnumCategoria.ALMUERZO
+                        Toast.makeText(context, "clicl", Toast.LENGTH_SHORT).show()
+                        categorias = addCategoria(categoriaTag)
+                    }
+                    2 -> {
+                        Toast.makeText(context, "clicl", Toast.LENGTH_SHORT).show()
+                        categoriaTag = EnumCategoria.DESAYUNOS
+                        categorias = addCategoria(categoriaTag)
+                    }
+                    3 -> {
+                        Toast.makeText(context, "clicl", Toast.LENGTH_SHORT).show()
+                        categoriaTag = EnumCategoria.MERIENDAS
+                        categorias = addCategoria(categoriaTag)
+
+                    }
+                    4 -> {
+                        Toast.makeText(context, "clicl", Toast.LENGTH_SHORT).show()
+                        categoriaTag = EnumCategoria.POSTRES
+                        categorias = addCategoria(categoriaTag)
+                    }
+                    5 -> {
+                        Toast.makeText(context, "clicl", Toast.LENGTH_SHORT).show()
+                        categoriaTag = EnumCategoria.BBQ
+                        categorias = addCategoria(categoriaTag)
+                    }
+                    6 -> {
+                        Toast.makeText(context, "clicl", Toast.LENGTH_SHORT).show()
+                        categoriaTag = EnumCategoria.COMIDARAPIDA
+                        categorias = addCategoria(categoriaTag)
+
+                    }
+                    7 -> {
+                        Toast.makeText(context, "clicl", Toast.LENGTH_SHORT).show()
+                        categoriaTag = EnumCategoria.MARISCOS
+                        categorias = addCategoria(categoriaTag)
+                    }
+                    8 -> {
+                        Toast.makeText(context, "clicl", Toast.LENGTH_SHORT).show()
+                        categoriaTag = EnumCategoria.POLLOS
+                        categorias = addCategoria(categoriaTag)
+                    }
+                    9 -> {
+                        Toast.makeText(context, "clicl", Toast.LENGTH_SHORT).show()
+                        categoriaTag = EnumCategoria.HELADOS
+                        categorias = addCategoria(categoriaTag)
+
+                    }
+                    10 -> {
+                        Toast.makeText(context, "clicl", Toast.LENGTH_SHORT).show()
+                        categoriaTag = EnumCategoria.HAMBURGUESAS
+                        categorias = addCategoria(categoriaTag)
+
+                    }
+                    11 -> {
+                        Toast.makeText(context, "clicl", Toast.LENGTH_SHORT).show()
+                        categoriaTag = EnumCategoria.PIZZAS
+                        categorias = addCategoria(categoriaTag)
+
+                    }
+                }
+                llenarCategorias(categorias, rvCategoriaProducto, false)
+            }
 
             override fun onItemSelected(
                 parent: AdapterView<*>?,
@@ -252,67 +373,7 @@ class FragmentLocal : Fragment() {
                 position: Int,
                 id: Long
             ) {
-
-                var categoriaTag: EnumCategoria
-                when (position) {
-                    1 -> {
-                        categoriaTag = EnumCategoria.ALMUERZO
-                        var categorias = addCategoria(categoriaTag)
-                        llenarCategorias(categorias, rvCategoriaProducto, false)
-
-                    }
-                    2 -> {
-                        categoriaTag = EnumCategoria.DESAYUNOS
-                        var categorias = addCategoria(categoriaTag)
-                        llenarCategorias(categorias, rvCategoriaProducto, false)
-                    }
-                    3 -> {
-                        categoriaTag = EnumCategoria.MERIENDAS
-                        var categorias = addCategoria(categoriaTag)
-                        llenarCategorias(categorias, rvCategoriaProducto, false)
-                    }
-                    4 -> {
-                        categoriaTag = EnumCategoria.POSTRES
-                        var categorias = addCategoria(categoriaTag)
-                        llenarCategorias(categorias, rvCategoriaProducto, false)
-                    }
-                    5 -> {
-                        categoriaTag = EnumCategoria.BBQ
-                        var categorias = addCategoria(categoriaTag)
-                        llenarCategorias(categorias, rvCategoriaProducto, false)
-                    }
-                    6 -> {
-                        categoriaTag = EnumCategoria.COMIDARAPIDA
-                        var categorias = addCategoria(categoriaTag)
-                        llenarCategorias(categorias, rvCategoriaProducto, false)
-                    }
-                    7 -> {
-                        categoriaTag = EnumCategoria.MARISCOS
-                        var categorias = addCategoria(categoriaTag)
-                        llenarCategorias(categorias, rvCategoriaProducto, false)
-                    }
-                    8 -> {
-                        categoriaTag = EnumCategoria.POLLOS
-                        var categorias = addCategoria(categoriaTag)
-                        llenarCategorias(categorias, rvCategoriaProducto, false)
-                    }
-                    9 -> {
-                        categoriaTag = EnumCategoria.HELADOS
-                        var categorias = addCategoria(categoriaTag)
-                        llenarCategorias(categorias, rvCategoriaProducto, false)
-                    }
-                    10 -> {
-                        categoriaTag = EnumCategoria.HAMBURGUESAS
-                        var categorias = addCategoria(categoriaTag)
-                        llenarCategorias(categorias, rvCategoriaProducto, false)
-                    }
-                    11 -> {
-                        categoriaTag = EnumCategoria.PIZZAS
-                        var categorias = addCategoria(categoriaTag)
-                        llenarCategorias(categorias, rvCategoriaProducto, false)
-                    }
-                }
-
+                agregar(position)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -453,8 +514,8 @@ class FragmentLocal : Fragment() {
         nombrelocal.isEnabled = habilitar
         horaInicio.isEnabled = habilitar
         horaCierre.isEnabled = habilitar
-        cancelarBtn.isEnabled = habilitar
-        guardarBtn.isEnabled = habilitar
+        //  cancelarBtn.isEnabled = habilitar
+        //guardarBtn.isEnabled = habilitar
         var nombreLocal = nombrelocal.text.toString()
         var horaCierre = horaCierre.text.toString()
         var horaInicio = horaInicio.text.toString()
@@ -463,25 +524,40 @@ class FragmentLocal : Fragment() {
                 requireContext(),
                 "Ahora puedes editar los campos de tu Local.", Toast.LENGTH_SHORT, true
             ).show()
-            cancelarBtn.setOnClickListener {
-                Toasty.info(
-                    requireContext(),
-                    "Has cancelado la edicion de los Datos de tu local.",
-                    Toast.LENGTH_SHORT, true
-                ).show()
-                recuperarDatosAnteriores(
-                    nombreLocal,
-                    horaCierre,
-                    horaInicio
-                )
+            var objecto = Toolbar.OnMenuItemClickListener {
+                when (it.title.toString()) {
+                    "Editar" -> {
+                        editar = it
+                        toolbar.menu.removeItem(it.itemId)
+                        guardar = toolbar.menu.add(R.string.guardar)
+                        cancelar = toolbar.menu.add(R.string.cancelar)
+                        habilitarEdicion(true)
+                    }
+                    "Cancelar" -> {
+                        recuperarDatosAnteriores(nombreLocal, horaCierre, horaInicio)
+                        toolbar.menu.removeItem(cancelar.itemId)
+                        toolbar.menu.removeItem(it.itemId)
+                        toolbar.menu.add(editar.title)
+                        Toast.makeText(
+                            context,
+                            "Se a cancelado la edicion de datos",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    "Guardar" -> {
+                        toolbar.menu.removeItem(cancelar.itemId)
+                        toolbar.menu.removeItem(it.itemId)
+                        toolbar.menu.add(editar.title)
+                        guardarDatosLocalDB(
+                            nombreLocal,
+                            horaCierre,
+                            horaInicio
+                        )
+                    }
+                }
+                true
             }
-            guardarBtn.setOnClickListener {
-                guardarDatosLocalDB(
-                    nombreLocal,
-                    horaCierre,
-                    horaInicio
-                )
-            }
+            toolbar.setOnMenuItemClickListener(objecto)
         }
 
     }
@@ -563,13 +639,15 @@ class FragmentLocal : Fragment() {
 
     fun agregarCategoria(): AdapterView.OnItemSelectedListener {
         /*
-        * esta funcion interna llena un aList de strings, que contiendra
+        * esta funcion interna llena un aList de strings, que contendra
         * una categoria y no se podra repetir ya que el hashmap toma como key la categoria
         * */
         fun agregar(categorias: HashMap<String, Boolean>): ArrayList<String> {
             var nCategoria = ArrayList<String>()
             for (categoria in categorias) {
-                nCategoria.add(categoria.key)
+                if (categoria.value) {
+                    nCategoria.add(categoria.key)
+                }
             }
             return nCategoria
         }
@@ -596,60 +674,73 @@ class FragmentLocal : Fragment() {
             llenarCategorias(nCategoria, rvCategorias, true)
         }
 
-        var listener = object : AdapterView.OnItemSelectedListener {
-
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
+        return object : AdapterView.OnItemSelectedListener {
+            fun anadirCategoriaPocion(position: Int) {
                 var local = Locales()
-
                 var categoriaTag: EnumCategoria
                 when (position) {
                     1 -> {
                         categoriaTag = EnumCategoria.ALMUERZO
-
+                        Toast.makeText(context, position.toString(), Toast.LENGTH_SHORT).show()
                         añadirDb(categoriaTag, local)
                     }
                     2 -> {
                         categoriaTag = EnumCategoria.DESAYUNOS
+                        Toast.makeText(context, position.toString(), Toast.LENGTH_SHORT).show()
+
                         añadirDb(categoriaTag, local)
                     }
                     3 -> {
+                        Toast.makeText(context, position.toString(), Toast.LENGTH_SHORT).show()
+
                         categoriaTag = EnumCategoria.MERIENDAS
                         añadirDb(categoriaTag, local)
                     }
                     4 -> {
+                        Toast.makeText(context, position.toString(), Toast.LENGTH_SHORT).show()
+
                         categoriaTag = EnumCategoria.POSTRES
                         añadirDb(categoriaTag, local)
                     }
                     5 -> {
+                        Toast.makeText(context, position.toString(), Toast.LENGTH_SHORT).show()
+
                         categoriaTag = EnumCategoria.BBQ
                         añadirDb(categoriaTag, local)
                     }
                     6 -> {
+                        Toast.makeText(context, position.toString(), Toast.LENGTH_SHORT).show()
+
                         categoriaTag = EnumCategoria.COMIDARAPIDA
                         añadirDb(categoriaTag, local)
                     }
                     7 -> {
+                        Toast.makeText(context, position.toString(), Toast.LENGTH_SHORT).show()
+
                         categoriaTag = EnumCategoria.MARISCOS
                         añadirDb(categoriaTag, local)
                     }
                     8 -> {
+                        Toast.makeText(context, position.toString(), Toast.LENGTH_SHORT).show()
+
                         categoriaTag = EnumCategoria.POLLOS
                         añadirDb(categoriaTag, local)
                     }
                     9 -> {
+                        Toast.makeText(context, position.toString(), Toast.LENGTH_SHORT).show()
+
                         categoriaTag = EnumCategoria.HELADOS
                         añadirDb(categoriaTag, local)
                     }
                     10 -> {
+                        Toast.makeText(context, position.toString(), Toast.LENGTH_SHORT).show()
+
                         categoriaTag = EnumCategoria.HAMBURGUESAS
                         añadirDb(categoriaTag, local)
                     }
                     11 -> {
+                        Toast.makeText(context, position.toString(), Toast.LENGTH_SHORT).show()
+
                         categoriaTag = EnumCategoria.PIZZAS
                         añadirDb(categoriaTag, local)
                     }
@@ -657,12 +748,20 @@ class FragmentLocal : Fragment() {
 
             }
 
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                anadirCategoriaPocion(position)
+            }
+
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 TODO("Not yet implemented")
             }
 
         }
-        return listener
     }
     //esta funcion me sirve para traer los datos del local con una consulta al nodo usuario
 
@@ -700,21 +799,21 @@ class FragmentLocal : Fragment() {
     }
 
     fun pintarDatosLocal(idLocal: String) {
-        fun atachCampos(nombre:String,horaInicioS: String,horaCierreS: String){
+        fun atachCampos(nombre: String, horaInicioS: String, horaCierreS: String) {
             nombrelocal.setText(nombre)
             horaInicio.setText(horaInicioS)
             horaCierre.setText(horaCierreS)
         }
+
         val qry =
             ref.child("${EnumReferenciasDB.LOCALES.rutaDB()}").orderByKey().equalTo(idLocal)
-        var local :Local
+        var local: Local
         val listener = object : ChildEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 TODO("Not yet implemented")
             }
 
             override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-                TODO("Not yet implemented")
             }
 
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
@@ -724,9 +823,11 @@ class FragmentLocal : Fragment() {
                 this@FragmentLocal.idLocal = String()
                 this@FragmentLocal.idLocal = p0.key.toString()
                 local = p0.getValue(Local::class.java)!!
-                atachCampos(local.nombre,local.horaInicio,local.horaCierre)
+                atachCampos(local.nombre, local.horaInicio, local.horaCierre)
                 for (categoria in local.miembroscategorias) {
-                    categorias.add(categoria.key)
+                    if (categoria.value) {
+                        categorias.add(categoria.key)
+                    }
                 }
 
                 for (menu in local.miembrosMenus) {
@@ -737,8 +838,8 @@ class FragmentLocal : Fragment() {
                     menusId.add(menu.key)
                 }
 
-               // llenarCategorias(categorias, rvCategorias, true)
-                //llenarMenus(menusTittles, menusId)
+                llenarCategorias(categorias, rvCategorias, true)
+                llenarMenus(menusTittles, menusId)
 
             }
 
@@ -749,9 +850,11 @@ class FragmentLocal : Fragment() {
                 this@FragmentLocal.idLocal = String()
                 this@FragmentLocal.idLocal = p0.key.toString()
                 local = p0.getValue(Local::class.java)!!
-                atachCampos(local.nombre,local.horaInicio,local.horaCierre)
+                atachCampos(local.nombre, local.horaInicio, local.horaCierre)
                 for (categoria in local.miembroscategorias) {
-                    categorias.add(categoria.key)
+                    if (categoria.value) {
+                        categorias.add(categoria.key)
+                    }
                 }
                 for (menu in local.miembrosMenus) {
                     for (nombre in menu.value) {
@@ -767,6 +870,27 @@ class FragmentLocal : Fragment() {
 
             override fun onChildRemoved(p0: DataSnapshot) {
                 //ojo revisar el codigo para que se elimine las categorias
+                val categorias = ArrayList<String>()
+                val menusTittles = ArrayList<String>()
+                val menusId = ArrayList<String>()
+                this@FragmentLocal.idLocal = String()
+                this@FragmentLocal.idLocal = p0.key.toString()
+                local = p0.getValue(Local::class.java)!!
+                atachCampos(local.nombre, local.horaInicio, local.horaCierre)
+                for (categoria in local.miembroscategorias) {
+                    if (categoria.value) {
+                        categorias.add(categoria.key)
+                    }
+                }
+                for (menu in local.miembrosMenus) {
+                    for (nombre in menu.value) {
+                        menusTittles.add(nombre.value)
+                        nombresMenus.put(nombre.value, menu.key)
+                    }
+                    menusId.add(menu.key)
+                }
+
+                llenarCategorias(categorias, rvCategorias, true)
             }
 
         }
@@ -780,39 +904,78 @@ class FragmentLocal : Fragment() {
     fun llenarCategorias(categoriasL: ArrayList<String>, rv: RecyclerView, global: Boolean) {
         //aqui lleno por primera vez mi variable global de categorias
         var categoriasN = ArrayList<String>()
-        if (global) {
-            for (categoria in categoriasL) {
-                categorias.put(categoria, true)
+        var categoriasNuevaGlobal = HashMap<String, Boolean>()
+        if (isAdded){
+        if (categoriasL.size > 0) {
+            if (global) {
+                for (categoria in categoriasL) {
+                    categoriasNuevaGlobal.put(categoria, true)
+                }
+                categorias = categoriasNuevaGlobal
+                //lleno el array categoriasN con las keys de mi variable global
+                for (categoria in categorias.keys) {
+                    categoriasN.add(categoria)
+                }
+            } else {
+                categoriasN = categoriasL
             }
-            //lleno el array categoriasN con las keys de mi variable global
-            for (categoria in categorias.keys) {
-                categoriasN.add(categoria)
+            //seteo mi rv y lo lleno
+            rv.apply {
+                this.layoutManager = LinearLayoutManager(
+                    context,
+                    LinearLayoutManager.HORIZONTAL, false
+                )
+
+                if (!global) {
+
+                    this.adapter =
+                        CategoriaAdapter(
+                            categoriasN,
+                            false,
+                            null,
+                            null,
+                            null,
+                            null,
+                            idLocal,
+                            ciudad,
+                            !global
+                        )
+
+
+                }
+                this.adapter =
+                    CategoriaAdapter(
+                        categoriasN,
+                        false,
+                        null,
+                        null,
+                        null,
+                        null,
+                        idLocal,
+                        ciudad,
+                        global
+                    )
             }
-        } else {
-            categoriasN = categoriasL
-        }
-        //seteo mi rv y lo lleno
-        rv.apply {
-            this.layoutManager = LinearLayoutManager(
-                context,
-                LinearLayoutManager.HORIZONTAL, false
-            )
-            this.adapter = CategoriaAdapter(categoriasN)
-        }
+        }}
     }
 
     fun llenarMenus(menusTittles: ArrayList<String>, menusId: ArrayList<String>) {
-        if (menusTittles.size > 0) {
-            for (titulo in menusTittles) {
-                titulos.put(titulo, true)
-            }
-            var adapter = MiembrosMenusViewPagerAdapter(this, menusId,idLocal)
-            pager.adapter = adapter
-            val tabLayoutMediator = TabLayoutMediator(titulosMenu, pager,
-                TabLayoutMediator.TabConfigurationStrategy { tab, position ->
-                    tab.text = menusTittles[position]
+        if (isAdded) {
+            if (menusTittles.size > 0) {
+                for (titulo in menusTittles) {
+                    titulos.put(titulo, true)
                 }
-            ).attach()
+                var adapter = MiembrosMenusViewPagerAdapter(this, menusId, idLocal)
+                pager.adapter = adapter
+
+                TabLayoutMediator(titulosMenu, pager,
+                    TabLayoutMediator.TabConfigurationStrategy { tab, position ->
+                        tab.text = menusTittles[position]
+
+                    }
+                ).attach()
+
+            }
         }
     }
 }
