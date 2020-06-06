@@ -29,6 +29,8 @@ import com.example.ecupickers.constantes.EnumTipoLocal
 import com.example.ecupickers.factory.DbReference
 import com.example.ecupickers.modelos.Local
 import com.example.ecupickers.modelos.Producto
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
 import com.google.android.material.tabs.TabLayout
@@ -113,6 +115,24 @@ class FragmentLocal : Fragment() {
             "${ciudad}/${uid}" , Toast.LENGTH_LONG, true
         ).show()
         pager = root.contenidoMenuHorizontalLocal
+        var a=object :ViewPager2.OnPageChangeCallback(){
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                pager.requestLayout()
+                Toast.makeText(context, "te amo mero", Toast.LENGTH_LONG).show()
+            }
+
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels)
+                pager.requestLayout()
+                Toast.makeText(context, "te amo mero", Toast.LENGTH_LONG).show()
+            }
+        }
+        pager.registerOnPageChangeCallback(a)
         añadirProductoBtn = root.buttonAgregarNuevoProducto
         nombresMenus = HashMap()
 
@@ -141,9 +161,13 @@ class FragmentLocal : Fragment() {
         //boton que habilita la edicion
        // editarBtn.setOnClickListener { habilitarEdicion(true) }
         //mostrar carta de agregar productos
+
         mostrarProductoPopWindows(context, añadirProductoBtn)
 
+
     }
+
+
 
     fun manejarCartaAddProducto(window: PopupWindow) {
         val btnAgregar = window.contentView.btnCartaAgregarProductoCrear
@@ -368,6 +392,7 @@ class FragmentLocal : Fragment() {
     }
 
     fun mostrarProductoPopWindows(context: Context?, btnAccion: Button) {
+
         val window = PopupWindow(context)
         val v = layoutInflater.inflate(R.layout.carta_agregar_producto, null)
         window.contentView = v

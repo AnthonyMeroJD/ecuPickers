@@ -33,6 +33,8 @@ class IngresoActivity : AppCompatActivity() {
         updateUI(currentUser)
         var campos = arrayListOf<EditText>(email, password)
         buttonIniciarSesion.setOnClickListener {
+            var intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
             if (comprobarCampos(campos)) {
                 var sEmail = email.text.toString().trim().toLowerCase()
                 var sPassword = password.text.toString()

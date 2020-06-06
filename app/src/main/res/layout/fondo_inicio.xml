@@ -6,11 +6,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/colorPrimary">
 
-    <TextView
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbarInicio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_hambuguer"
+        android:padding="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/coloBlancoFondo"
+            android:text="@string/tu_inicio"
+            android:textSize="24sp"/>
+
+    </com.google.android.material.appbar.MaterialToolbar>
+ <!--   <TextView
         android:id="@+id/tVInicio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="32dp"
         android:textColor="@color/coloBlancoFondo"
         android:textSize="35sp"
         android:textStyle="bold"
@@ -19,17 +38,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints"
-        android:text="@string/tu_inicio" />
+        android:text="@string/tu_inicio" /> -->
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        app:cardCornerRadius="25dp"
+
+        app:cardCornerRadius="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tVInicio"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarInicio"
         app:layout_goneMarginTop="24dp"
         tools:ignore="MissingConstraints">
 
@@ -43,7 +62,8 @@
                 android:id="@+id/titulosMenuHorizontalInicio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:tabTextColor="@color/colorTexto">
+                app:tabTextColor="@color/colorTexto"
+                app:tabMode="scrollable">
 
 
                 <com.google.android.material.tabs.TabItem

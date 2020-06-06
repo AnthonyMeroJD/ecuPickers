@@ -82,8 +82,8 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.nav_tu_local -> {
                     fragment = FragmentLocal()
-
-                    bundle.putString("idUser", auth.uid.toString())
+                    //bundle.putString("idUser", auth.uid)
+                    bundle.putString("idUser", "Y0fPjvAGdaUDQMOAH3Fa80o2Cps2")
                     fragment.arguments = bundle
 
                     fragmentManager.beginTransaction().replace(
@@ -108,12 +108,15 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        var qry =
-            ref.child(EnumReferenciasDB.USERS.rutaDB()).orderByKey().equalTo(auth.uid.toString())
+       // var qry =
+           // ref.child(EnumReferenciasDB.USERS.rutaDB()).orderByKey().equalTo(auth.uid)
+       var qry =
+            ref.child(EnumReferenciasDB.USERS.rutaDB()).orderByKey().equalTo("Y0fPjvAGdaUDQMOAH3Fa80o2Cps2")
         qry.addChildEventListener(traerUsuario())
     }
     fun grabar(string: String){
-        bundle.putString("ciudad", string)
+       // bundle.putString("ciudad", string)
+        bundle.putString("ciudad", "Quito")
         Toast.makeText(this@MainActivity,string, Toast.LENGTH_SHORT).show()
     }
     fun traerUsuario():ChildEventListener{

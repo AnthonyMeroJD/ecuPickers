@@ -8,8 +8,8 @@
     android:layout_marginTop="16dp"
     app:cardBackgroundColor="@color/colorFondoBotonCategoria"
     android:id="@+id/cardViewAddProductosAlMenu"
-    app:strokeWidth="1dp"
     app:strokeColor="@color/colorPrimary"
+    app:strokeWidth="1dp"
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,7 +23,6 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
             android:src="@drawable/ic_add_circle"
             android:tint="@color/colorGris"
@@ -33,10 +32,8 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
-            android:layout_marginLeft="8dp"
             android:layout_marginTop="24dp"
             android:text="@string/añadir_productos_al_menu"
             android:textColor="@color/colorTexto"

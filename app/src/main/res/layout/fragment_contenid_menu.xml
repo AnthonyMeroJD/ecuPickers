@@ -6,9 +6,13 @@
     android:orientation="vertical"
     tools:context=".fragmentos.ContenidMenu">
 
+
  <include
      layout="@layout/carta_add_productos_al_menu"/>
  <include
      layout="@layout/recyclerview_carta_productos"
      />
+
+
+
 </LinearLayout>

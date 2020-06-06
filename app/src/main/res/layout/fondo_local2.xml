@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
-    
-    <androidx.core.widget.NestedScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/scrollLocal"
-        android:background="@color/coloBlancoFondo"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:transitionName="shared_element">
-
         <androidx.constraintlayout.widget.ConstraintLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/coloBlancoFondo">
 
 
             <ImageView
@@ -22,7 +14,6 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:scaleType="centerCrop"
-
                 android:src="@drawable/prueba"
                 app:layout_constraintDimensionRatio="4:3"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -35,13 +26,9 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:navigationIcon="@drawable/ic_atras"
+                app:navigationIcon="@drawable/ic_hambuguer"
                 app:layout_constraintTop_toTopOf="parent"
-                app:menu="@menu/main"
-
-                >
-
-
+                app:menu="@menu/main">
 
             </androidx.appcompat.widget.Toolbar>
 
@@ -67,6 +54,17 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
+    <TextView
+        android:id="@+id/txtViewCategoriaL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/categoria"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fondoNombreLocal" />
+
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chipGroup"
                 android:layout_width="0dp"
@@ -78,7 +76,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/fondoNombreLocal"
+                app:layout_constraintTop_toBottomOf="@id/txtViewCategoriaL"
                 app:layout_constraintStart_toStartOf="parent">
 
 
@@ -181,18 +179,16 @@
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/titulosMenuHorizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    app:tabMode="scrollable">
 
 
                 </com.google.android.material.tabs.TabLayout>
 
                 <androidx.viewpager2.widget.ViewPager2
-
-
                     android:id="@+id/contenidoMenuHorizontalLocal"
-
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="600dp"
                     android:layout_marginTop="10dp" />
 
 
@@ -212,5 +208,4 @@
 
 
 
-    </androidx.core.widget.NestedScrollView>
-    
+

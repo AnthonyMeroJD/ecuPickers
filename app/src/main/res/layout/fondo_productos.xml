@@ -4,51 +4,72 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorFondoBotonCategoria">
+    android:background="@color/coloBlancoFondo">
 
 
     <ImageView
         android:id="@+id/imagenViewProducto"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:scaleType="centerCrop"
         app:layout_constraintDimensionRatio="4:3"
-        android:src="@drawable/ic_add_circle"
-        android:tint="@color/colorGris"
-        app:layout_constraintCircleRadius="10dp"
+        android:src="@drawable/prueba"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="128dp"
-        app:cardCornerRadius="15dp"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarProductos"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline6">
+        app:navigationIcon="@drawable/ic_hambuguer"
+        app:layout_constraintTop_toTopOf="parent"
+        app:menu="@menu/main">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+    </androidx.appcompat.widget.Toolbar>
+
+
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:id="@+id/txtInputNProducto"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline7"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imagenViewProducto">
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
+
                 android:id="@+id/editTextNombreProducto"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
+
                 android:enabled="false"
                 android:hint="@string/nombre_producto"
-                android:textColor="@color/colorTexto"
-                android:textSize="30sp"
-                app:layout_constraintEnd_toStartOf="@+id/guideline7"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+    <TextView
+        android:id="@+id/txtVCategoriaProducto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/categoria"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txtInputNProducto" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rVBotonesCategoriaProducto"
@@ -61,7 +82,7 @@
                 android:layout_marginRight="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextNombreProducto"
+                app:layout_constraintTop_toBottomOf="@+id/txtVCategoriaProducto"
                 tools:itemCount="1"
                 tools:listitem="@layout/botones_categoria">
 
@@ -83,110 +104,80 @@
 
             </androidx.cardview.widget.CardView>
 
-            <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:src="@drawable/ic_clock"
-                android:tint="@color/colorGris"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/spinnerCategoriasProductos" />
 
-            <EditText
-                android:id="@+id/editTextTiempoAM"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:enabled="false"
-                android:hint="10:00"
-                android:inputType="time"
-                android:textColor="@color/colorTexto"
-                android:textSize="16sp"
-                app:layout_constraintStart_toEndOf="@+id/imageView3"
-                app:layout_constraintTop_toTopOf="@+id/imageView3" />
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/txtInputTiempoUno"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline7"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView8">
 
-            <TextView
-                android:id="@+id/textView8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="-"
-                android:textColor="@color/colorGris"
-                android:textSize="18sp"
-                app:layout_constraintStart_toEndOf="@+id/editTextTiempoAM"
-                app:layout_constraintTop_toBottomOf="@+id/spinnerCategoriasProductos" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextTiempoAM"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:hint="10:00"
+            android:inputType="time"
+            android:textColor="@color/colorTexto"
+            android:textSize="16sp" />
 
-            <EditText
-                android:id="@+id/editTextTiempoPM"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:enabled="false"
-                android:hint="20:00"
-                android:inputType="time"
-                android:textColor="@color/colorTexto"
-                android:textSize="16sp"
-                app:layout_constraintStart_toEndOf="@+id/textView8"
-                app:layout_constraintTop_toTopOf="@+id/imageView3" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:id="@+id/textView18"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/min"
-                android:textSize="18sp"
-                app:layout_constraintStart_toEndOf="@+id/editTextTiempoPM"
-                app:layout_constraintTop_toTopOf="@+id/imageView3" />
 
-            <Button
-                android:id="@+id/buttonGuardarCambiosProductos"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:backgroundTint="@color/colorPrimary"
-                android:padding="15dp"
-                android:text="@string/guardar"
-                android:textColor="@color/coloBlancoFondo"
-                android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="Tiempo Estimado"
+        android:textColor="@color/colorGris"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerCategoriasProductos" />
 
-            <Button
-                android:id="@+id/buttonEditarProducos"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:backgroundTint="@color/colorPrimary"
-                android:padding="15dp"
-                android:text="@string/editar"
-                android:textColor="@color/coloBlancoFondo"
-                android:textSize="18sp"
-                app:layout_constraintStart_toEndOf="@+id/buttonGuardarCambiosProductos"
-                app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout2"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintStart_toStartOf="@+id/guideline7"
+        app:layout_constraintTop_toBottomOf="@id/textView8">
 
-            <Button
-                android:id="@+id/buttonCancelarCambiosProducos"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:backgroundTint="@color/colorPrimary"
-                android:padding="15dp"
-                android:text="@string/cancelar"
-                android:textColor="@color/coloBlancoFondo"
-                android:textSize="18sp"
-                android:visibility="visible"
-                app:layout_constraintStart_toEndOf="@+id/buttonEditarProducos"
-                app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextTiempoPM"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:enabled="false"
+            android:hint="20:00"
+            android:inputType="time"
+            android:textColor="@color/colorTexto"
+            android:textSize="16sp"
+
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+
+
+
+
+
+
 
 
             <LinearLayout
@@ -196,11 +187,12 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/buttonGuardarCambiosProductos">
+                app:layout_constraintTop_toBottomOf="@+id/txtInputTiempoUno">
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/titulosMenuHorizontal"
@@ -222,13 +214,13 @@
             </LinearLayout>
 
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline7"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintCircleRadius="15dp"
-                app:layout_constraintGuide_begin="389dp" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintCircleRadius="15dp"
+        app:layout_constraintGuide_begin="194dp" />
 
 
             <androidx.cardview.widget.CardView
@@ -241,33 +233,31 @@
                 android:backgroundTint="@color/colorFondoBotonCategoria"
                 app:cardCornerRadius="15dp"
                 app:layout_constraintStart_toEndOf="@+id/rVBotonesCategoriaProducto"
-                app:layout_constraintTop_toBottomOf="@+id/editTextNombreProducto"
+                app:layout_constraintTop_toBottomOf="@+id/txtInputNProducto"
                 tools:targetApi="lollipop">
 
 
             </androidx.cardview.widget.CardView>
 
 
-            <Spinner
-                android:id="@+id/spinnerCategoriasProductos"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rVBotonesCategoriaProducto" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    </androidx.cardview.widget.CardView>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline6"
-        android:layout_width="wrap_content"
+    <Spinner
+        android:id="@+id/spinnerCategoriasProductos"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="129dp" />
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rVBotonesCategoriaProducto" />
+
+
+
+
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

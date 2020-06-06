@@ -4,6 +4,6 @@
     android:id="@+id/rVCartasPedidosInicio"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:listitem="@layout/carta_pedidos">
+    tools:listitem="@layout/carta_pedidos_inicio">
 
 </androidx.recyclerview.widget.RecyclerView>
