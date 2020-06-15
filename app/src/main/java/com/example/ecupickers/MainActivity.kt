@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var ref: DatabaseReference
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var global:String
+    private lateinit var global: String
     private lateinit var bundle: Bundle
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,14 +82,15 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.nav_tu_local -> {
                     fragment = FragmentLocal()
-                    //bundle.putString("idUser", auth.uid)
-                    bundle.putString("idUser", "Y0fPjvAGdaUDQMOAH3Fa80o2Cps2")
+                    bundle.putString("idUser", auth.uid)
+                    //bundle.putString("idUser", "Y0fPjvAGdaUDQMOAH3Fa80o2Cps2")
                     fragment.arguments = bundle
-
-                    fragmentManager.beginTransaction().replace(
-                        R.id.nav_host_fragment,
-                        fragment
-                    ).commit()
+                    if (bundle.containsKey("idUser") && bundle.containsKey("ciudad")) {
+                        fragmentManager.beginTransaction().replace(
+                            R.id.nav_host_fragment,
+                            fragment
+                        ).commit()
+                    }
                 }
                 R.id.nav_cerrar_secion -> {
                     auth.signOut()
@@ -108,21 +109,23 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-       // var qry =
-           // ref.child(EnumReferenciasDB.USERS.rutaDB()).orderByKey().equalTo(auth.uid)
-       var qry =
-            ref.child(EnumReferenciasDB.USERS.rutaDB()).orderByKey().equalTo("Y0fPjvAGdaUDQMOAH3Fa80o2Cps2")
+        var qry =
+            ref.child(EnumReferenciasDB.USERS.rutaDB()).orderByKey().equalTo(auth.uid)
+        //var qry =
+        //   ref.child(EnumReferenciasDB.USERS.rutaDB()).orderByKey().equalTo("Y0fPjvAGdaUDQMOAH3Fa80o2Cps2")
         qry.addChildEventListener(traerUsuario())
     }
-    fun grabar(string: String){
-       // bundle.putString("ciudad", string)
-        bundle.putString("ciudad", "Quito")
-        Toast.makeText(this@MainActivity,string, Toast.LENGTH_SHORT).show()
+
+    fun grabar(string: String) {
+         bundle.putString("ciudad", string)
+       // bundle.putString("ciudad", "Quito")
+        Toast.makeText(this@MainActivity, string, Toast.LENGTH_SHORT).show()
     }
-    fun traerUsuario():ChildEventListener{
+
+    fun traerUsuario(): ChildEventListener {
 
 
-    return  object : ChildEventListener {
+        return object : ChildEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 TODO("Not yet implemented")
             }
@@ -138,7 +141,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
                 var p = p0.getValue(User::class.java)
-             //   Toast.makeText(this@MainActivity, p!!.ciudad, Toast.LENGTH_SHORT).show()
+                //   Toast.makeText(this@MainActivity, p!!.ciudad, Toast.LENGTH_SHORT).show()
                 grabar(p!!.ciudad!!)
 
             }

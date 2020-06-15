@@ -1,12 +1,9 @@
 package com.example.ecupickers.ui.gestionarLocal
 
 
-import android.app.Dialog
 import android.app.TimePickerDialog
-import android.content.Context
 import android.os.Bundle
 import android.text.InputType
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -14,21 +11,21 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.ecupickers.R
-import com.example.ecupickers.adapters.CategoriaAdapter
+import com.example.ecupickers.adapters.CategoriaLocalAdapter
 import com.example.ecupickers.adapters.MiembrosMenusViewPagerAdapter
 import com.example.ecupickers.clases.Locales
-import com.example.ecupickers.clases.Productos
 import com.example.ecupickers.constantes.EnumCamposDB
 import com.example.ecupickers.constantes.EnumCategoria
 import com.example.ecupickers.constantes.EnumReferenciasDB
 import com.example.ecupickers.constantes.EnumTipoLocal
+import com.example.ecupickers.dialogs.DialogoCartaAgregarProducto
+import com.example.ecupickers.dialogs.DialogoCrearMenu
 import com.example.ecupickers.factory.DbReference
 import com.example.ecupickers.modelos.Local
-import com.example.ecupickers.modelos.Producto
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -39,8 +36,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
-import kotlinx.android.synthetic.main.carta_agregar_producto.view.*
-import kotlinx.android.synthetic.main.carta_nuevo_menu.*
 import kotlinx.android.synthetic.main.fondo_local2.*
 import kotlinx.android.synthetic.main.fondo_local2.view.txtHoraInicio
 import kotlinx.android.synthetic.main.fondo_local2.view.txthoraCierre
@@ -51,7 +46,6 @@ class FragmentLocal : Fragment() {
     private lateinit var uid: String
     private lateinit var idLocal: String
     private lateinit var ciudad: String
-
     private lateinit var nombrelocal: EditText
     private lateinit var qryUser: Query
     private lateinit var ref: DatabaseReference
@@ -63,7 +57,7 @@ class FragmentLocal : Fragment() {
     private lateinit var horaInicio: EditText
     private lateinit var horaCierre: EditText
     private lateinit var pager: ViewPager2
-    private lateinit var añadirProductoBtn: Button
+    private lateinit var anadirProductoBtn: Button
     private lateinit var nombresMenus: HashMap<String, String>
     private lateinit var toolbar: Toolbar
     private lateinit var editar: MenuItem
@@ -110,25 +104,7 @@ class FragmentLocal : Fragment() {
             "${ciudad}/${uid}", Toast.LENGTH_LONG, true
         ).show()
         pager = root.contenidoMenuHorizontalLocal
-        var a=object :ViewPager2.OnPageChangeCallback(){
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                pager.requestLayout()
-                Toast.makeText(context, "te amo mero", Toast.LENGTH_LONG).show()
-            }
-
-            override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
-            ) {
-                super.onPageScrolled(position, positionOffset, positionOffsetPixels)
-                pager.requestLayout()
-                Toast.makeText(context, "te amo mero", Toast.LENGTH_LONG).show()
-            }
-        }
-        pager.registerOnPageChangeCallback(a)
-        añadirProductoBtn = root.buttonAgregarNuevoProducto
+        anadirProductoBtn = root.buttonAgregarNuevoProducto
         nombresMenus = HashMap()
         toolbar = root.toolbarLocal
         return root
@@ -139,7 +115,7 @@ class FragmentLocal : Fragment() {
         //esta funcion consulta y dentro llama a la funcion que pinta los datos del local
         traerLocal(uid, ciudad)
         //combo categorias
-        comboCategorias?.let {
+        comboCategorias.let {
             val adaptador: ArrayAdapter<CharSequence> = ArrayAdapter.createFromResource(
                 requireContext(),
                 R.array.opciones_categorias, android.R.layout.simple_expandable_list_item_1
@@ -153,55 +129,52 @@ class FragmentLocal : Fragment() {
         //abrir TimePicker al darle el primer click
         desplegarTimePicker(horaInicio)
         desplegarTimePicker(horaCierre)
-        //boton que habilita la edicion
-        // editarBtn.setOnClickListener { habilitarEdicion(true) }
-        //mostrar carta de agregar productos
-
-        mostrarProductoPopWindows(context, añadirProductoBtn)
+        mostrarProductoPopWindows(anadirProductoBtn)
         mostrarPopNuevoMenu(btnAgregarMenu)
         toolbar.setOnMenuItemClickListener(menuToolbar())
     }
 
-    fun mostrarPopNuevoMenu(btnAccion: FloatingActionButton) {
-        val v = layoutInflater.inflate(R.layout.carta_nuevo_menu, null)
-        val dialog = Dialog(requireContext())
-        dialog.setContentView(v)
-
-
-
-
+    private fun mostrarPopNuevoMenu(btnAccion: FloatingActionButton) {
+        val dialog = DialogoCrearMenu()
+        val bundle = Bundle()
         btnAccion.setOnClickListener {
-            dialog.show()
-            manejarCrearMenu(dialog)
+            bundle.putString("idLocal", idLocal)
+            dialog.arguments = bundle
+            dialog.show(childFragmentManager, "CrearNuevoMenu")
         }
-
     }
 
-    fun manejarCrearMenu(dialog: Dialog) {
-        var btnGuardar = dialog.btnCartanuevoMenuAgregarMenu
-        var nombreMenu = dialog.txtNombreMenu
-        btnGuardar?.let {
-            it.setOnClickListener {
-                var localManager = Locales()
-                if (nombreMenu.text.isBlank() || nombreMenu.text.isEmpty()) {
-                    Toasty.error(
-                        requireContext(), "El nombre del menu no puede estar vacio",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    nombreMenu.error = "este campo es obligatorio"
-                } else {
-                    localManager.gestionarMenu(null, nombreMenu.text.toString(), idLocal)
-                    Toasty.success(
-                        requireContext(), "Se agrego el menu ${nombreMenu.text} a tu local",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-
+    private fun mostrarProductoPopWindows(btnAccion: Button) {
+        fun getTitulosMenusLocal(): ArrayList<String> {
+            val menusTitulos = ArrayList<String>()
+            for (titulo in nombresMenus.keys) {
+                menusTitulos.add(titulo)
             }
+            return menusTitulos
+        }
+
+        fun getidsMenusLocal(): ArrayList<String> {
+            val idsMenus = ArrayList<String>()
+            for (titulo in nombresMenus.values) {
+                idsMenus.add(titulo)
+            }
+            return idsMenus
+        }
+
+        val dialog = DialogoCartaAgregarProducto(false)
+        val bundle = Bundle()
+        btnAccion.setOnClickListener {
+            bundle.putStringArrayList("menusTitulos", getTitulosMenusLocal())
+            bundle.putStringArrayList("idsMenus", getidsMenusLocal())
+            bundle.putString("idLocal", idLocal)
+            bundle.putString("nombreLocal", nombrelocal.text.toString())
+            dialog.arguments = bundle
+            dialog.show(childFragmentManager, "DialogoCartaAgregarProucto")
+
         }
     }
 
-    fun menuToolbar(): Toolbar.OnMenuItemClickListener {
+    private fun menuToolbar(): Toolbar.OnMenuItemClickListener {
         return Toolbar.OnMenuItemClickListener {
             when (it.title.toString()) {
                 "Editar" -> {
@@ -218,257 +191,7 @@ class FragmentLocal : Fragment() {
 
     }
 
-
-
-    fun manejarCartaAddProducto(window: PopupWindow) {
-        val btnAgregar = window.contentView.btnCartaAgregarProductoCrear
-        val nombreProducto = window.contentView.txtCartaProductoNombre
-        val precioProducto = window.contentView.txtcartaProductoPrecio
-        val descripcionProducto = window.contentView.txtcartaProductoDescripcion
-        val tiempoEstimadoInicio = window.contentView.txtCartaProductoTiempoEstimadoInicio
-        val timpoEstimadoFin = window.contentView.txtCartaProductoTiempoEstimadoFin
-        val comboCategoriasProducto = window.contentView.spinnerCartaAgregarProductoCategoria
-        val rvCategoriaProducto = window.contentView.rvCartaAgregarProductoCategoria
-        val comboMenusProductos = window.contentView.spinnerCartaAgregarProductoMenu
-        var rvMenusPreductos = window.contentView.rvCartaAgregarProductoMenu
-        var categorias = HashMap<String, Boolean>()
-        var menus = HashMap<String, Boolean>()
-        var nombreMenu = ArrayList<String>()
-        var idsMenus = ArrayList<String>()
-        var menusIdElegido = HashMap<String, Boolean>()
-        fun addCategoria(tag: EnumCategoria): ArrayList<String> {
-            var categoriasL = ArrayList<String>()
-            categorias.put(tag.getCategoria(), true)
-            for (categoria in categorias) {
-                if (categoria.value) {
-                    categoriasL.add(categoria.key)
-                }
-            }
-            return categoriasL
-        }
-
-        fun comprobarCampos(arrayList: ArrayList<EditText>): Boolean {
-            var validar = true
-            for (campo in arrayList) {
-                if (campo.text.isBlank()) {
-                    campo.error = "compruebe que el campo este lleno correctamente"
-                    validar = false
-                }
-                if ((campo == tiempoEstimadoInicio ||
-                            campo == timpoEstimadoFin) && campo.text.toString().length > 3
-                ) {
-                    campo.error = "el campo solo puede contener maximo 3 digitos"
-                    validar = false
-                }
-            }
-            return validar
-        }
-
-        fun addMenu(tag: String, idMenu: String, eliminar: Boolean = false): ArrayList<String> {
-            var menuL = ArrayList<String>()
-            menus.put(tag, !eliminar)
-            menusIdElegido.put(idMenu, true)
-            for (menu in menus) {
-                if (menu.value) {
-                    menuL.add(menu.key)
-                }
-            }
-            return menuL
-        }
-        nombreMenu.add(0, "seleccione el menu")
-        for (nombre in nombresMenus.keys) {
-            nombreMenu.add(nombre)
-        }
-        for (idMenu in nombresMenus.values) {
-            idsMenus.add(idMenu)
-        }
-        comboCategoriasProducto?.let {
-            val adaptador: ArrayAdapter<CharSequence> = ArrayAdapter.createFromResource(
-                window.contentView.context,
-                R.array.opciones_categorias, android.R.layout.simple_expandable_list_item_1
-            )
-
-            it.adapter = adaptador
-        }
-        comboMenusProductos?.let {
-            val adaptador: ArrayAdapter<String> = ArrayAdapter(
-                window.contentView.context, android.R.layout.simple_spinner_item,
-                nombreMenu
-            )
-            it.adapter = adaptador
-        }
-
-        var listenerCategoria = object : AdapterView.OnItemSelectedListener {
-            fun agregar(position: Int) {
-                var categoriaTag: EnumCategoria
-                var categorias = ArrayList<String>()
-                when (position) {
-                    1 -> {
-                        categoriaTag = EnumCategoria.ALMUERZO
-                        Toast.makeText(context, "clicl", Toast.LENGTH_SHORT).show()
-                        categorias = addCategoria(categoriaTag)
-                    }
-                    2 -> {
-                        Toast.makeText(context, "clicl", Toast.LENGTH_SHORT).show()
-                        categoriaTag = EnumCategoria.DESAYUNOS
-                        categorias = addCategoria(categoriaTag)
-                    }
-                    3 -> {
-                        Toast.makeText(context, "clicl", Toast.LENGTH_SHORT).show()
-                        categoriaTag = EnumCategoria.MERIENDAS
-                        categorias = addCategoria(categoriaTag)
-
-                    }
-                    4 -> {
-                        Toast.makeText(context, "clicl", Toast.LENGTH_SHORT).show()
-                        categoriaTag = EnumCategoria.POSTRES
-                        categorias = addCategoria(categoriaTag)
-                    }
-                    5 -> {
-                        Toast.makeText(context, "clicl", Toast.LENGTH_SHORT).show()
-                        categoriaTag = EnumCategoria.BBQ
-                        categorias = addCategoria(categoriaTag)
-                    }
-                    6 -> {
-                        Toast.makeText(context, "clicl", Toast.LENGTH_SHORT).show()
-                        categoriaTag = EnumCategoria.COMIDARAPIDA
-                        categorias = addCategoria(categoriaTag)
-
-                    }
-                    7 -> {
-                        Toast.makeText(context, "clicl", Toast.LENGTH_SHORT).show()
-                        categoriaTag = EnumCategoria.MARISCOS
-                        categorias = addCategoria(categoriaTag)
-                    }
-                    8 -> {
-                        Toast.makeText(context, "clicl", Toast.LENGTH_SHORT).show()
-                        categoriaTag = EnumCategoria.POLLOS
-                        categorias = addCategoria(categoriaTag)
-                    }
-                    9 -> {
-                        Toast.makeText(context, "clicl", Toast.LENGTH_SHORT).show()
-                        categoriaTag = EnumCategoria.HELADOS
-                        categorias = addCategoria(categoriaTag)
-
-                    }
-                    10 -> {
-                        Toast.makeText(context, "clicl", Toast.LENGTH_SHORT).show()
-                        categoriaTag = EnumCategoria.HAMBURGUESAS
-                        categorias = addCategoria(categoriaTag)
-
-                    }
-                    11 -> {
-                        Toast.makeText(context, "clicl", Toast.LENGTH_SHORT).show()
-                        categoriaTag = EnumCategoria.PIZZAS
-                        categorias = addCategoria(categoriaTag)
-
-                    }
-                }
-                llenarCategorias(categorias, rvCategoriaProducto, false)
-            }
-
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                agregar(position)
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                TODO("Not yet implemented")
-            }
-        }
-        comboCategoriasProducto.onItemSelectedListener = listenerCategoria
-
-        var listenerMenu = object : AdapterView.OnItemSelectedListener {
-
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                if (position != 0) {
-                    var menusL = addMenu(nombreMenu[position], idsMenus[position - 1])
-                    llenarCategorias(menusL, rvMenusPreductos, false)
-                }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                TODO("Not yet implemented")
-            }
-
-        }
-        comboMenusProductos.onItemSelectedListener = listenerMenu
-        btnAgregar.setOnClickListener {
-            var campos = arrayListOf<EditText>(
-                nombreProducto,
-                descripcionProducto,
-                tiempoEstimadoInicio,
-                timpoEstimadoFin, precioProducto
-            )
-
-            if (comprobarCampos(campos)) {
-
-                var nombreProducto = nombreProducto.text.toString()
-                var precio = precioProducto.text.toString()
-                var descripcion = descripcionProducto.text.toString()
-                var local = nombrelocal.text.toString()
-                var tiempoEstimado =
-                    "${tiempoEstimadoInicio.text}-${timpoEstimadoFin.text}"
-                var productoManager = Productos()
-                var producto = Producto()
-                producto.apply {
-                    this.nombre = nombreProducto
-                    this.precio = precio
-                    this.descripcion = descripcion
-                    this.atendidos = "0"
-                    this.calificacion = "0"
-                    this.local = local
-                }
-                var idProducto = productoManager.crearProducto(producto)
-                var alimento = productoManager.crearAlimento(
-                    idProducto,
-                    producto,
-                    tiempoEstimado,
-                    menusIdElegido,
-                    categorias,
-                    idLocal
-                )
-                var idsMenus = ArrayList<String>()
-                for (id in menusIdElegido) {
-                    idsMenus.add(id.key)
-                }
-                productoManager.añadirProductoAMenu(idsMenus, idLocal, idProducto, alimento)
-                Toasty.success(
-                    window.contentView.context,
-                    "Se añadido con exito el producto", Toast.LENGTH_SHORT, true
-                ).show()
-            }
-        }
-
-
-    }
-
-    fun mostrarProductoPopWindows(context: Context?, btnAccion: Button) {
-
-        val window = PopupWindow(context)
-        val v = layoutInflater.inflate(R.layout.carta_agregar_producto, null)
-        window.contentView = v
-        window.isOutsideTouchable = true
-        window.isFocusable = true
-        window.animationStyle
-        btnAccion.setOnClickListener {
-
-            window.showAtLocation(btnAccion, Gravity.CENTER, 0, 0)
-            manejarCartaAddProducto(window)
-        }
-    }
-
-
-    fun desplegarTimePicker(editText: EditText) {
+    private fun desplegarTimePicker(editText: EditText) {
 
         editText.onFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
             v as EditText
@@ -505,9 +228,10 @@ class FragmentLocal : Fragment() {
                 true
             ).show()
         }
+
     }
 
-    fun habilitarEdicion(habilitar: Boolean) {
+    private fun habilitarEdicion(habilitar: Boolean) {
         if (habilitar) {
             nombrelocal.requestFocus()
         }
@@ -516,15 +240,15 @@ class FragmentLocal : Fragment() {
         horaCierre.isEnabled = habilitar
         //  cancelarBtn.isEnabled = habilitar
         //guardarBtn.isEnabled = habilitar
-        var nombreLocal = nombrelocal.text.toString()
-        var horaCierre = horaCierre.text.toString()
-        var horaInicio = horaInicio.text.toString()
+        val nombreLocal = nombrelocal.text.toString()
+        val horaCierre = horaCierre.text.toString()
+        val horaInicio = horaInicio.text.toString()
         if (habilitar) {
             Toasty.info(
                 requireContext(),
                 "Ahora puedes editar los campos de tu Local.", Toast.LENGTH_SHORT, true
             ).show()
-            var objecto = Toolbar.OnMenuItemClickListener {
+            val objecto = Toolbar.OnMenuItemClickListener {
                 when (it.title.toString()) {
                     "Editar" -> {
                         editar = it
@@ -562,15 +286,15 @@ class FragmentLocal : Fragment() {
 
     }
 
-    fun guardarDatosLocalDB(
+    private fun guardarDatosLocalDB(
         nombreLocal: String,
         horaCierreT: String,
         horaInicioT: String
     ) {
-        var nuevoNombre = nombrelocal.text.toString()
-        var horaCierreNuevo = horaCierre.text.toString()
-        var horaInicioNuevo = horaInicio.text.toString()
-        var local = Locales()
+        val nuevoNombre = nombrelocal.text.toString()
+        val horaCierreNuevo = horaCierre.text.toString()
+        val horaInicioNuevo = horaInicio.text.toString()
+        val local = Locales()
         if (nombrelocal.text.isBlank()) {
             Toasty.error(
                 requireContext(),
@@ -626,24 +350,24 @@ class FragmentLocal : Fragment() {
         habilitarEdicion(false)
     }
 
-    fun recuperarDatosAnteriores(
+    private fun recuperarDatosAnteriores(
         nombreLocal: String,
         horaCierre: String,
         horaInicio: String
     ) {
-        nombrelocal.setText("${nombreLocal}")
-        txtHoraInicio.setText("${horaInicio}")
-        txthoraCierre.setText("${horaCierre}")
+        nombrelocal.setText(nombreLocal)
+        txtHoraInicio.setText(horaInicio)
+        txthoraCierre.setText(horaCierre)
         habilitarEdicion(habilitar = false)
     }
 
-    fun agregarCategoria(): AdapterView.OnItemSelectedListener {
+    private fun agregarCategoria(): AdapterView.OnItemSelectedListener {
         /*
         * esta funcion interna llena un aList de strings, que contendra
         * una categoria y no se podra repetir ya que el hashmap toma como key la categoria
         * */
         fun agregar(categorias: HashMap<String, Boolean>): ArrayList<String> {
-            var nCategoria = ArrayList<String>()
+            val nCategoria = ArrayList<String>()
             for (categoria in categorias) {
                 if (categoria.value) {
                     nCategoria.add(categoria.key)
@@ -657,95 +381,75 @@ class FragmentLocal : Fragment() {
         * y agrega a la variable global de categorias la categoria que se selecciona en el
         * spinner,ojo estas categorias en la variable glogal CATEGORIAS son la key
         * */
-        fun añadirDb(tag: EnumCategoria, local: Locales) {
-            var categoriaCategorizada = ArrayList<EnumCategoria>()
-            var categoriaTag = tag
-            categoriaCategorizada.add(categoriaTag)
+        fun anadirDb(tag: EnumCategoria, local: Locales) {
+            val categoriaCategorizada = ArrayList<EnumCategoria>()
+            categoriaCategorizada.add(tag)
             //agrego la categoria a la variable global
-            categorias.put("${categoriaTag.getCategoria()}", true)
+            categorias[tag.getCategoria()] = true
             //paso la categoria global a la funcion que me retorna un array conlas categorias
             // sin repeticiones
-            var nCategoria = agregar(categorias)
+            val nCategoria = agregar(categorias)
             //aqui llamo a la funcion que inserta la categoria a la base de datos
             local.gestionarCategoriaLocal(
                 false, categoriaCategorizada, idLocal, ciudad
             )
             //
-            llenarCategorias(nCategoria, rvCategorias, true)
+            llenarCategorias(nCategoria, rvCategorias)
         }
 
         return object : AdapterView.OnItemSelectedListener {
             fun anadirCategoriaPocion(position: Int) {
-                var local = Locales()
-                var categoriaTag: EnumCategoria
+                val local = Locales()
+                val categoriaTag: EnumCategoria
                 when (position) {
                     1 -> {
                         categoriaTag = EnumCategoria.ALMUERZO
-                        Toast.makeText(context, position.toString(), Toast.LENGTH_SHORT).show()
-                        añadirDb(categoriaTag, local)
+                        anadirDb(categoriaTag, local)
                     }
                     2 -> {
                         categoriaTag = EnumCategoria.DESAYUNOS
-                        Toast.makeText(context, position.toString(), Toast.LENGTH_SHORT).show()
-
-                        añadirDb(categoriaTag, local)
+                        anadirDb(categoriaTag, local)
                     }
                     3 -> {
-                        Toast.makeText(context, position.toString(), Toast.LENGTH_SHORT).show()
 
                         categoriaTag = EnumCategoria.MERIENDAS
-                        añadirDb(categoriaTag, local)
+                        anadirDb(categoriaTag, local)
                     }
                     4 -> {
-                        Toast.makeText(context, position.toString(), Toast.LENGTH_SHORT).show()
-
                         categoriaTag = EnumCategoria.POSTRES
-                        añadirDb(categoriaTag, local)
+                        anadirDb(categoriaTag, local)
                     }
                     5 -> {
-                        Toast.makeText(context, position.toString(), Toast.LENGTH_SHORT).show()
 
                         categoriaTag = EnumCategoria.BBQ
-                        añadirDb(categoriaTag, local)
+                        anadirDb(categoriaTag, local)
                     }
                     6 -> {
-                        Toast.makeText(context, position.toString(), Toast.LENGTH_SHORT).show()
-
                         categoriaTag = EnumCategoria.COMIDARAPIDA
-                        añadirDb(categoriaTag, local)
+                        anadirDb(categoriaTag, local)
                     }
                     7 -> {
-                        Toast.makeText(context, position.toString(), Toast.LENGTH_SHORT).show()
-
                         categoriaTag = EnumCategoria.MARISCOS
-                        añadirDb(categoriaTag, local)
+                        anadirDb(categoriaTag, local)
                     }
                     8 -> {
-                        Toast.makeText(context, position.toString(), Toast.LENGTH_SHORT).show()
-
                         categoriaTag = EnumCategoria.POLLOS
-                        añadirDb(categoriaTag, local)
+                        anadirDb(categoriaTag, local)
                     }
                     9 -> {
-                        Toast.makeText(context, position.toString(), Toast.LENGTH_SHORT).show()
-
                         categoriaTag = EnumCategoria.HELADOS
-                        añadirDb(categoriaTag, local)
+                        anadirDb(categoriaTag, local)
                     }
                     10 -> {
-                        Toast.makeText(context, position.toString(), Toast.LENGTH_SHORT).show()
-
                         categoriaTag = EnumCategoria.HAMBURGUESAS
-                        añadirDb(categoriaTag, local)
+                        anadirDb(categoriaTag, local)
                     }
                     11 -> {
-                        Toast.makeText(context, position.toString(), Toast.LENGTH_SHORT).show()
-
                         categoriaTag = EnumCategoria.PIZZAS
-                        añadirDb(categoriaTag, local)
+                        anadirDb(categoriaTag, local)
                     }
                 }
-
+                comboCategorias.setSelection(0)
             }
 
             override fun onItemSelected(
@@ -767,9 +471,9 @@ class FragmentLocal : Fragment() {
 
 
     //esta funcion me consulta el local en el nodo MiembrosVendedores
-    fun traerLocal(idUser: String, ciudad: String) {
+    private fun traerLocal(idUser: String, ciudad: String) {
         val qry = ref.child(
-            "${EnumReferenciasDB.MIEMBROSVENDEDORES.rutaDB()}" +
+            EnumReferenciasDB.MIEMBROSVENDEDORES.rutaDB() +
                     "/${ciudad}/${idUser}"
         )
         val listener = object : ChildEventListener {
@@ -798,7 +502,7 @@ class FragmentLocal : Fragment() {
         qry.addChildEventListener(listener)
     }
 
-    fun pintarDatosLocal(idLocal: String) {
+    private fun pintarDatosLocal(idLocal: String) {
         fun atachCampos(nombre: String, horaInicioS: String, horaCierreS: String) {
             nombrelocal.setText(nombre)
             horaInicio.setText(horaInicioS)
@@ -806,7 +510,7 @@ class FragmentLocal : Fragment() {
         }
 
         val qry =
-            ref.child("${EnumReferenciasDB.LOCALES.rutaDB()}").orderByKey().equalTo(idLocal)
+            ref.child(EnumReferenciasDB.LOCALES.rutaDB()).orderByKey().equalTo(idLocal)
         var local: Local
         val listener = object : ChildEventListener {
             override fun onCancelled(p0: DatabaseError) {
@@ -833,12 +537,12 @@ class FragmentLocal : Fragment() {
                 for (menu in local.miembrosMenus) {
                     for (nombre in menu.value) {
                         menusTittles.add(nombre.value)
-                        nombresMenus.put(nombre.value, menu.key)
+                        nombresMenus[nombre.value] = menu.key
                     }
                     menusId.add(menu.key)
                 }
 
-                llenarCategorias(categorias, rvCategorias, true)
+                llenarCategorias(categorias, rvCategorias)
                 llenarMenus(menusTittles, menusId)
 
             }
@@ -859,12 +563,12 @@ class FragmentLocal : Fragment() {
                 for (menu in local.miembrosMenus) {
                     for (nombre in menu.value) {
                         menusTittles.add(nombre.value)
-                        nombresMenus.put(nombre.value, menu.key)
+                        nombresMenus[nombre.value] = menu.key
                     }
                     menusId.add(menu.key)
                 }
 
-                llenarCategorias(categorias, rvCategorias, true)
+                llenarCategorias(categorias, rvCategorias)
                 llenarMenus(menusTittles, menusId)
             }
 
@@ -885,12 +589,12 @@ class FragmentLocal : Fragment() {
                 for (menu in local.miembrosMenus) {
                     for (nombre in menu.value) {
                         menusTittles.add(nombre.value)
-                        nombresMenus.put(nombre.value, menu.key)
+                        nombresMenus[nombre.value] = menu.key
                     }
                     menusId.add(menu.key)
                 }
 
-                llenarCategorias(categorias, rvCategorias, true)
+                llenarCategorias(categorias, rvCategorias)
             }
 
         }
@@ -901,80 +605,59 @@ class FragmentLocal : Fragment() {
     /*
     * esta funcion se encarga de llenar el rv con el arreglo de categorias que se le pasa
     * */
-    fun llenarCategorias(categoriasL: ArrayList<String>, rv: RecyclerView, global: Boolean) {
+    private fun llenarCategorias(
+        categoriasL: ArrayList<String>,
+        rv: RecyclerView
+    ) {
         //aqui lleno por primera vez mi variable global de categorias
         var categoriasN = ArrayList<String>()
-        var categoriasNuevaGlobal = HashMap<String, Boolean>()
-        if (isAdded){
-        if (categoriasL.size > 0) {
-            if (global) {
+        val categoriasNuevaGlobal = HashMap<String, Boolean>()
+        if (isAdded) {
+            if (categoriasL.size > 0) {
                 for (categoria in categoriasL) {
-                    categoriasNuevaGlobal.put(categoria, true)
+                    categoriasNuevaGlobal[categoria] = true
                 }
                 categorias = categoriasNuevaGlobal
                 //lleno el array categoriasN con las keys de mi variable global
                 for (categoria in categorias.keys) {
                     categoriasN.add(categoria)
                 }
-            } else {
-                categoriasN = categoriasL
-            }
-            //seteo mi rv y lo lleno
-            rv.apply {
-                this.layoutManager = LinearLayoutManager(
-                    context,
-                    LinearLayoutManager.HORIZONTAL, false
-                )
-
-                if (!global) {
-
+                //seteo mi rv y lo lleno
+                rv.apply {
+                    this.layoutManager = GridLayoutManager(context, 3)
+                    val ids = HashMap<String, String>()
+                    ids["ciudad"] = ciudad
+                    ids["idLocal"] = idLocal
                     this.adapter =
-                        CategoriaAdapter(
+                        CategoriaLocalAdapter(
                             categoriasN,
-                            false,
-                            null,
-                            null,
-                            null,
-                            null,
-                            idLocal,
-                            ciudad,
-                            !global
+                            ids
                         )
-
-
                 }
-                this.adapter =
-                    CategoriaAdapter(
-                        categoriasN,
-                        false,
-                        null,
-                        null,
-                        null,
-                        null,
-                        idLocal,
-                        ciudad,
-                        global
-                    )
             }
-        }}
+        }
     }
 
-    fun llenarMenus(menusTittles: ArrayList<String>, menusId: ArrayList<String>) {
+    private fun llenarMenus(menusTittles: ArrayList<String>, menusId: ArrayList<String>) {
         if (isAdded) {
             if (menusTittles.size > 0) {
                 for (titulo in menusTittles) {
-                    titulos.put(titulo, true)
+                    titulos[titulo] = true
                 }
-                var adapter = MiembrosMenusViewPagerAdapter(this, menusId, idLocal)
+                //este adaptador maneja el adaptador de la pag
+                val adapter = MiembrosMenusViewPagerAdapter(this, menusId, idLocal)
                 pager.adapter = adapter
 
                 TabLayoutMediator(titulosMenu, pager,
                     TabLayoutMediator.TabConfigurationStrategy { tab, position ->
                         tab.text = menusTittles[position]
+                        tab.setIcon(R.drawable.ic_restaurant_menu)
 
+                        tab.view.setOnClickListener {
+                            Toast.makeText(it.context, "click", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 ).attach()
-
             }
         }
     }
