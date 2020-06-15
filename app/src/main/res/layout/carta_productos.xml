@@ -1,107 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardViewProductos"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/cardViewProductos"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginTop="16dp"
-    app:strokeWidth="1dp"
-    app:cardElevation="5dp"
-    app:strokeColor="@color/colorGris">
+    app:cardCornerRadius="10dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
->
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline12"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="116dp" />
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp">
 
         <ImageView
-            android:id="@+id/ImageViewCartaProducto"
+            android:id="@+id/imgVCartaProducto"
             android:layout_width="0dp"
             android:layout_height="0dp"
-
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/guideline12"
+            android:src="@drawable/prueba"
+            android:scaleType="centerCrop"
+            app:layout_constraintDimensionRatio="4:1"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/txtVTituloCartaProducto"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginLeft="20dp"
+            android:text="Hamburguesa Triople con Queso y Chedar"
+            app:layout_constraintTop_toBottomOf="@+id/imgVCartaProducto"
             android:layout_marginTop="16dp"
-            android:layout_marginRight="25dp"
-            app:layout_goneMarginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:textColor="@color/colorTexto"
             android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/guideline12"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Hamburguesa Triple con Queso"
-            android:layout_marginEnd="25sp" />
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/txtcartaProductoDescripcion"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="25dp"
-            android:layout_marginRight="25dp"
-            android:textColor="@color/colorTexto"
-            android:textSize="15sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/guideline12"
-            app:layout_constraintTop_toBottomOf="@+id/txtVTituloCartaProducto"
-            tools:text="descripcion que va en un producto pra probrar que tal" />
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="16dp"
+            android:text="Hamburguesa Triople con Queso y Chedar"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtVTituloCartaProducto" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/txtcartaProductoPrecio"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:text="$40"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btnEliminarCartaProducto"
+            app:layout_constraintTop_toBottomOf="@+id/txtcartaProductoDescripcion" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnEditarCartaProducto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="16dp"
-            android:textColor="@color/colorPrimary"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/guideline12"
-            app:layout_constraintTop_toBottomOf="@+id/txtcartaProductoDescripcion"
-            tools:text="20" />
+            android:text="@string/editar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txtcartaProductoDescripcion" />
 
-        <ImageView
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnEliminarCartaProducto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_money"
-            android:tint="@color/colorPrimary"
-            app:layout_constraintStart_toEndOf="@+id/txtcartaProductoPrecio"
-            app:layout_constraintTop_toTopOf="@+id/txtcartaProductoPrecio" />
-
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:id="@+id/imgOpcionesCartaProductos"
-            android:src="@drawable/ic_opciones"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/txtcartaProductoDescripcion"
-            app:layout_constraintTop_toTopOf="parent"
-            android:tint="@color/colorGris"/>
-
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/eliminar"
+            app:layout_constraintStart_toEndOf="@+id/btnEditarCartaProducto"
+            app:layout_constraintTop_toBottomOf="@+id/txtcartaProductoDescripcion" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

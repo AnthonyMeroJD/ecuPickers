@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -131,6 +132,7 @@ class FragmentLocal : Fragment() {
         desplegarTimePicker(horaCierre)
         mostrarProductoPopWindows(anadirProductoBtn)
         mostrarPopNuevoMenu(btnAgregarMenu)
+        toolbar.overflowIcon=ContextCompat.getDrawable(requireContext(),R.drawable.ic_edit)
         toolbar.setOnMenuItemClickListener(menuToolbar())
     }
 
@@ -181,6 +183,7 @@ class FragmentLocal : Fragment() {
                     editar = it
                     toolbar.menu.removeItem(it.itemId)
                     guardar = toolbar.menu.add(R.string.guardar)
+                    guardar.isVisible=false
                     cancelar = toolbar.menu.add(R.string.cancelar)
                     habilitarEdicion(true)
                 }
@@ -254,6 +257,7 @@ class FragmentLocal : Fragment() {
                         editar = it
                         toolbar.menu.removeItem(it.itemId)
                         guardar = toolbar.menu.add(R.string.guardar)
+                        guardar.isVisible=false
                         cancelar = toolbar.menu.add(R.string.cancelar)
                         habilitarEdicion(true)
                     }

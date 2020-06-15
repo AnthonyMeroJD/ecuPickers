@@ -53,7 +53,7 @@ class ContenidMenu : Fragment() {
         var titulo = view.txtVTituloCartaProducto!!
         var descripcion = view.txtcartaProductoDescripcion!!
         var precio = view.txtcartaProductoPrecio!!
-        var opciones = view.imgOpcionesCartaProductos!!
+        var opciones = view.btnEditarCartaProducto!!
 
     }
 

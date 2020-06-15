@@ -83,6 +83,7 @@
     <string name="menu_tu_inicio">Inicio</string>
     <string name="menu_tus_productos">Tus Productos</string>
     <string name="menu_tu_local">Tu local</string>
+    <string name="eliminar">Eliminar</string>
 
 
 </resources>
