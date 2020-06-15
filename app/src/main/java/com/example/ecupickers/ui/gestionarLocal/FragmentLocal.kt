@@ -44,6 +44,7 @@ import kotlinx.android.synthetic.main.carta_nuevo_menu.*
 import kotlinx.android.synthetic.main.fondo_local2.*
 import kotlinx.android.synthetic.main.fondo_local2.view.txtHoraInicio
 import kotlinx.android.synthetic.main.fondo_local2.view.txthoraCierre
+import kotlinx.android.synthetic.main.fragment_local.view.*
 
 
 class FragmentLocal : Fragment() {
@@ -158,7 +159,6 @@ class FragmentLocal : Fragment() {
 
         mostrarProductoPopWindows(context, añadirProductoBtn)
         mostrarPopNuevoMenu(btnAgregarMenu)
-
         toolbar.setOnMenuItemClickListener(menuToolbar())
     }
 

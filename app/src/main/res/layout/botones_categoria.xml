@@ -11,6 +11,8 @@
 
 
     <com.google.android.material.chip.Chip
+        app:chipStartPadding="5dp"
+        app:chipEndPadding="10dp"
         android:id="@+id/btnCategoriaTituloCategoria"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

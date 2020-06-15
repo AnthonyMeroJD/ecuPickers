@@ -18,20 +18,22 @@
             android:id="@+id/textView11"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginLeft="32dp"
             android:layout_marginTop="24dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginRight="32dp"
             android:gravity="center_horizontal"
             android:text="@string/añadir_producto_existente_menu"
             android:textAlignment="center"
             android:textColor="@color/colorTexto"
-            android:textSize="20sp"
+            android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+
 
 
         <TextView
@@ -51,12 +53,13 @@
             android:id="@+id/linearLayout3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/colorFondoBotonCategoria"
+            android:background="@drawable/borde"
             android:orientation="vertical"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
+
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView12">
@@ -93,7 +96,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
-            android:background="@color/colorFondoBotonCategoria"
+            android:background="@drawable/borde"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -108,6 +111,20 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView10" />
         </LinearLayout>
 
+        <View
+            android:id="@+id/divider5"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            app:layout_goneMarginTop="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="7dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
         <TextView
             android:id="@+id/textView13"
             android:layout_width="wrap_content"
@@ -128,7 +145,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
-            android:background="@color/colorFondoBotonCategoria"
+            android:background="@drawable/borde"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -137,7 +154,6 @@
                 android:id="@+id/listViewProductosSeleccionados"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView13" />
@@ -164,6 +180,35 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout5"
             tools:targetApi="lollipop" />
+
+        <View
+            android:id="@+id/divider3"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            app:layout_goneMarginTop="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="7dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView11" />
+        <View
+        android:id="@+id/divider4"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        app:layout_goneMarginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="7dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

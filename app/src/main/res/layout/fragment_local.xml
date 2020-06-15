@@ -1,18 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.gestionarLocal.FragmentLocal">
     <include
         layout="@layout/fondo_local2"
 
         />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnAgregarNuevoMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_money"
+        android:layout_margin="16dp"
+        android:layout_gravity="bottom|end"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+
+        app:layout_anchorGravity="bottom|right|end"
+        app:elevation="6dp"
+        app:fabSize="normal"
+        />
 
 
-</androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
 
