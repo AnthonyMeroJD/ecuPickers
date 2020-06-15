@@ -2,276 +2,286 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/coloBlancoFondo"
+    android:scrollbars="vertical"
     >
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:overScrollMode="never">
 
-        >
 
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintDimensionRatio="2:1"
-            android:src="@drawable/ic_add_circle"
-            android:tint="@color/colorGris"
-            android:background="@drawable/imagen_fondo_gris"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layoutNombreProducto"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:hint="@string/nombre_producto"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline5"
-            app:layout_constraintTop_toBottomOf="@id/imageView2">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/txtCartaProductoNombre"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            >
 
-        </com.google.android.material.textfield.TextInputLayout>
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="2:1"
+                android:src="@drawable/ic_add_circle"
+                android:tint="@color/colorGris"
+                android:background="@drawable/imagen_fondo_gris"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layoutPrecioProducto"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            android:hint="@string/precio"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layoutNombreProducto"
-            app:startIconDrawable="@drawable/ic_money">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/txtcartaProductoPrecio"
-                android:layout_width="match_parent"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutNombreProducto"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:inputType="numberDecimal" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:hint="@string/nombre_producto"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/guideline5"
+                app:layout_constraintTop_toBottomOf="@id/imageView2">
 
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtCartaProductoNombre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layoutDescripcionProducto"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:hint="@string/descripcion"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layoutPrecioProducto">
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/txtcartaProductoDescripcion"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/categoria"
-            android:textSize="20sp"
-            android:textStyle="italic"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layoutDescripcionProducto" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvCartaAgregarProductoCategoria"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toStartOf="@+id/guideline2"
-            app:layout_constraintStart_toStartOf="@+id/guideline5"
-            app:layout_constraintTop_toBottomOf="@+id/textView3"
-            tools:itemCount="1"
-            tools:listitem="@layout/botones_categoria">
-
-
-        </androidx.recyclerview.widget.RecyclerView>
-
-
-        <Spinner
-            android:id="@+id/spinnerCartaAgregarProductoCategoria"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:tint="@color/colorTexto"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rvCartaAgregarProductoCategoria" />
-
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="395dp" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="16dp" />
-
-
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/tiempo_estimado"
-            android:textSize="20sp"
-            android:textStyle="italic"
-            app:layout_constraintStart_toStartOf="@+id/guideline5"
-            app:layout_constraintTop_toBottomOf="@+id/spinnerCartaAgregarProductoCategoria" />
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layoutMinInicio"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:hint="@string/min"
-            app:layout_constraintEnd_toStartOf="@+id/guideline11"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView6"
-            app:startIconDrawable="@drawable/ic_clock">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/txtCartaProductoTiempoEstimadoInicio"
-                android:layout_width="match_parent"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutPrecioProducto"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:inputType="phone"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
+                android:hint="@string/precio"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layoutNombreProducto"
+                app:startIconDrawable="@drawable/ic_money">
 
-                />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtcartaProductoPrecio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layoutMinFinal"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:hint="@string/min"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/layoutMinInicio"
-            app:layout_constraintTop_toBottomOf="@+id/textView6"
-            app:startIconDrawable="@drawable/ic_clock">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/txtCartaProductoTiempoEstimadoFin"
-                android:layout_width="match_parent"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutDescripcionProducto"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
-                android:textSize="16sp" />
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:hint="@string/descripcion"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layoutPrecioProducto">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtcartaProductoDescripcion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-
-        <TextView
-            android:id="@+id/textView7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/menu_opcional"
-            android:textSize="20sp"
-            android:textStyle="italic"
-            app:layout_constraintStart_toStartOf="@+id/guideline5"
-            app:layout_constraintTop_toBottomOf="@+id/layoutMinInicio" />
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvCartaAgregarProductoMenu"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toStartOf="@+id/guideline2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView7"
-            tools:itemCount="1"
-            tools:listitem="@layout/botones_categoria" />
+            </com.google.android.material.textfield.TextInputLayout>
 
 
-        <Spinner
-            android:id="@+id/spinnerCartaAgregarProductoMenu"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:tint="@color/colorTexto"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline5"
-            app:layout_constraintTop_toBottomOf="@+id/rvCartaAgregarProductoMenu" />
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/categoria"
+                android:textSize="20sp"
+                android:textStyle="italic"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layoutDescripcionProducto" />
 
-        <Button
-            android:id="@+id/btnCartaAgregarProductoCrear"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:backgroundTint="@color/colorPrimary"
-            android:text="@string/crear"
-            android:textColor="@color/coloBlancoFondo"
-            app:layout_constraintEnd_toStartOf="@+id/guideline2"
-            app:layout_constraintStart_toStartOf="@+id/guideline5"
-            app:layout_constraintTop_toBottomOf="@+id/spinnerCartaAgregarProductoMenu" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline11"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="208dp" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvCartaAgregarProductoCategoria"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toStartOf="@+id/guideline2"
+                app:layout_constraintStart_toStartOf="@+id/guideline5"
+                app:layout_constraintTop_toBottomOf="@+id/textView3"
+                tools:itemCount="1"
+                tools:listitem="@layout/botones_categoria">
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.recyclerview.widget.RecyclerView>
+
+
+            <Spinner
+                android:id="@+id/spinnerCartaAgregarProductoCategoria"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:tint="@color/colorTexto"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rvCartaAgregarProductoCategoria" />
+
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="395dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="16dp" />
+
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tiempo_estimado"
+                android:textSize="20sp"
+                android:textStyle="italic"
+                app:layout_constraintStart_toStartOf="@+id/guideline5"
+                app:layout_constraintTop_toBottomOf="@+id/spinnerCartaAgregarProductoCategoria" />
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutMinInicio"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:hint="@string/min"
+                app:layout_constraintEnd_toStartOf="@+id/guideline11"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView6"
+                app:startIconDrawable="@drawable/ic_clock">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtCartaProductoTiempoEstimadoInicio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="phone"
+
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutMinFinal"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:hint="@string/min"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/layoutMinInicio"
+                app:layout_constraintTop_toBottomOf="@+id/textView6"
+                app:startIconDrawable="@drawable/ic_clock">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtCartaProductoTiempoEstimadoFin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:textSize="16sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <TextView
+                android:id="@+id/txtTituloMenuCartaAgregarProducto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/menu_opcional"
+                android:textSize="20sp"
+                android:textStyle="italic"
+                app:layout_constraintStart_toStartOf="@+id/guideline5"
+                app:layout_constraintTop_toBottomOf="@+id/layoutMinInicio" />
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvCartaAgregarProductoMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toStartOf="@+id/guideline2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtTituloMenuCartaAgregarProducto"
+                tools:itemCount="1"
+                tools:listitem="@layout/botones_categoria" />
+
+
+            <Spinner
+                android:id="@+id/spinnerCartaAgregarProductoMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:tint="@color/colorTexto"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/guideline5"
+                app:layout_constraintTop_toBottomOf="@+id/rvCartaAgregarProductoMenu" />
+
+            <Button
+                android:id="@+id/btnCartaAgregarProductoCrear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="@color/colorPrimary"
+                android:text="@string/crear"
+                android:textColor="@color/coloBlancoFondo"
+                app:layout_constraintEnd_toStartOf="@+id/guideline2"
+                app:layout_constraintStart_toStartOf="@+id/guideline5"
+                app:layout_constraintTop_toBottomOf="@+id/spinnerCartaAgregarProductoMenu" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="208dp" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+
 
 
 

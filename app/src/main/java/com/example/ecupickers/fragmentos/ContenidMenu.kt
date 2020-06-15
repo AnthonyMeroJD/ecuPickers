@@ -1,32 +1,32 @@
 package com.example.ecupickers.fragmentos
 
 import android.os.Bundle
-import android.view.Gravity
+
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.PopupWindow
 import android.widget.Toast
+
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+
 import androidx.recyclerview.widget.RecyclerView
 
 import com.example.ecupickers.R
-import com.example.ecupickers.adapters.CategoriaAdapter
 import com.example.ecupickers.constantes.EnumCamposDB
+import com.example.ecupickers.constantes.EnumCategoria
 
 import com.example.ecupickers.constantes.EnumReferenciasDB
+import com.example.ecupickers.dialogs.DialogoAddProductosAlMenu
+import com.example.ecupickers.dialogs.DialogoCartaAgregarProducto
 import com.example.ecupickers.factory.DbReference
-import com.example.ecupickers.modelos.Menu
+
 import com.example.ecupickers.modelos.MiembrosAlimentos
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.database.*
-import kotlinx.android.synthetic.main.carta_add_productos_al_menu.*
-import kotlinx.android.synthetic.main.carta_add_productos_al_menu.view.*
 import kotlinx.android.synthetic.main.carta_add_productos_al_menu.view.cartaAddProductosAlMenu
-import kotlinx.android.synthetic.main.carta_add_productos_menu_existente.view.*
 import kotlinx.android.synthetic.main.carta_productos.view.*
 import kotlinx.android.synthetic.main.recyclerview_carta_productos.view.*
 
@@ -34,25 +34,27 @@ import kotlinx.android.synthetic.main.recyclerview_carta_productos.view.*
 class ContenidMenu : Fragment() {
 
     private lateinit var rv: RecyclerView
-    private lateinit var idLocal:String
+    private lateinit var idLocal: String
     private lateinit var idMenu: String
     private lateinit var opciones: FirebaseRecyclerOptions<MiembrosAlimentos>
     private lateinit var adapter: FirebaseRecyclerAdapter<MiembrosAlimentos, MenuViewHolder>
     private lateinit var reference: DatabaseReference
     private lateinit var qry: Query
     private lateinit var btnAddAlimentoAlMenu: ConstraintLayout
-    private lateinit var idCategoria:String
+
 
     companion object {
         var IDMENU: String = "idMenu"
-        var IDCATEGORIA:String="idCategoria"
-        var IDLOCAL:String="idLocal"
+        var IDLOCAL: String = "idLocal"
+        var IDPRODUCTO:String="idProducto"
     }
 
     inner class MenuViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var titulo = view.txtVTituloCartaProducto
-        var descripcion = view.txtcartaProductoDescripcion
-        var precio = view.txtcartaProductoPrecio
+        var titulo = view.txtVTituloCartaProducto!!
+        var descripcion = view.txtcartaProductoDescripcion!!
+        var precio = view.txtcartaProductoPrecio!!
+        var opciones = view.imgOpcionesCartaProductos!!
+
     }
 
     override fun onCreateView(
@@ -71,10 +73,19 @@ class ContenidMenu : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        adapter = gestionarRvProductos(qry)
+        rv.layoutManager = LinearLayoutManager(context)
+        rv.adapter = adapter
+        adapter.startListening()
+        mostrarCarta(btnAddAlimentoAlMenu)
+    }
+
+    private fun gestionarRvProductos(qry: Query):
+            FirebaseRecyclerAdapter<MiembrosAlimentos, MenuViewHolder> {
         opciones =
             FirebaseRecyclerOptions.Builder<MiembrosAlimentos>()
                 .setQuery(qry, MiembrosAlimentos::class.java).build()
-        adapter = object : FirebaseRecyclerAdapter<MiembrosAlimentos, MenuViewHolder>(opciones) {
+        return object : FirebaseRecyclerAdapter<MiembrosAlimentos, MenuViewHolder>(opciones) {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MenuViewHolder {
                 val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.carta_productos, parent, false)
@@ -86,59 +97,28 @@ class ContenidMenu : Fragment() {
                 position: Int,
                 model: MiembrosAlimentos
             ) {
-                holder.descripcion.text = model.descripcion
-                holder.precio.text = model.precio
-                holder.titulo.text = model.nombre
+
+                val descripcion = model.descripcion
+                val precio = model.precio
+                val nombre = model.nombre
+                val idProducto=model.id
+                holder.descripcion.text = descripcion
+                holder.precio.text = precio
+                holder.titulo.text = nombre
+                holder.opciones.setOnClickListener {
+                    editarProducto(idProducto,idLocal)
+                }
             }
         }
-        rv.layoutManager = LinearLayoutManager(context)
-        rv.adapter = adapter
-        adapter.startListening()
-        mostrarCarta(btnAddAlimentoAlMenu)
     }
 
-    fun mostrarCarta(view: View) {
-        val window = PopupWindow(context)
-        val v = layoutInflater.inflate(R.layout.carta_add_productos_menu_existente, null)
-        window.contentView = v
-        window.isOutsideTouchable = true
-        window.isFocusable = true
-        view.setOnClickListener {
-            window.showAtLocation(view, Gravity.CENTER, 0, 0)
-            manejarCartaAdd(window)
-        }
-    }
-
-    fun manejarCartaAdd(view: PopupWindow) {
-
-        var rvCategoria = view.contentView.listViewCategoriaMostrar
-        var rvProducto=view.contentView.listViewProductosAñadir
-        var rvElegidos=view.contentView.listViewProductosSeleccionados
-        var btnAgregar=view.contentView.btnCartaaddProductosMenuExistente
-        var categoria = arrayListOf(
-            "Almuerzos",
-            "Desayunos",
-            "Meriendas",
-            "Postres",
-            "BBQ",
-            "Comida Rapida",
-            "Mariscos",
-            "Pollos",
-            "Helados",
-            "Hamburguesas",
-            "Pizzas"
-        )
-        rvCategoria.apply {
-            layoutManager = LinearLayoutManager(
-                context,
-                LinearLayoutManager.VERTICAL, false
-            )
-            var ids=HashMap<String,String>()
-            ids.put(IDMENU,idMenu)
-            ids.put(IDLOCAL,idLocal)
-            adapter = CategoriaAdapter(categoria,true,rvProducto,rvElegidos,btnAgregar,ids)
-        }
-
+    private fun editarProducto(idProducto:String,idLocal:String) {
+        val bundle=Bundle()
+        val window = DialogoCartaAgregarProducto(true)
+        bundle.putString(IDPRODUCTO,idProducto)
+        bundle.putString(IDLOCAL,idLocal)
+        window.arguments=bundle
+        window.show(childFragmentManager, "DialogoEditarProducto")
 
     }
 
@@ -146,10 +126,19 @@ class ContenidMenu : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             idMenu = it.getString(IDMENU)!!
-            idLocal=it.getString(IDLOCAL)!!
+            idLocal = it.getString(IDLOCAL)!!
         }
+    }
 
-
+    private fun mostrarCarta(view: View) {
+        val window = DialogoAddProductosAlMenu()
+        val bundle = Bundle()
+        view.setOnClickListener {
+            bundle.putString(IDLOCAL, idLocal)
+            bundle.putString(IDMENU, idMenu)
+            window.arguments = bundle
+            window.show(childFragmentManager, "DialogoAddProductoAlMenu")
+        }
     }
 
 

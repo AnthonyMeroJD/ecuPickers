@@ -138,20 +138,15 @@ class Locales {
         val childUpdates = HashMap<String, Any>()
         //aqui elimina
         if (eliminar && idMenu != null) {
-            childUpdates.put(
-                "${EnumReferenciasDB.LOCALES.rutaDB()}/${idLocal}/" +
-                        "${EnumCamposDB.MIEMBROSMENUS.getCampos()}/" +
-                        "${idMenu}/${EnumCamposDB.NOMBRE.getCampos()}",
-                "false"
-            )
+            childUpdates["${EnumReferenciasDB.LOCALES.rutaDB()}/${idLocal}/" +
+                    "${EnumCamposDB.MIEMBROSMENUS.getCampos()}/" +
+                    "${idMenu}/${EnumCamposDB.NOMBRE.getCampos()}"] = "false"
+
 
         } else {
-            childUpdates.put(
-                "${EnumReferenciasDB.LOCALES.rutaDB()}/${idLocal}/" +
-                        "${EnumCamposDB.MIEMBROSMENUS.getCampos()}/" +
-                        "${key}/${EnumCamposDB.NOMBRE.getCampos()}",
-                nombreMenu
-            )
+            childUpdates["${EnumReferenciasDB.LOCALES.rutaDB()}/${idLocal}/" +
+                    "${EnumCamposDB.MIEMBROSMENUS.getCampos()}/" +
+                    "${key}/${EnumCamposDB.NOMBRE.getCampos()}"] = nombreMenu
         }
         ref.updateChildren(childUpdates)
     }

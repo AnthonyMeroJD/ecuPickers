@@ -13,10 +13,11 @@ class MiembrosMenusViewPagerAdapter(
     : FragmentStateAdapter(fm) {
     private var idMenus=idMenus
     private var idLocal=idlocal
+    private lateinit var fragment: ContenidMenu
     override fun getItemCount(): Int =idMenus.size
 
     override fun createFragment(position: Int): Fragment {
-        val fragment=ContenidMenu()
+        fragment=ContenidMenu()
         val buddle=Bundle()
         buddle.putString("idMenu",idMenus[position])
         buddle.putString("idLocal",idLocal)
