@@ -16,14 +16,14 @@ import com.example.ecupickers.factory.DbReference
 class Menus {
 
 
-    fun gestionarNombre(nombre: String, idMenu: String) {
+    fun gestionarNombre(nombre: String, idLocal: String, idMenu: String) {
         val childUpdates = HashMap<String, Any>()
         val ref = DbReference.getRef(EnumReferenciasDB.ROOT)
         //ojo si la ruta no existe la crea e inserta los datos
-        childUpdates.put(
-            "${EnumReferenciasDB.MENUS.rutaDB()}/${idMenu}/${EnumCamposDB.NOMBRE.getCampos()}"
-            , nombre
-        )
+        childUpdates["${EnumReferenciasDB.LOCALES.rutaDB()}/${idLocal}/" +
+                "${EnumCamposDB.MIEMBROSMENUS.getCampos()}/${idMenu}/" +
+                "${EnumCamposDB.NOMBRE.getCampos()}"] =
+            nombre
         ref.updateChildren(childUpdates)
     }
 
@@ -37,33 +37,41 @@ class Menus {
     }
 
     fun gestionarAlimentosAMenu(
-        idAlimento:String,
-        nombreAlimento:String,
-        descripcion:String,
-        precio:String,
+        idAlimento: String,
+        nombreAlimento: String,
+        descripcion: String,
+        precio: String,
         idMenu: String
     ) {
         val childUpdates = HashMap<String, Any>()
         val ref = DbReference.getRef(EnumReferenciasDB.ROOT)
 
-            childUpdates.put(
-                "${EnumReferenciasDB.MENUS.rutaDB()}/${idMenu}/" +
-                        "${EnumCamposDB.MIEMBROSALIMENTOS.getCampos()}/" +
-                        "${idAlimento}/${EnumCamposDB.NOMBRE.getCampos()}",nombreAlimento
-            )
-            childUpdates.put(
-                "${EnumReferenciasDB.MENUS.rutaDB()}/${idMenu}/" +
-                        "${EnumCamposDB.MIEMBROSALIMENTOS.getCampos()}/" +
-                        "${idAlimento}/${EnumCamposDB.DESCRIPCION.getCampos()}",descripcion
-            )
         childUpdates.put(
             "${EnumReferenciasDB.MENUS.rutaDB()}/${idMenu}/" +
                     "${EnumCamposDB.MIEMBROSALIMENTOS.getCampos()}/" +
-                    "${idAlimento}/${EnumCamposDB.PRECIO.getCampos()}",precio
+                    "${idAlimento}/${EnumCamposDB.NOMBRE.getCampos()}", nombreAlimento
+        )
+        childUpdates.put(
+            "${EnumReferenciasDB.MENUS.rutaDB()}/${idMenu}/" +
+                    "${EnumCamposDB.MIEMBROSALIMENTOS.getCampos()}/" +
+                    "${idAlimento}/${EnumCamposDB.DESCRIPCION.getCampos()}", descripcion
+        )
+        childUpdates.put(
+            "${EnumReferenciasDB.MENUS.rutaDB()}/${idMenu}/" +
+                    "${EnumCamposDB.MIEMBROSALIMENTOS.getCampos()}/" +
+                    "${idAlimento}/${EnumCamposDB.PRECIO.getCampos()}", precio
         )
 
         ref.updateChildren(childUpdates)
 
     }
 
+    fun eliminarMenu(idLocal: String, idMenu: String) {
+        val childUpdates = HashMap<String, Any?>()
+        val ref = DbReference.getRef(EnumReferenciasDB.ROOT)
+        childUpdates["${EnumReferenciasDB.MENUS.rutaDB()}/$idMenu"] = null
+        childUpdates["${EnumReferenciasDB.LOCALES.rutaDB()}/$idLocal/" +
+                "${EnumCamposDB.MIEMBROSMENUS.getCampos()}/${idMenu}"]=null
+        ref.updateChildren(childUpdates)
+    }
 }

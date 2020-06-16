@@ -37,7 +37,6 @@
                 app:navigationIcon="@drawable/ic_atras"
                 app:layout_constraintTop_toTopOf="parent"
                 app:menu="@menu/main"
-
                 >
 
 

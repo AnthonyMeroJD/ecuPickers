@@ -113,7 +113,7 @@ class Productos {
         var nombre = alimento.nombre
         var descripcion = alimento.descripcion
         var precio = alimento.precio
-        var id=idAlimento
+        var id = idAlimento
 
         for (menu in idMenus) {
             childUpdates["${EnumReferenciasDB.MENUS.rutaDB()}/${menu}/" +
@@ -162,36 +162,37 @@ class Productos {
         camposValor: HashMap<EnumCamposDB, Any>,
         idLocal: String,
         idProducto: String,
-        idsMenu:HashMap<String,Boolean>
+        idsMenu: HashMap<String, Boolean>
     ) {
         val childUpdates = HashMap<String, Any>()
         val ref = DbReference.getRef(EnumReferenciasDB.ROOT)
-        val menusIds=ArrayList<String>()
-        for (menu in idsMenu){
+        val menusIds = ArrayList<String>()
+        for (menu in idsMenu) {
             menusIds.add(menu.key)
         }
         for (campo in camposValor) {
             when (campo.key.getCampos()) {
                 EnumCamposDB.TIEMPOESTIMADO.getCampos() -> {
-                    var tiempoEstimado =campo.value as String
+                    var tiempoEstimado = campo.value as String
                     childUpdates["${EnumReferenciasDB.MIEMBROSALIMENTOS.rutaDB()}/" +
                             "${idLocal}/${idProducto}/${campo.key.getCampos()}"] = tiempoEstimado
                 }
-                EnumCamposDB.MIEMBROSCATEGORIAS.getCampos()->{
-                    var categorias=campo.value as HashMap <String,Boolean>
+                EnumCamposDB.MIEMBROSCATEGORIAS.getCampos() -> {
+                    var categorias = campo.value as HashMap<String, Boolean>
                     childUpdates["${EnumReferenciasDB.MIEMBROSALIMENTOS.rutaDB()}/" +
                             "${idLocal}/${idProducto}/${campo.key.getCampos()}"] = categorias
                 }
                 else -> {
-                    var valor=campo.value as String
+                    var valor = campo.value as String
                     childUpdates["${EnumReferenciasDB.MIEMBROSALIMENTOS.rutaDB()}/" +
                             "${idLocal}/${idProducto}/${campo.key.getCampos()}"] = valor
-                    for (menu in menusIds){
+                    for (menu in menusIds) {
                         childUpdates["${EnumReferenciasDB.MENUS.rutaDB()}/" +
-                                "${menu}/${EnumCamposDB.MIEMBROSALIMENTOS.getCampos()}/${idProducto}/${campo.key.getCampos()}"] = valor
+                                "${menu}/${EnumCamposDB.MIEMBROSALIMENTOS.getCampos()}/${idProducto}/${campo.key.getCampos()}"] =
+                            valor
                     }
                     childUpdates["${EnumReferenciasDB.PRODUCTOS.rutaDB()}/" +
-                            "${idProducto}/${campo.key.getCampos()}"] =valor
+                            "${idProducto}/${campo.key.getCampos()}"] = valor
                     /*
                     childUpdates["${EnumReferenciasDB.MIEMBROSALIMENTOS.rutaDB()}/" +
                             "${idLocal}/${idProducto}/${campo.key.getCampos()}"] = campo.value
@@ -200,6 +201,16 @@ class Productos {
                 }
             }
         }
+        ref.updateChildren(childUpdates)
+    }
+
+    fun eliminarProductoDeMenu(idLocal: String, idMenu: String, idProducto: String) {
+        val childUpdates = HashMap<String, Any?>()
+        val ref = DbReference.getRef(EnumReferenciasDB.ROOT)
+        childUpdates["${EnumReferenciasDB.MENUS.rutaDB()}/" +
+                "${idMenu}/${EnumCamposDB.MIEMBROSALIMENTOS.getCampos()}/$idProducto"]=null
+        childUpdates["${EnumReferenciasDB.MIEMBROSALIMENTOS.rutaDB()}/$idLocal/$idProducto/" +
+                "${EnumCamposDB.MIEMBROSMENUS.getCampos()}/${idMenu}"]=false
         ref.updateChildren(childUpdates)
     }
 }

@@ -20,7 +20,6 @@
     </group>
 
     <group>
-
         <item android:id="@+id/nav_cerrar_secion"
             android:icon="@drawable/ic_cancel"
             android:title="logout"/>

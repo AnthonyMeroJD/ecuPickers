@@ -4,13 +4,11 @@ package com.example.ecupickers.ui.gestionarLocal
 import android.app.TimePickerDialog
 import android.os.Bundle
 import android.text.InputType
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -65,6 +63,8 @@ class FragmentLocal : Fragment() {
     private lateinit var cancelar: MenuItem
     private lateinit var guardar: MenuItem
     private lateinit var btnAgregarMenu: FloatingActionButton
+    private lateinit var menu: Menu
+    private lateinit var adapterCategorias:CategoriaLocalAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -90,24 +90,20 @@ class FragmentLocal : Fragment() {
         horaCierre = root.txthoraCierre
         horaInicio.isEnabled = false
         horaCierre.isEnabled = false
-
         nombrelocal = root.editText4
         nombrelocal.isEnabled = false
         comboCategorias = root.spinnerCategoriasLocal
+        comboCategorias.isEnabled=false
         titulosMenu = root.titulosMenuHorizontal
         qryUser = ref.child(EnumReferenciasDB.USERS.rutaDB()).orderByKey().equalTo(uid)
         rvCategorias = root.recyclerView
         categorias = HashMap()
         titulos = HashMap()
-        //borrar este toast
-        Toasty.warning(
-            root.context,
-            "${ciudad}/${uid}", Toast.LENGTH_LONG, true
-        ).show()
         pager = root.contenidoMenuHorizontalLocal
         anadirProductoBtn = root.buttonAgregarNuevoProducto
         nombresMenus = HashMap()
         toolbar = root.toolbarLocal
+        menu = toolbar.menu
         return root
     }
 
@@ -132,12 +128,12 @@ class FragmentLocal : Fragment() {
         desplegarTimePicker(horaCierre)
         mostrarProductoPopWindows(anadirProductoBtn)
         mostrarPopNuevoMenu(btnAgregarMenu)
-        toolbar.overflowIcon=ContextCompat.getDrawable(requireContext(),R.drawable.ic_edit)
+        toolbar.overflowIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_edit)
         toolbar.setOnMenuItemClickListener(menuToolbar())
     }
 
     private fun mostrarPopNuevoMenu(btnAccion: FloatingActionButton) {
-        val dialog = DialogoCrearMenu()
+        val dialog = DialogoCrearMenu(false)
         val bundle = Bundle()
         btnAccion.setOnClickListener {
             bundle.putString("idLocal", idLocal)
@@ -178,13 +174,15 @@ class FragmentLocal : Fragment() {
 
     private fun menuToolbar(): Toolbar.OnMenuItemClickListener {
         return Toolbar.OnMenuItemClickListener {
+
             when (it.title.toString()) {
                 "Editar" -> {
                     editar = it
-                    toolbar.menu.removeItem(it.itemId)
-                    guardar = toolbar.menu.add(R.string.guardar)
-                    guardar.isVisible=false
-                    cancelar = toolbar.menu.add(R.string.cancelar)
+                    menu.removeItem(it.itemId)
+                    guardar = menu.add(R.string.guardar)
+                    cancelar = menu.add(R.string.cancelar)
+                    guardar.setIcon(R.drawable.ic_edit)
+
                     habilitarEdicion(true)
                 }
             }
@@ -241,11 +239,11 @@ class FragmentLocal : Fragment() {
         nombrelocal.isEnabled = habilitar
         horaInicio.isEnabled = habilitar
         horaCierre.isEnabled = habilitar
-        //  cancelarBtn.isEnabled = habilitar
-        //guardarBtn.isEnabled = habilitar
+        comboCategorias.isEnabled=habilitar
         val nombreLocal = nombrelocal.text.toString()
         val horaCierre = horaCierre.text.toString()
         val horaInicio = horaInicio.text.toString()
+
         if (habilitar) {
             Toasty.info(
                 requireContext(),
@@ -255,32 +253,32 @@ class FragmentLocal : Fragment() {
                 when (it.title.toString()) {
                     "Editar" -> {
                         editar = it
-                        toolbar.menu.removeItem(it.itemId)
-                        guardar = toolbar.menu.add(R.string.guardar)
-                        guardar.isVisible=false
-                        cancelar = toolbar.menu.add(R.string.cancelar)
+                        menu.removeItem(it.itemId)
+                        guardar = menu.add(R.string.guardar)
+                        cancelar = menu.add(R.string.cancelar)
                         habilitarEdicion(true)
                     }
                     "Cancelar" -> {
                         recuperarDatosAnteriores(nombreLocal, horaCierre, horaInicio)
-                        toolbar.menu.removeItem(cancelar.itemId)
-                        toolbar.menu.removeItem(it.itemId)
-                        toolbar.menu.add(editar.title)
-                        Toast.makeText(
-                            context,
+                        menu.removeItem(cancelar.itemId)
+                        menu.removeItem(it.itemId)
+                        menu.add(editar.title)
+                        Toasty.warning(
+                            requireContext(),
                             "Se a cancelado la edicion de datos",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
                     "Guardar" -> {
-                        toolbar.menu.removeItem(cancelar.itemId)
-                        toolbar.menu.removeItem(it.itemId)
-                        toolbar.menu.add(editar.title)
+                        menu.removeItem(cancelar.itemId)
+                        menu.removeItem(it.itemId)
+                        menu.add(editar.title)
                         guardarDatosLocalDB(
                             nombreLocal,
                             horaCierre,
                             horaInicio
                         )
+
                     }
                 }
                 true
@@ -289,6 +287,7 @@ class FragmentLocal : Fragment() {
         }
 
     }
+
 
     private fun guardarDatosLocalDB(
         nombreLocal: String,
@@ -319,7 +318,7 @@ class FragmentLocal : Fragment() {
                     tag = EnumCamposDB.NOMBRE
                     actualizar(tag, nuevoNombre)
                     Toasty.success(
-                        requireContext(), "Se a cambaido con exito el nombre!",
+                        requireContext(), "Se a cambio con exito el nombre!",
                         Toast.LENGTH_SHORT, true
                     ).show()
                 }
@@ -327,7 +326,7 @@ class FragmentLocal : Fragment() {
                     tag = EnumCamposDB.HORACIERRE
                     actualizar(tag, horaCierreNuevo)
                     Toasty.success(
-                        requireContext(), "Se a cambaido con exito la hora cierre!",
+                        requireContext(), "Se a cambio con exito la hora cierre!",
                         Toast.LENGTH_SHORT, true
                     ).show()
                 }
@@ -335,12 +334,12 @@ class FragmentLocal : Fragment() {
                     tag = EnumCamposDB.HORAINICIO
                     actualizar(tag, horaInicioNuevo)
                     Toasty.success(
-                        requireContext(), "Se a cambaido con exito la hora Inicio!",
+                        requireContext(), "Se a cambio con exito la hora Inicio!",
                         Toast.LENGTH_SHORT, true
                     ).show()
                 }
                 Toasty.success(
-                    requireContext(), "Se a cambaido con exito los datos!",
+                    requireContext(), "Se a cambio con exito los datos!",
                     Toast.LENGTH_SHORT, true
                 ).show()
 
@@ -397,8 +396,9 @@ class FragmentLocal : Fragment() {
             local.gestionarCategoriaLocal(
                 false, categoriaCategorizada, idLocal, ciudad
             )
-            //
             llenarCategorias(nCategoria, rvCategorias)
+            Toasty.success(requireContext(),"Se añadio la categoria $tag a tu local",
+                Toast.LENGTH_SHORT).show()
         }
 
         return object : AdapterView.OnItemSelectedListener {
@@ -632,12 +632,15 @@ class FragmentLocal : Fragment() {
                     val ids = HashMap<String, String>()
                     ids["ciudad"] = ciudad
                     ids["idLocal"] = idLocal
-                    this.adapter =
-                        CategoriaLocalAdapter(
-                            categoriasN,
-                            ids
-                        )
+                    val adapter=  CategoriaLocalAdapter(
+                        categoriasN,
+                        ids
+                    )
+                    this.adapter =adapter
+
+                    adapterCategorias=adapter
                 }
+
             }
         }
     }
@@ -656,10 +659,6 @@ class FragmentLocal : Fragment() {
                     TabLayoutMediator.TabConfigurationStrategy { tab, position ->
                         tab.text = menusTittles[position]
                         tab.setIcon(R.drawable.ic_restaurant_menu)
-
-                        tab.view.setOnClickListener {
-                            Toast.makeText(it.context, "click", Toast.LENGTH_SHORT).show()
-                        }
                     }
                 ).attach()
             }

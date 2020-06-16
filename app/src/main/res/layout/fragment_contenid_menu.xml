@@ -7,12 +7,21 @@
     tools:context=".fragmentos.ContenidMenu">
 
 
- <include
-     layout="@layout/carta_add_productos_al_menu"/>
- <include
-     layout="@layout/recyclerview_carta_productos"
-     />
+    <include layout="@layout/carta_add_productos_al_menu" />
 
+    <Button
+        android:id="@+id/btnFragmentoContedidoMenuEditarNombreMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/editar_menu" />
+    <Button
+        android:id="@+id/btnFragmentoContedidoEliminarMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/eliminar_menu" />
+
+
+    <include layout="@layout/recyclerview_carta_productos" />
 
 
 </LinearLayout>

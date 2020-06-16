@@ -40,6 +40,7 @@ class CategoriaLocalAdapter(
         }
 
         fun bind(categoriaP: String, position: Int) {
+
             ids?.let {
                 if (it.contains("idLocal")) {
                     idLocal = it["idLocal"]!!
@@ -49,55 +50,54 @@ class CategoriaLocalAdapter(
                 }
             }
             categoriaV?.text = categoriaP
-
-                categoriaV?.let {
-                    fun categoriza(categoria: String): ArrayList<EnumCategoria> {
-                        var categorias = ArrayList<EnumCategoria>()
-                        when (categoria) {
-                            EnumCategoria.ALMUERZO.getCategoria() -> categorias.add(EnumCategoria.ALMUERZO)
-                            EnumCategoria.BBQ.getCategoria() -> categorias.add(EnumCategoria.BBQ)
-                            EnumCategoria.COMIDARAPIDA.getCategoria() -> categorias.add(
-                                EnumCategoria.COMIDARAPIDA
-                            )
-                            EnumCategoria.HAMBURGUESAS.getCategoria() -> categorias.add(
-                                EnumCategoria.HAMBURGUESAS
-                            )
-                            EnumCategoria.HELADOS.getCategoria() -> categorias.add(EnumCategoria.HELADOS)
-                            EnumCategoria.MARISCOS.getCategoria() -> categorias.add(EnumCategoria.MARISCOS)
-                            EnumCategoria.MERIENDAS.getCategoria() -> categorias.add(EnumCategoria.MERIENDAS)
-                            EnumCategoria.PIZZAS.getCategoria() -> categorias.add(EnumCategoria.PIZZAS)
-                            EnumCategoria.POLLOS.getCategoria() -> categorias.add(EnumCategoria.POLLOS)
-                            EnumCategoria.POSTRES.getCategoria() -> categorias.add(EnumCategoria.POSTRES)
-                            EnumCategoria.DESAYUNOS.getCategoria() -> categorias.add(EnumCategoria.DESAYUNOS)
-                        }
-                        return categorias
+            categoriaV?.let {
+                fun categoriza(categoria: String): ArrayList<EnumCategoria> {
+                    var categorias = ArrayList<EnumCategoria>()
+                    when (categoria) {
+                        EnumCategoria.ALMUERZO.getCategoria() -> categorias.add(EnumCategoria.ALMUERZO)
+                        EnumCategoria.BBQ.getCategoria() -> categorias.add(EnumCategoria.BBQ)
+                        EnumCategoria.COMIDARAPIDA.getCategoria() -> categorias.add(
+                            EnumCategoria.COMIDARAPIDA
+                        )
+                        EnumCategoria.HAMBURGUESAS.getCategoria() -> categorias.add(
+                            EnumCategoria.HAMBURGUESAS
+                        )
+                        EnumCategoria.HELADOS.getCategoria() -> categorias.add(EnumCategoria.HELADOS)
+                        EnumCategoria.MARISCOS.getCategoria() -> categorias.add(EnumCategoria.MARISCOS)
+                        EnumCategoria.MERIENDAS.getCategoria() -> categorias.add(EnumCategoria.MERIENDAS)
+                        EnumCategoria.PIZZAS.getCategoria() -> categorias.add(EnumCategoria.PIZZAS)
+                        EnumCategoria.POLLOS.getCategoria() -> categorias.add(EnumCategoria.POLLOS)
+                        EnumCategoria.POSTRES.getCategoria() -> categorias.add(EnumCategoria.POSTRES)
+                        EnumCategoria.DESAYUNOS.getCategoria() -> categorias.add(EnumCategoria.DESAYUNOS)
                     }
-
-                    var categoria = it.text.toString().replace(" ", "")
-                    var categoriasI = categoriza(categoria)
-                    var localManager = Locales()
-                    it.setOnCloseIconClickListener {
-                        idLocal?.let { itLocal ->
-                            idCiudad?.let { itciudad ->
-                                    localManager.gestionarCategoriaLocal(
-                                        true,
-                                        categoriasI,
-                                        itLocal,
-                                        itciudad
-                                    )
-                                    eliminarDelRv(position, categoriasI[0])
-                                    Toasty.success(
-                                        it.context,
-                                        "La categoria:${categoria} se elimino de las categorias de local",
-                                        Toast.LENGTH_LONG,
-                                        true
-                                    ).show()
-
-                            }
-                        }
-                    }
-
+                    return categorias
                 }
+
+                var categoria = it.text.toString().replace(" ", "")
+                var categoriasI = categoriza(categoria)
+                var localManager = Locales()
+                it.setOnCloseIconClickListener {
+                    idLocal?.let { itLocal ->
+                        idCiudad?.let { itciudad ->
+                            localManager.gestionarCategoriaLocal(
+                                true,
+                                categoriasI,
+                                itLocal,
+                                itciudad
+                            )
+                            eliminarDelRv(position, categoriasI[0])
+                            Toasty.success(
+                                it.context,
+                                "La categoria:${categoria} se elimino de las categorias de local",
+                                Toast.LENGTH_LONG,
+                                true
+                            ).show()
+
+                        }
+                    }
+                }
+
+            }
 
         }
     }
@@ -114,5 +114,8 @@ class CategoriaLocalAdapter(
         val categoria: String = categorias[position]
 
         holder.bind(categoria, position)
+    }
+    fun getCategorias():ArrayList<String>{
+        return categorias
     }
 }

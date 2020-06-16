@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="editar_menu">Editar nombre del menu</string>
+    <string name="eliminar_menu">Eliminar el menu</string>
+    <string name="eliminar_menu_titulo">¿Desea eliminar el menu?</string>
+</resources>

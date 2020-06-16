@@ -84,6 +84,10 @@
     <string name="menu_tus_productos">Tus Productos</string>
     <string name="menu_tu_local">Tu local</string>
     <string name="eliminar">Eliminar</string>
+    <string name="editar_menu">Editar nombre del menu</string>
+    <string name="eliminar_menu">Eliminar el menu</string>
+    <string name="eliminar_menu_titulo">¿Desea eliminar el menu?</string>
+    <string name="advertencia_eliminar_menu">Si elimina el menu se desvinculara todos los productos del menu,no se eliminara ningun producto solo el menu</string>
 
 
 </resources>
