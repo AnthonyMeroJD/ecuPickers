@@ -63,6 +63,7 @@ class MainActivity : AppCompatActivity() {
         //este es el escucha que que maneja la seleccion de los items
 
         var listener = NavigationView.OnNavigationItemSelectedListener { item ->
+
             var fragmentManager: FragmentManager = supportFragmentManager
 
             when (item.itemId) {
@@ -93,6 +94,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 R.id.nav_cerrar_secion -> {
+
                     auth.signOut()
                     var intent = Intent(this, IngresoActivity::class.java)
                     startActivity(intent)

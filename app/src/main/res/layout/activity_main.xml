@@ -18,32 +18,11 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        app:itemIconTint="@color/colorGris"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp"
-            android:padding="16dp">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_cancel"/>
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/nav_cerrar_secion"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:textSize="18sp"
-                android:text="Salir" />
-        </LinearLayout>
     </com.google.android.material.navigation.NavigationView>
 
 

@@ -20,7 +20,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-
         app:layout_anchorGravity="bottom|right|end"
         app:elevation="6dp"
         app:fabSize="normal"

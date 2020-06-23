@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/menuTop"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_inicio"
@@ -16,15 +18,18 @@
             android:id="@+id/nav_tu_local"
             android:icon="@drawable/ic_local"
             android:title="@string/menu_tu_local" />
-        
+
     </group>
 
-    <group>
-        <item android:id="@+id/nav_cerrar_secion"
+    <group
+        android:id="@+id/menuInferior"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/nav_cerrar_secion"
             android:icon="@drawable/ic_cancel"
-            android:title="logout"/>
+            android:iconTint="@color/colorRosa"
+            android:title="logout" />
     </group>
-
 
 
 </menu>
