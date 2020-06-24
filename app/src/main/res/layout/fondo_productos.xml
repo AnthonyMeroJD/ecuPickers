@@ -64,6 +64,28 @@
                 />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:id="@+id/txtLayoutDescripcion"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtInputNProducto">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txtDescripcion"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:enabled="false"
+                android:hint="@string/descripcion" />
+        </com.google.android.material.textfield.TextInputLayout>
+
 
     <TextView
         android:id="@+id/txtVCategoriaProducto"
@@ -74,7 +96,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txtInputNProducto" />
+        app:layout_constraintTop_toBottomOf="@id/txtLayoutDescripcion" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rVBotonesCategoriaProducto"
